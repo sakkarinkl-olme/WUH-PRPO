@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Orbit Warehouse — Glassmorphism Dashboard (PR & PO)</title>
+<title>Warehouse — Glassmorphism Dashboard (PR & PO)</title>
 
 <!-- SheetJS สำหรับอ่านไฟล์ Excel (.xlsx, .xls, .csv) -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -231,6 +231,7 @@ header p { margin: 0; font-size: 13.5px; }
 .card:hover { transform: translateY(-4px); background: var(--glass-panel-hover); }
 .label { color: var(--muted); font-size: 13px; font-weight: 650; }
 .value { margin: 12px 0 8px; font-size: 32px; font-weight: 850; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+.value-sep { color: var(--muted); font-weight: 600; font-size: .72em; margin: 0 2px; }
 .meta { font-size: 12px; color: var(--muted); }
 .mint { color: var(--mint); }
 .purple { color: var(--purple); }
@@ -388,7 +389,7 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
 <div class="app">
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="brand">orbit<span>.</span></div>
+    <div class="brand">PRPO Dashboard<span>.</span></div>
 
     <div class="sidebar-label">เมนูหลัก</div>
     <nav class="nav-menu" aria-label="เมนูแดชบอร์ด">
@@ -436,7 +437,7 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
     <header>
       <div>
         <div class="eyebrow" id="pageEyebrow">WAREHOUSE INTELLIGENCE · GLASS UI</div>
-        <h1 id="pageTitle">ภาพรวมข้อมูลคลังพัสดุและเวชภัณฑ์</h1>
+        <h1 id="pageTitle">ภาพรวมข้อมูลจัดซื้อจัดจ้าง</h1>
         <p id="pageSub">เลือกคลังเพื่อดูสรุปข้อมูล หรือสลับที่มาของข้อมูลระหว่าง Google Sheets กับ Excel</p>
       </div>
 
@@ -483,10 +484,13 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
           <div class="value mint" id="ovTotalPR" data-count="0">0</div>
           <div class="meta" id="ovPrSourceMeta">ดึงข้อมูลจากชีต PR</div>
         </article>
+        <!-- ปรับการ์ดใบที่ 3 เป็น จำนวน PO ที่ดำเนินการแล้ว / จำนวน PO ทั้งหมด -->
         <article class="card">
-          <div class="label">จำนวนวัสดุที่ไม่ซ้ำ</div>
-          <div class="value purple" id="ovUniqueMat" data-count="0">0</div>
-          <div class="meta">นับตามรหัส/ชื่อวัสดุในคลังที่เลือก</div>
+          <div class="label">จำนวน PO ที่ดำเนินการแล้ว</div>
+          <div class="value purple">
+            <span id="ovDonePO" data-count="0">0</span><span class="value-sep">/</span><span id="ovAllPO" data-count="0">0</span>
+          </div>
+          <div class="meta" id="ovDoneMeta">จำนวน PO ที่ดำเนินการ / PO ทั้งหมด</div>
         </article>
         <article class="card">
           <div class="label">จำนวนบริษัทผู้ขาย</div>
@@ -562,19 +566,19 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
           <div class="meta">รายการขอซื้อที่รอดำเนินการออกเลข PO</div>
         </article>
         <article class="card">
-          <div class="label">ผลรวมมูลค่า / จำนวนใน PR</div>
+          <div class="label">ผลรวมราคารวมใน PR ทั้งหมด (บาท)</div>
           <div class="value" id="prSumAmount" data-count="0">0</div>
-          <div class="meta" id="prSumColName">คำนวณจากชีต PR</div>
+          <div class="meta" id="prSumColName">คำนวณผลรวมจากช่อง ราคารวมใน PR</div>
         </article>
       </div>
 
       <article class="card table-card">
         <div class="panel-head">
-          <h2>ตารางข้อมูล PR ทั้งหมด</h2>
+          <h2>ตารางข้อมูล PR ทั้งหมด (เรียงคอลัมน์ตามกำหนด)</h2>
           <span class="tag" id="prTableBadge">0 แถว</span>
         </div>
         <div class="search-bar" style="margin-top: 14px; margin-bottom: 0;">
-          <input type="search" id="prSearchInput" class="search-input" placeholder="พิมพ์ค้นหาเลข PR, รหัสวัสดุ, ชื่อรายการ หรือสถานะในชีต PR...">
+          <input type="search" id="prSearchInput" class="search-input" placeholder="พิมพ์ค้นหา PR Date, PR, PO, รหัสวัสดุ หรือชื่อวัสดุในชีต PR...">
         </div>
         <div class="table-wrap">
           <table id="prTable"><thead></thead><tbody></tbody></table>
@@ -781,7 +785,6 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
         </div>
       </article>
 
-      <!-- การ์ดที่เปลี่ยนชื่อและข้อมูลตามการสลับแหล่งข้อมูล Google Sheets <-> Excel -->
       <div class="kpis" style="margin-top: 18px;">
         <article class="card">
           <div class="label">แหล่งข้อมูลที่ใช้งานอยู่ตอนนี้</div>
@@ -842,9 +845,21 @@ const PLANT_NAMES = {
 };
 const PLANT_ORDER = ["2000", "2100", "2200", "2400", "2500"];
 
+// ลำดับคอลัมน์ตาราง PR ตามที่กำหนด
+const PR_TABLE_ORDER = [
+  { label: "PR Date",      match: [/^pr\s*date$/i, /pr.*date/i, /วันที่ขอซื้อ/i, /วันที่/i, /date/i] },
+  { label: "PR",           match: [/^pr$/i, /^เลขที่\s*pr$/i, /เลข\s*pr/i, /pr\s*no/i, /pr\s*number/i, /ใบขอซื้อ/i] },
+  { label: "PO",           match: [/^po$/i, /^เลขที่\s*po$/i, /เลข\s*po/i, /po\s*no/i, /po\s*number/i, /ใบสั่งซื้อ/i] },
+  { label: "รหัสวัสดุ",     match: [/^รหัสวัสดุ$/i, /รหัสวัสดุ/i, /รหัสสินค้า/i, /material/i, /^รหัส$/i, /code/i] },
+  { label: "วัสดุ",         match: [/^วัสดุ$/i, /^ชื่อวัสดุ$/i, /รายการขอซื้อ/i, /ชื่อวัสดุ/i, /รายการวัสดุ/i, /วัสดุ/i, /short.*text/i, /description/i, /รายการ/i] },
+  { label: "จำนวน",        match: [/^จำนวน$/i, /จำนวนสั่ง/i, /จำนวนขอซื้อ/i, /จำนวน/i, /^qty$/i, /quantity/i] },
+  { label: "หน่วยนับ",      match: [/^หน่วยนับ$/i, /หน่วยนับ/i, /^หน่วย$/i, /unit/i, /uom/i] },
+  { label: "ราคาต่อหน่วย",  match: [/^ราคาต่อหน่วย$/i, /ราคาต่อหน่วย/i, /ราคา\/หน่วย/i, /unit\s*price/i, /ราคา/i] }
+];
+
 let STATE = {
   activeView: "overview",
-  dataSource: "google", // "google" หรือ "excel"
+  dataSource: "google",
   selectedPlant: "ALL",
   selectedCompany: "ALL",
   po: { headers: [], rows: [], cols: {} },
@@ -945,7 +960,7 @@ function cleanVendorName(rawVal) {
 function detectSheetColumns(headers, rows) {
   const findCol = (regexList) => {
     for (const rx of regexList) {
-      const found = headers.find(h => rx.test(h));
+      const found = headers.find(h => rx.test(String(h).trim()));
       if (found) return found;
     }
     return "";
@@ -956,18 +971,22 @@ function detectSheetColumns(headers, rows) {
     plantCol = headers.find(h => rows.some(r => /^(2000|2100|2200|2400|2500)$/.test(normalizePlantCode(r[h])))) || headers[0] || "";
   }
 
-  const matCodeCol = findCol([/material/i, /mat.*code/i, /item.*code/i, /รหัสวัสดุ/i, /รหัสสินค้า/i, /รหัสรายการ/i, /^รหัส$/i, /code/i]) || headers[1] || headers[0] || "";
-  const matNameCol = findCol([/short.*text/i, /description/i, /mat.*name/i, /item.*name/i, /ชื่อวัสดุ/i, /รายการวัสดุ/i, /รายการขอซื้อ/i, /ชื่อสินค้า/i, /รายละเอียด/i, /รายการ/i, /name/i]) || headers[2] || matCodeCol;
+  const matCodeCol = findCol([/^รหัสวัสดุ$/i, /รหัสวัสดุ/i, /material/i, /mat.*code/i, /item.*code/i, /รหัสสินค้า/i, /^รหัส$/i, /code/i]) || headers[1] || headers[0] || "";
+  const matNameCol = findCol([/^วัสดุ$/i, /^ชื่อวัสดุ$/i, /ชื่อวัสดุ/i, /รายการวัสดุ/i, /รายการขอซื้อ/i, /วัสดุ/i, /short.*text/i, /description/i, /ชื่อสินค้า/i, /รายละเอียด/i, /รายการ/i, /name/i]) || headers[2] || matCodeCol;
   const companyCol = findCol([/ผู้ขาย/i, /ชื่อผู้ขาย/i, /บริษัท/i, /คู่ค้า/i, /ร้านค้า/i, /vendor/i, /supplier/i, /company/i]) || "";
   const imageCol = findCol([/image/i, /img/i, /photo/i, /pic/i, /รูป/i, /ภาพ/i, /ลิงก์รูป/i, /url/i]) || "";
-  const poNoCol = findCol([/^เลขที่\s*po$/i, /เลข\s*po/i, /po\s*no/i, /po\s*number/i, /purchasing\s*doc/i, /ใบสั่งซื้อ/i, /^po$/i]) || "";
-  const prNoCol = findCol([/^เลขที่\s*pr$/i, /เลข\s*pr/i, /pr\s*no/i, /pr\s*number/i, /purchase\s*req/i, /ใบขอซื้อ/i, /^pr$/i]) || headers[0] || "";
+  const poNoCol = findCol([/^po$/i, /^เลขที่\s*po$/i, /เลข\s*po/i, /po\s*no/i, /po\s*number/i, /purchasing\s*doc/i, /ใบสั่งซื้อ/i]) || "";
+  const prNoCol = findCol([/^pr$/i, /^เลขที่\s*pr$/i, /เลข\s*pr/i, /pr\s*no/i, /pr\s*number/i, /purchase\s*req/i, /ใบขอซื้อ/i]) || headers[0] || "";
   const docNoCol = poNoCol || prNoCol || headers[0] || "";
   const statusCol = findCol([/สถานะจัดซื้อ/i, /สถานะ/i, /ผลการ/i, /ดำเนินการ/i, /status/i, /state/i]) || "";
-  const fullPriceCol = findCol([/ราคาเต็มใน\s*po/i, /ราคาเต็ม/i, /มูลค่าสั่งซื้อ/i, /ราคารวม/i, /มูลค่ารวม/i, /มูลค่าประมาณการ/i, /net\s*value/i, /total\s*price/i, /amount/i, /มูลค่า/i, /ราคา/i, /งบประมาณ/i]) || "";
-  const amountCol = fullPriceCol || findCol([/qty/i, /quantity/i, /จำนวน/i]) || "";
 
-  return { plantCol, matCodeCol, matNameCol, companyCol, imageCol, poNoCol, prNoCol, docNoCol, statusCol, fullPriceCol, amountCol };
+  // คอลัมน์ราคารวมใน PR สำหรับเมนูรายการ PR โดยเฉพาะ
+  const prTotalPriceCol = findCol([/ราคารวมใน\s*pr/i, /^ราคารวม$/i, /มูลค่ารวมใน\s*pr/i, /ราคารวม/i, /มูลค่าประมาณการ/i]) || "";
+  // คอลัมน์ราคาเต็มใน PO
+  const fullPriceCol = findCol([/ราคาเต็มใน\s*po/i, /ราคาเต็ม/i, /มูลค่าสั่งซื้อ/i, /ราคารวมใน\s*pr/i, /ราคารวม/i, /มูลค่ารวม/i, /net\s*value/i, /total\s*price/i, /amount/i, /มูลค่า/i]) || "";
+  const amountCol = fullPriceCol || findCol([/^จำนวน$/i, /qty/i, /quantity/i, /จำนวน/i]) || "";
+
+  return { plantCol, matCodeCol, matNameCol, companyCol, imageCol, poNoCol, prNoCol, docNoCol, statusCol, prTotalPriceCol, fullPriceCol, amountCol };
 }
 
 function parseNumber(val) {
@@ -1133,7 +1152,6 @@ function populateExcelSheetSelectors() {
   }
 }
 
-// ฟังก์ชันสลับที่มาของข้อมูล (Google Sheets <-> Excel)
 function switchDataSource(targetSource) {
   const banner = document.getElementById("statusBanner");
 
@@ -1149,7 +1167,7 @@ function switchDataSource(targetSource) {
       `;
     } else {
       STATE.po = { headers: ["เลขที่ PO", "Plant", "รหัสวัสดุ", "ชื่อวัสดุ", "ผู้ขาย", "สถานะจัดซื้อ", "ราคาเต็มใน PO"], rows: [], cols: {} };
-      STATE.pr = { headers: ["เลขที่ PR", "เลขที่ PO", "Plant", "รหัสวัสดุ", "รายการขอซื้อ", "ราคาเต็มใน PO"], rows: [], cols: {} };
+      STATE.pr = { headers: ["PR Date", "PR", "PO", "Plant", "รหัสวัสดุ", "วัสดุ", "จำนวน", "หน่วยนับ", "ราคาต่อหน่วย", "ราคารวมใน PR"], rows: [], cols: {} };
       activateMenuView("import-excel");
       banner.className = "notice warn";
       banner.innerHTML = `<span>📂 <strong>เลือกโหมดอ่านข้อมูลจากไฟล์ Excel แล้ว</strong> — กรุณาลากไฟล์ Excel มาวางในกรอบด้านล่างเพื่อแสดงข้อมูล</span>`;
@@ -1171,7 +1189,6 @@ function switchDataSource(targetSource) {
     }
   }
 
-  // อัปเดตสถานะปุ่มสลับทั้งบน Header, Sidebar และในหน้า Import
   const isExcel = STATE.dataSource === "excel";
   document.getElementById("srcBtnGoogle").classList.toggle("active", !isExcel);
   document.getElementById("srcBtnExcel").classList.toggle("active", isExcel);
@@ -1256,6 +1273,38 @@ function renderTable(tableId, headers, rows, maxRows = 50) {
   }
   tbody.innerHTML = rows.slice(0, maxRows).map(row =>
     `<tr>${showHeaders.map(h => `<td>${row[h] ?? "-"}</td>`).join("")}</tr>`
+  ).join("");
+}
+
+// จัดเรียงคอลัมน์ตามลำดับที่กำหนด (สำหรับตาราง PR)
+function buildOrderedColumns(headers, orderDef) {
+  const used = new Set();
+  return orderDef.map(def => {
+    let found = "";
+    for (const rx of def.match) {
+      found = (headers || []).find(h => !used.has(h) && rx.test(String(h).trim())) || "";
+      if (found) break;
+    }
+    if (found) used.add(found);
+    return { label: def.label, key: found };
+  });
+}
+
+function renderOrderedTable(tableId, columns, rows, maxRows = 100) {
+  const thead = document.querySelector(`#${tableId} thead`);
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  thead.innerHTML = `<tr>${columns.map(c => `<th>${c.label}</th>`).join("")}</tr>`;
+
+  if (!rows || !rows.length) {
+    tbody.innerHTML = `<tr><td colspan="${columns.length}" style="text-align:center;color:var(--muted);padding:24px;">ไม่พบรายการข้อมูลตามเงื่อนไขที่เลือก</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.slice(0, maxRows).map(row =>
+    `<tr>${columns.map(c => {
+      const v = c.key ? row[c.key] : "";
+      return `<td>${v !== "" && v !== null && v !== undefined ? v : "-"}</td>`;
+    }).join("")}</tr>`
   ).join("");
 }
 
@@ -1365,12 +1414,17 @@ function renderOverviewView() {
   const poFiltered = filterRowsByPlant(STATE.po, STATE.selectedPlant);
   const prFiltered = filterRowsByPlant(STATE.pr, STATE.selectedPlant);
 
-  const uniqueMats = new Set(poFiltered.map(r => String(r[STATE.po.cols.matCodeCol] || r[STATE.po.cols.matNameCol] || "").trim()).filter(Boolean));
+  const ovDoneCount = poFiltered.filter(r => classifyPurchaseStatus(r, STATE.po.cols) === "done").length;
   const uniqueVendors = new Set(poFiltered.map(r => cleanVendorName(r[STATE.po.cols.companyCol])).filter(v => v && v !== "ไม่ระบุผู้ขาย"));
 
   document.getElementById("ovTotalPO").dataset.count = poFiltered.length;
   document.getElementById("ovTotalPR").dataset.count = prFiltered.length;
-  document.getElementById("ovUniqueMat").dataset.count = uniqueMats.size;
+  document.getElementById("ovDonePO").dataset.count = ovDoneCount;
+  document.getElementById("ovAllPO").dataset.count = poFiltered.length;
+
+  const ovDonePct = poFiltered.length ? Math.round((ovDoneCount / poFiltered.length) * 100) : 0;
+  document.getElementById("ovDoneMeta").textContent = `ดำเนินการแล้ว / PO ทั้งหมด (${ovDonePct}%)`;
+
   document.getElementById("ovUniqueVendor").dataset.count = uniqueVendors.size;
   document.getElementById("ovPlantMeta").textContent = STATE.selectedPlant === "ALL" ? "รวมทุกคลัง" : `เฉพาะคลัง: ${getPlantDisplayName(STATE.selectedPlant)}`;
   document.getElementById("ovPrSourceMeta").textContent = STATE.dataSource === "excel" ? "ดึงข้อมูลจากไฟล์ Excel" : "ดึงข้อมูลจาก Google Sheets";
@@ -1401,6 +1455,7 @@ function renderOverviewView() {
   renderTable("ovTable", STATE.po.headers, poFiltered, 15);
 }
 
+// --- VIEW 2: รายการ PR (คำนวณผลรวมจากช่อง "ราคารวมใน PR" และเรียงคอลัมน์ตามกำหนด) ---
 function renderPRView() {
   const prByPlant = filterRowsByPlant(STATE.pr, STATE.selectedPlant);
   const poByPlant = filterRowsByPlant(STATE.po, STATE.selectedPlant);
@@ -1419,8 +1474,17 @@ function renderPRView() {
     ? finalPR.filter(r => !hasValidPONumber(r[prPoCol])).length
     : finalPR.filter(r => classifyPurchaseStatus(r, STATE.pr.cols) === "pending").length;
 
-  const amtCol = STATE.pr.cols.fullPriceCol || STATE.pr.cols.amountCol;
-  const totalAmt = amtCol ? finalPR.reduce((sum, r) => sum + parseNumber(r[amtCol]), 0) : finalPR.length;
+  // คำนวณผลรวมจากช่อง "ราคารวมใน PR" ทั้งหมด
+  const prTotalCol =
+    STATE.pr.headers.find(h => /ราคารวมใน\s*pr/i.test(String(h).trim())) ||
+    STATE.pr.cols.prTotalPriceCol ||
+    STATE.pr.headers.find(h => /ราคารวม/i.test(String(h).trim())) ||
+    STATE.pr.cols.fullPriceCol ||
+    "";
+
+  const totalAmt = prTotalCol
+    ? finalPR.reduce((sum, r) => sum + parseNumber(r[prTotalCol]), 0)
+    : 0;
 
   document.getElementById("prTotalRows").dataset.count = finalPR.length;
   document.getElementById("prPoCountOfPlant").dataset.count = poCountInPlant;
@@ -1430,10 +1494,14 @@ function renderPRView() {
   const plantLabel = getPlantDisplayName(STATE.selectedPlant);
   document.getElementById("prPlantLabel").textContent = `คลัง: ${plantLabel}`;
   document.getElementById("prPoCountMeta").textContent = `จำนวน PO ของคลัง (${plantLabel})`;
-  document.getElementById("prSumColName").textContent = amtCol ? `รวมจากคอลัมน์ "${amtCol}"` : "จำนวนรายการทั้งหมด";
+  document.getElementById("prSumColName").textContent = prTotalCol
+    ? `รวมจากช่อง "${prTotalCol}" ทั้งหมด`
+    : "ไม่พบคอลัมน์ ราคารวมใน PR";
   document.getElementById("prTableBadge").textContent = `แสดง ${finalPR.length.toLocaleString("th-TH")} แถว`;
 
-  renderTable("prTable", STATE.pr.headers, finalPR, 60);
+  // เรียงตารางตามลำดับ: PR Date , PR , PO , รหัสวัสดุ , วัสดุ , จำนวน , หน่วยนับ , ราคาต่อหน่วย
+  const prOrderedCols = buildOrderedColumns(STATE.pr.headers, PR_TABLE_ORDER);
+  renderOrderedTable("prTable", prOrderedCols, finalPR, 100);
 }
 
 function renderPOOverviewView() {
@@ -1466,7 +1534,6 @@ function renderPOOverviewView() {
     return { label: PLANT_NAMES[code], doneCount: done, pendingCount: pending };
   }).filter(item => item.doneCount > 0 || item.pendingCount > 0);
 
-  // ไม่แสดงคำว่า เสร็จแล้ว / รอดำเนินการ ใต้กราฟ (showSubLabels: false)
   renderDualPlantChart("poOvBarChart", poPlantStatusItems, {
     firstKey: "doneCount", secondKey: "pendingCount",
     firstLabel: "ดำเนินการแล้ว", secondLabel: "ยังไม่ได้ดำเนินการ",
@@ -1618,7 +1685,6 @@ function renderPOCompanyView() {
   renderTable("compTable", headers, compRows, 40);
 }
 
-// --- VIEW 6: หน้า Import ข้อมูล (เปลี่ยนชื่อการ์ดและตัวเลขตามการสลับแหล่งข้อมูล Google Sheets <-> Excel) ---
 function renderImportExcelView() {
   const ex = STATE.excelStore;
   const gs = STATE.googleStore;
@@ -1628,7 +1694,6 @@ function renderImportExcelView() {
   document.getElementById("excelStatusTag").textContent = ex.loaded ? `ไฟล์ที่โหลดไว้: ${ex.fileName}` : "ยังไม่ได้อัปโหลดไฟล์ Excel";
   document.getElementById("excelMenuBadge").textContent = ex.loaded ? "พร้อมใช้" : "ลากวาง";
 
-  // เปลี่ยนชื่อหัวข้อการ์ดทั้ง 2 ใบตามที่มาของข้อมูลที่เลือกอยู่
   document.getElementById("impActiveSourceText").textContent = isExcel ? "📂 ไฟล์ Excel" : "☁️ Google Sheets";
   document.getElementById("impActiveSourceMeta").textContent = `กำลังอ่านและแสดงผลจาก ${sourceLabel}`;
 
@@ -1669,7 +1734,7 @@ function renderImportExcelView() {
 // =========================================================
 const VIEW_META = {
   "overview": { eyebrow: "WAREHOUSE INTELLIGENCE · GLASS UI", title: "ภาพรวมข้อมูลคลังพัสดุและเวชภัณฑ์", sub: "เลือกคลัง (พัสดุ, คลังยา, คลังเวชภัณฑ์, คลังแลป, คลังห้องผ่าตัด) เพื่อดูสรุปข้อมูล" },
-  "pr": { eyebrow: "PURCHASE REQUISITION (ชีต PR)", title: "รายการขอซื้อ (PR) แยกตามคลัง", sub: "แสดงข้อมูลทั้งหมดจากชีต PR พร้อมจำนวน PO ของคลัง และจำนวน PR ที่ยังไม่มีเลข PO" },
+  "pr": { eyebrow: "PURCHASE REQUISITION (ชีต PR)", title: "รายการขอซื้อ (PR) แยกตามคลัง", sub: "แสดงข้อมูลทั้งหมดจากชีต PR คำนวณผลรวมจากช่อง ราคารวมใน PR และเรียงคอลัมน์ตารางตามกำหนด" },
   "po-overview": { eyebrow: "PURCHASE ORDER OVERVIEW (ชีต 1)", title: "ภาพรวมรายการใบสั่งซื้อ (PO)", sub: "สรุปจำนวนรายการ PO สถานะการจัดซื้อ มูลค่าสั่งซื้อรวม และตารางข้อมูล PO ทั้งหมดแยกตามคลัง" },
   "po-material": { eyebrow: "PURCHASE ORDER — MATERIAL CATALOG (ชีต 1)", title: "ค้นหาจากรหัสหรือชื่อวัสดุ (พร้อมรูปภาพวัสดุ)", sub: "เลือกคลังที่ต้องการ แล้วค้นหาด้วยรหัสวัสดุหรือชื่อวัสดุเพื่อดูรายละเอียดและรูปภาพ" },
   "po-company": { eyebrow: "PURCHASE ORDER — VENDOR ANALYTICS (ชีต 1)", title: "ค้นหาจากบริษัท และภาพรวมสถานะจัดซื้อ", sub: "เลือกคลังและบริษัทเพื่อดูสถานะจัดซื้อที่ดำเนินการแล้ว / ยังไม่ได้ดำเนินการ และมูลค่าสั่งซื้อจากราคาเต็มใน PO" },
@@ -1762,14 +1827,14 @@ function getDemoDataset() {
     { "เลขที่ PO": "PO-69006", "Plant": "2100", "รหัสวัสดุ": "MED-2105", "ชื่อวัสดุ": "Amoxicillin 500 mg Capsule", "ผู้ขาย": "20045 - บริษัท ฟาร์มาแคร์ จำกัด", "สถานะจัดซื้อ": "ดำเนินการแล้ว", "ราคาเต็มใน PO": 32000, "รูปภาพ": "" }
   ];
 
-  const prHeaders = ["เลขที่ PR", "เลขที่ PO", "Plant", "รหัสวัสดุ", "รายการขอซื้อ", "ผู้ขอซื้อ", "ราคาเต็มใน PO", "สถานะจัดซื้อ"];
+  const prHeaders = ["PR Date", "PR", "PO", "Plant", "รหัสวัสดุ", "วัสดุ", "จำนวน", "หน่วยนับ", "ราคาต่อหน่วย", "ราคารวมใน PR"];
   const prRows = [
-    { "เลขที่ PR": "PR-1001", "เลขที่ PO": "PO-69001", "Plant": "2000", "รหัสวัสดุ": "MAT-2001", "รายการขอซื้อ": "กระดาษถ่ายเอกสาร A4 80 แกรม", "ผู้ขอซื้อ": "งานพัสดุกลาง", "ราคาเต็มใน PO": 14400, "สถานะจัดซื้อ": "ดำเนินการแล้ว" },
-    { "เลขที่ PR": "PR-1002", "เลขที่ PO": "PO-69002", "Plant": "2100", "รหัสวัสดุ": "MED-2101", "รายการขอซื้อ": "Paracetamol 500 mg", "ผู้ขอซื้อ": "ห้องจ่ายยาผู้ป่วยนอก", "ราคาเต็มใน PO": 25000, "สถานะจัดซื้อ": "ดำเนินการแล้ว" },
-    { "เลขที่ PR": "PR-1003", "เลขที่ PO": "", "Plant": "2200", "รหัสวัสดุ": "SUP-2201", "รายการขอซื้อ": "ถุงมือตรวจโรค Nitrile", "ผู้ขอซื้อ": "คลังเวชภัณฑ์", "ราคาเต็มใน PO": 45000, "สถานะจัดซื้อ": "ยังไม่ได้ดำเนินการ" },
-    { "เลขที่ PR": "PR-1004", "เลขที่ PO": "PO-69004", "Plant": "2400", "รหัสวัสดุ": "LAB-2401", "รายการขอซื้อ": "หลอดเก็บเลือดสุญญากาศ EDTA", "ผู้ขอซื้อ": "ห้องปฏิบัติการ", "ราคาเต็มใน PO": 38000, "สถานะจัดซื้อ": "ดำเนินการแล้ว" },
-    { "เลขที่ PR": "PR-1005", "เลขที่ PO": "", "Plant": "2500", "รหัสวัสดุ": "OR-2501", "รายการขอซื้อ": "ชุดกาวน์ผ่าตัดปลอดเชื้อ Sterile", "ผู้ขอซื้อ": "หน่วยผ่าตัด", "ราคาเต็มใน PO": 67500, "สถานะจัดซื้อ": "ยังไม่ได้ดำเนินการ" },
-    { "เลขที่ PR": "PR-1006", "เลขที่ PO": "", "Plant": "2000", "รหัสวัสดุ": "MAT-2009", "รายการขอซื้อ": "แฟ้มสันกว้าง A4", "ผู้ขอซื้อ": "งานพัสดุกลาง", "ราคาเต็มใน PO": 6200, "สถานะจัดซื้อ": "ยังไม่ได้ดำเนินการ" }
+    { "PR Date": "01/11/2026", "PR": "PR-1001", "PO": "PO-69001", "Plant": "2000", "รหัสวัสดุ": "MAT-2001", "วัสดุ": "กระดาษถ่ายเอกสาร A4 80 แกรม", "จำนวน": 120, "หน่วยนับ": "รีม", "ราคาต่อหน่วย": 120, "ราคารวมใน PR": 14400 },
+    { "PR Date": "01/11/2026", "PR": "PR-1002", "PO": "PO-69002", "Plant": "2100", "รหัสวัสดุ": "MED-2101", "วัสดุ": "Paracetamol 500 mg", "จำนวน": 500, "หน่วยนับ": "กล่อง", "ราคาต่อหน่วย": 50, "ราคารวมใน PR": 25000 },
+    { "PR Date": "02/11/2026", "PR": "PR-1003", "PO": "", "Plant": "2200", "รหัสวัสดุ": "SUP-2201", "วัสดุ": "ถุงมือตรวจโรค Nitrile", "จำนวน": 300, "หน่วยนับ": "กล่อง", "ราคาต่อหน่วย": 150, "ราคารวมใน PR": 45000 },
+    { "PR Date": "02/11/2026", "PR": "PR-1004", "PO": "PO-69004", "Plant": "2400", "รหัสวัสดุ": "LAB-2401", "วัสดุ": "หลอดเก็บเลือดสุญญากาศ EDTA", "จำนวน": 200, "หน่วยนับ": "แพ็ค", "ราคาต่อหน่วย": 190, "ราคารวมใน PR": 38000 },
+    { "PR Date": "03/11/2026", "PR": "PR-1005", "PO": "", "Plant": "2500", "รหัสวัสดุ": "OR-2501", "วัสดุ": "ชุดกาวน์ผ่าตัดปลอดเชื้อ Sterile", "จำนวน": 150, "หน่วยนับ": "ชุด", "ราคาต่อหน่วย": 450, "ราคารวมใน PR": 67500 },
+    { "PR Date": "03/11/2026", "PR": "PR-1006", "PO": "", "Plant": "2000", "รหัสวัสดุ": "MAT-2009", "วัสดุ": "แฟ้มสันกว้าง A4", "จำนวน": 100, "หน่วยนับ": "แฟ้ม", "ราคาต่อหน่วย": 62, "ราคารวมใน PR": 6200 }
   ];
 
   return {
