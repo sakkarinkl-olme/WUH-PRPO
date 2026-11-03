@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Warehouse — Glassmorphism Dashboard (PR & PO)</title>
+<title>Orbit Warehouse — Digital Twin Dashboard (PR & PO)</title>
 
 <!-- SheetJS สำหรับอ่านไฟล์ Excel (.xlsx, .xls, .csv) -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -11,134 +11,109 @@
 <script>
   try {
     document.documentElement.dataset.theme =
-      localStorage.getItem("dashboard-theme") === "dark" ? "dark" : "light";
+      localStorage.getItem("dashboard-theme") === "light" ? "light" : "dark";
   } catch {
-    document.documentElement.dataset.theme = "light";
+    document.documentElement.dataset.theme = "dark";
   }
 </script>
 
 <style>
 :root {
   color-scheme: light;
-  --bg: #eef2ff;
-  --bg-grad: linear-gradient(135deg, #e0e7ff 0%, #f0fdf4 50%, #fae8ff 100%);
-  --glass-panel: rgba(255, 255, 255, 0.52);
-  --glass-panel-hover: rgba(255, 255, 255, 0.72);
-  --glass-sidebar: rgba(255, 255, 255, 0.45);
-  --glass-pill: rgba(255, 255, 255, 0.60);
-  --glass-input: rgba(255, 255, 255, 0.68);
-  --glass-border: rgba(255, 255, 255, 0.82);
-  --glass-border-subtle: rgba(255, 255, 255, 0.52);
-  --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.92), inset 0 -1px 1px rgba(255, 255, 255, 0.35);
-  --glass-shadow: 0 16px 38px -6px rgba(31, 38, 135, 0.10), 0 4px 12px rgba(0, 0, 0, 0.03);
-  --text: #0f172a;
-  --muted: #475569;
-  --line: rgba(15, 23, 42, 0.08);
-  --purple: #6d28d9;
-  --mint: #0d9488;
-  --amber: #d97706;
-  --active-bg: rgba(109, 40, 217, 0.14);
-  --active-text: #5b21b6;
-  --notice-bg: rgba(209, 250, 229, 0.68);
-  --notice-text: #065f46;
-  --warn-bg: rgba(254, 243, 199, 0.78);
-  --warn-text: #92400e;
-  --grid-line: rgba(15, 23, 42, 0.06);
-  --donut-center: rgba(255, 255, 255, 0.86);
-  --chart-purple: #8b5cf6;
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #eceef2;
+  --surface-hover: #f8f9fb;
+  --border: #d9dde4;
+  --text: #1a1d26;
+  --muted: #5d6676;
+  --line: #e3e6ec;
+  --purple: #6d3fd6;
+  --mint: #0f9d8a;
+  --amber: #e08a00;
+  --primary: #6d3fd6;
+  --primary-text: #ffffff;
+  --active-bg: #ebe4fb;
+  --active-text: #4f2aa8;
+  --notice-bg: #d9f5ec;
+  --notice-text: #0b5e4c;
+  --warn-bg: #fdecc4;
+  --warn-text: #8a4b00;
+  --grid-line: #e3e6ec;
+  --donut-center: #ffffff;
+  --chart-purple: #6d3fd6;
   --chart-mint: #14b8a6;
-  --chart-amber: #f59e0b;
-  --chart-neutral: rgba(148, 163, 184, 0.45);
-  --table-head: rgba(255, 255, 255, 0.85);
-  --orb-1: rgba(167, 139, 250, 0.55);
-  --orb-2: rgba(52, 211, 153, 0.45);
-  --orb-3: rgba(96, 165, 250, 0.45);
+  --chart-amber: #f5a524;
+  --chart-neutral: #cbd1db;
+  --table-head: #eceef2;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #070b19;
-  --bg-grad: linear-gradient(135deg, #070b19 0%, #111827 50%, #1e1b4b 100%);
-  --glass-panel: rgba(17, 25, 40, 0.56);
-  --glass-panel-hover: rgba(26, 37, 58, 0.72);
-  --glass-sidebar: rgba(13, 19, 33, 0.52);
-  --glass-pill: rgba(30, 41, 59, 0.60);
-  --glass-input: rgba(15, 23, 42, 0.64);
-  --glass-border: rgba(255, 255, 255, 0.14);
-  --glass-border-subtle: rgba(255, 255, 255, 0.08);
-  --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.18), inset 0 -1px 1px rgba(255, 255, 255, 0.04);
-  --glass-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.55), 0 4px 16px rgba(0, 0, 0, 0.25);
-  --text: #f8fafc;
-  --muted: #94a3b8;
-  --line: rgba(255, 255, 255, 0.09);
-  --purple: #c4b5fd;
-  --mint: #5eead4;
-  --amber: #fbbf24;
-  --active-bg: rgba(167, 139, 250, 0.22);
-  --active-text: #ede9fe;
-  --notice-bg: rgba(6, 78, 59, 0.58);
-  --notice-text: #6ee7b7;
-  --warn-bg: rgba(120, 53, 15, 0.60);
-  --warn-text: #fde68a;
-  --grid-line: rgba(255, 255, 255, 0.06);
-  --donut-center: rgba(15, 23, 42, 0.85);
-  --chart-purple: #a78bfa;
+  --bg: #14161c;
+  --surface: #1e212a;
+  --surface-2: #2a2e39;
+  --surface-hover: #242834;
+  --border: #363b48;
+  --text: #f1f3f7;
+  --muted: #9aa3b5;
+  --line: #2e323d;
+  --purple: #b79cff;
+  --mint: #4fd9c4;
+  --amber: #ffbe4a;
+  --primary: #8a63f0;
+  --primary-text: #ffffff;
+  --active-bg: #33295a;
+  --active-text: #e4d9ff;
+  --notice-bg: #0f3b33;
+  --notice-text: #7ff0d9;
+  --warn-bg: #4a3410;
+  --warn-text: #ffd98a;
+  --grid-line: #2e323d;
+  --donut-center: #1e212a;
+  --chart-purple: #9d7bff;
   --chart-mint: #2dd4bf;
   --chart-amber: #fbbf24;
-  --chart-neutral: rgba(71, 85, 105, 0.55);
-  --table-head: rgba(15, 23, 42, 0.88);
-  --orb-1: rgba(124, 58, 237, 0.35);
-  --orb-2: rgba(13, 148, 136, 0.30);
-  --orb-3: rgba(37, 99, 235, 0.30);
+  --chart-neutral: #3d4352;
+  --table-head: #2a2e39;
 }
 
 * { box-sizing: border-box; }
 body {
   margin: 0; min-height: 100vh;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  color: var(--text); background: var(--bg-grad);
-  background-attachment: fixed; overflow-x: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans Thai", sans-serif;
+  color: var(--text); background: var(--bg); overflow-x: hidden;
 }
 button, input, select { font: inherit; }
 
-.ambient-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-.orb { position: absolute; border-radius: 50%; filter: blur(75px); animation: floatOrb 18s ease-in-out infinite alternate; }
-.orb-1 { width: 480px; height: 480px; top: -120px; right: 8%; background: var(--orb-1); }
-.orb-2 { width: 420px; height: 420px; bottom: -100px; left: 12%; background: var(--orb-2); animation-delay: -6s; }
-.orb-3 { width: 340px; height: 340px; top: 40%; left: 45%; background: var(--orb-3); animation-delay: -11s; }
-@keyframes floatOrb {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(35px, -25px) scale(1.08); }
-  100% { transform: translate(-25px, 30px) scale(0.95); }
-}
+/* พื้นหลังแบบเรียบ: ซ่อนลูกบอลเบลอเดิม */
+.ambient-bg { display: none; }
 
 .app { display: grid; grid-template-columns: 270px minmax(0, 1fr); min-height: 100vh; }
 
 /* SIDEBAR */
 .sidebar {
-  padding: 28px 20px; border-right: 1px solid var(--glass-border);
-  background: var(--glass-sidebar);
-  backdrop-filter: blur(28px) saturate(190%); -webkit-backdrop-filter: blur(28px) saturate(190%);
-  box-shadow: var(--glass-highlight); display: flex; flex-direction: column;
+  padding: 28px 20px; background: var(--surface); border-right: 2px solid var(--border);
+  display: flex; flex-direction: column;
 }
 .brand { font-weight: 850; font-size: 26px; letter-spacing: -1px; padding: 0 10px; }
 .brand span { color: var(--mint); }
 .sidebar-label { margin: 22px 10px 8px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; }
-.nav-menu { display: flex; flex-direction: column; gap: 6px; }
+.nav-menu { display: flex; flex-direction: column; gap: 4px; }
 .nav-btn {
-  width: 100%; text-align: left; padding: 11px 14px; border-radius: 15px;
-  border: 1px solid transparent; background: transparent; color: var(--text);
+  width: 100%; text-align: left; padding: 11px 14px; border-radius: 8px;
+  border: 2px solid transparent; background: transparent; color: var(--text);
   font-size: 14px; font-weight: 600; cursor: pointer;
-  display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: all .22s ease;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  transition: background-color .15s ease, color .15s ease;
 }
-.nav-btn:hover { background: var(--glass-pill); border-color: var(--glass-border-subtle); box-shadow: var(--glass-highlight); transform: translateX(3px); }
-.nav-btn.active { color: var(--active-text); background: var(--active-bg); border-color: var(--glass-border); box-shadow: var(--glass-highlight), 0 8px 20px rgba(109, 40, 217, 0.12); }
-.nav-sub { padding-left: 14px; display: flex; flex-direction: column; gap: 5px; border-left: 2px solid var(--glass-border); margin-left: 16px; }
+.nav-btn:hover { background: var(--surface-2); }
+.nav-btn.active { color: var(--active-text); background: var(--active-bg); border-color: var(--purple); }
+.nav-sub { padding-left: 14px; display: flex; flex-direction: column; gap: 4px; border-left: 2px solid var(--border); margin-left: 16px; }
 .nav-sub .nav-btn { padding: 9px 13px; font-size: 13px; font-weight: 500; }
-.badge-sheet { font-size: 10px; padding: 2px 8px; border-radius: 99px; background: var(--glass-pill); border: 1px solid var(--glass-border); color: var(--muted); }
+.badge-sheet { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: var(--surface-2); color: var(--muted); font-weight: 700; }
 .sidebar-note {
-  margin-top: auto; padding: 15px; border-radius: 16px; background: var(--glass-pill);
-  border: 1px solid var(--glass-border-subtle); box-shadow: var(--glass-highlight);
+  margin-top: auto; padding: 15px; border-radius: 8px; background: var(--surface-2);
   color: var(--muted); font-size: 12px; line-height: 1.7;
 }
 .sidebar-note a { color: var(--purple); text-decoration: none; font-weight: 700; }
@@ -154,81 +129,68 @@ header p { margin: 0; font-size: 13.5px; }
 .header-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
 
 .source-switcher {
-  display: inline-flex; align-items: center; padding: 4px; border-radius: 15px;
-  background: var(--glass-panel); border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-highlight), var(--glass-shadow);
-  backdrop-filter: blur(18px) saturate(180%); gap: 4px;
+  display: inline-flex; align-items: center; padding: 4px; border-radius: 10px;
+  background: var(--surface); border: 2px solid var(--border); gap: 4px;
 }
 .source-btn {
-  border: 1px solid transparent; background: transparent; color: var(--muted);
-  padding: 7px 13px; border-radius: 11px; font-size: 12.5px; font-weight: 700;
-  cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all .22s ease;
+  border: 0; background: transparent; color: var(--muted);
+  padding: 7px 13px; border-radius: 6px; font-size: 12.5px; font-weight: 700;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  transition: background-color .15s ease, color .15s ease;
 }
-.source-btn:hover { color: var(--text); }
-.source-btn.active {
-  background: linear-gradient(135deg, rgba(109, 40, 217, 0.90), rgba(13, 148, 136, 0.85));
-  color: #ffffff; border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 4px 14px rgba(109, 40, 217, 0.25);
-}
+.source-btn:hover { color: var(--text); background: var(--surface-2); }
+.source-btn.active { background: var(--primary); color: var(--primary-text); }
 
 .btn {
-  color: var(--text); background: var(--glass-pill); border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-highlight), var(--glass-shadow); backdrop-filter: blur(18px) saturate(180%);
-  border-radius: 14px; padding: 9px 16px; min-height: 42px; cursor: pointer;
-  font-size: 13px; font-weight: 600; transition: all .22s ease;
+  color: var(--text); background: var(--surface); border: 2px solid var(--border);
+  border-radius: 10px; padding: 9px 16px; min-height: 42px; cursor: pointer;
+  font-size: 13px; font-weight: 600; transition: background-color .15s ease, border-color .15s ease;
 }
-.btn:hover { background: var(--glass-panel-hover); transform: translateY(-2px); }
-.btn.active-mode {
-  background: linear-gradient(135deg, rgba(109, 40, 217, 0.90), rgba(13, 148, 136, 0.85));
-  color: #ffffff; border-color: rgba(255, 255, 255, 0.45);
-}
+.btn:hover { background: var(--surface-2); border-color: var(--purple); }
+.btn.active-mode { background: var(--primary); color: var(--primary-text); border-color: var(--primary); }
 
 .theme-toggle { display: inline-flex; align-items: center; gap: 10px; }
 .theme-track {
   display: inline-flex; align-items: center; width: 42px; height: 24px; padding: 3px;
-  border-radius: 99px; background: rgba(148, 163, 184, 0.35); border: 1px solid var(--glass-border);
+  border-radius: 99px; background: var(--chart-neutral); border: 0;
 }
-.theme-thumb { width: 16px; height: 16px; border-radius: 50%; background: #ffffff; transition: transform .3s ease; }
-[data-theme="dark"] .theme-track { background: rgba(139, 92, 246, 0.65); }
+.theme-thumb { width: 18px; height: 18px; border-radius: 50%; background: #ffffff; transition: transform .2s ease; }
+[data-theme="dark"] .theme-track { background: var(--primary); }
 [data-theme="dark"] .theme-thumb { transform: translateX(18px); }
 
 .notice {
-  padding: 12px 18px; margin-bottom: 18px; border: 1px solid var(--glass-border);
-  border-radius: 16px; background: var(--notice-bg); color: var(--notice-text);
-  backdrop-filter: blur(20px) saturate(180%); box-shadow: var(--glass-highlight), var(--glass-shadow);
-  font-size: 13px; font-weight: 500; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  padding: 12px 18px; margin-bottom: 18px; border-radius: 10px;
+  background: var(--notice-bg); color: var(--notice-text);
+  font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
 }
 .notice.warn { background: var(--warn-bg); color: var(--warn-text); }
 
 /* PLANT FILTER BAR */
 .plant-bar {
-  display: flex; align-items: center; flex-wrap: wrap; gap: 9px; margin-bottom: 20px;
-  padding: 13px 18px; border-radius: 20px; background: var(--glass-panel);
-  border: 1px solid var(--glass-border); backdrop-filter: blur(24px) saturate(190%);
-  box-shadow: var(--glass-highlight), var(--glass-shadow);
+  display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;
+  padding: 13px 18px; border-radius: 12px; background: var(--surface); border: 2px solid var(--border);
 }
 .plant-bar-label { font-size: 13px; font-weight: 750; margin-right: 6px; }
 .plant-pill {
-  padding: 8px 17px; border-radius: 99px; border: 1px solid var(--glass-border);
-  background: var(--glass-pill); box-shadow: var(--glass-highlight); color: var(--text);
-  font-size: 13px; font-weight: 650; cursor: pointer; transition: all .22s ease;
+  padding: 7px 16px; border-radius: 8px; border: 2px solid var(--border);
+  background: var(--surface); color: var(--text);
+  font-size: 13px; font-weight: 650; cursor: pointer; transition: background-color .15s ease, border-color .15s ease;
 }
-.plant-pill:hover { background: var(--glass-panel-hover); transform: translateY(-2px); }
-.plant-pill.active {
-  background: linear-gradient(135deg, rgba(109, 40, 217, 0.90), rgba(13, 148, 136, 0.86));
-  color: #ffffff; border-color: rgba(255, 255, 255, 0.45);
-}
+.plant-pill:hover { background: var(--surface-2); }
+.plant-pill.active { background: var(--primary); color: var(--primary-text); border-color: var(--primary); }
 
 /* CARDS & VIEWS */
-.view-section { display: none; animation: enter .45s ease both; }
+.view-section { display: none; }
 .view-section.active { display: block; }
 .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
 .card {
-  position: relative; background: var(--glass-panel); border: 1px solid var(--glass-border);
-  border-radius: 24px; padding: 22px; backdrop-filter: blur(24px) saturate(190%);
-  box-shadow: var(--glass-highlight), var(--glass-shadow); min-width: 0;
-  transition: transform .25s ease, background-color .25s ease;
+  position: relative; background: var(--surface); border: 2px solid var(--border);
+  border-radius: 12px; padding: 22px; min-width: 0;
 }
-.card:hover { transform: translateY(-4px); background: var(--glass-panel-hover); }
+.kpis .card { border-top: 6px solid var(--purple); }
+.kpis .card:nth-child(2) { border-top-color: var(--mint); }
+.kpis .card:nth-child(3) { border-top-color: var(--amber); }
+.kpis .card:nth-child(4) { border-top-color: var(--chart-neutral); }
 .label { color: var(--muted); font-size: 13px; font-weight: 650; }
 .value { margin: 12px 0 8px; font-size: 32px; font-weight: 850; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
 .value-sep { color: var(--muted); font-weight: 600; font-size: .72em; margin: 0 2px; }
@@ -240,8 +202,8 @@ header p { margin: 0; font-size: 13.5px; }
 .content { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; margin-top: 18px; }
 .panel-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 .tag {
-  font-size: 11px; font-weight: 600; color: var(--muted); background: var(--glass-pill);
-  border: 1px solid var(--glass-border); box-shadow: var(--glass-highlight); padding: 5px 11px; border-radius: 99px;
+  font-size: 11px; font-weight: 700; color: var(--muted); background: var(--surface-2);
+  padding: 5px 10px; border-radius: 6px;
 }
 
 /* CHARTS */
@@ -256,108 +218,96 @@ header p { margin: 0; font-size: 13.5px; }
 .sub-bar-col { flex: 1; max-width: 40px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
 .bar-top-value {
   font-size: 11.5px; font-weight: 800; color: var(--text); margin-bottom: 5px; padding: 2px 6px;
-  border-radius: 7px; background: var(--glass-pill); border: 1px solid var(--glass-border-subtle);
-  box-shadow: var(--glass-highlight); font-variant-numeric: tabular-nums; white-space: nowrap;
+  border-radius: 4px; background: var(--surface-2); font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .sub-type-label { font-size: 10px; font-weight: 750; color: var(--muted); margin-top: 4px; }
 .bar {
   position: relative; width: min(100%, 46px); height: var(--height); min-height: 8px;
-  border-radius: 11px 11px 4px 4px;
-  background: linear-gradient(180deg, rgba(167, 139, 250, 0.92), rgba(109, 40, 217, 0.72));
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 8px 20px rgba(109, 40, 217, 0.2);
-  transform-origin: bottom; animation: grow .85s cubic-bezier(.2, .7, .2, 1) both; animation-delay: var(--delay, 120ms);
+  border-radius: 4px 4px 0 0; background: var(--chart-purple);
+  transform-origin: bottom; animation: grow .6s ease-out both; animation-delay: var(--delay, 120ms);
 }
-.bar.po-bar { width: 100%; background: linear-gradient(180deg, rgba(94, 234, 212, 0.95), rgba(13, 148, 136, 0.78)); }
-.bar.pr-bar { width: 100%; background: linear-gradient(180deg, rgba(167, 139, 250, 0.95), rgba(109, 40, 217, 0.78)); }
-.bar.amber-bar { width: 100%; background: linear-gradient(180deg, rgba(251, 191, 36, 0.95), rgba(217, 119, 6, 0.78)); }
+.bar.po-bar { width: 100%; background: var(--chart-mint); }
+.bar.pr-bar { width: 100%; background: var(--chart-purple); }
+.bar.amber-bar { width: 100%; background: var(--chart-amber); }
 .month { padding-top: 9px; font-size: 12px; font-weight: 700; color: var(--text); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .donut {
   width: 170px; height: 170px; margin: 20px auto; border-radius: 50%; display: grid; place-items: center;
   background: conic-gradient(var(--chart-mint) 0 var(--p1, 75%), var(--chart-purple) var(--p1, 75%) var(--p2, 95%), var(--chart-neutral) var(--p2, 95%) 100%);
-  box-shadow: 0 10px 30px rgba(109, 40, 217, 0.16);
 }
 .donut.po-status-donut { background: conic-gradient(var(--chart-mint) 0 var(--p1, 75%), var(--chart-amber) var(--p1, 75%) 100%); }
 .donut-center {
-  width: 130px; height: 130px; border-radius: 50%; background: var(--donut-center);
-  backdrop-filter: blur(16px); border: 1px solid var(--glass-border); box-shadow: var(--glass-highlight);
+  width: 120px; height: 120px; border-radius: 50%; background: var(--donut-center);
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
 .donut-center strong { font-size: 28px; }
 .donut-center span { color: var(--muted); font-size: 11px; }
 .legend { display: grid; gap: 11px; }
 .legend-row { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
-.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 8px; }
 
 /* DROPZONE & INPUTS */
 .dropzone {
-  margin-top: 16px; border: 2px dashed var(--purple); border-radius: 22px; padding: 38px 24px;
-  text-align: center; background: var(--glass-pill); backdrop-filter: blur(20px);
-  box-shadow: var(--glass-highlight); cursor: pointer; transition: all .25s ease;
+  margin-top: 16px; border: 3px dashed var(--purple); border-radius: 12px; padding: 38px 24px;
+  text-align: center; background: var(--surface-2); cursor: pointer; transition: background-color .15s ease, border-color .15s ease;
 }
-.dropzone:hover, .dropzone.dragover { background: var(--active-bg); border-color: var(--mint); transform: translateY(-3px); }
+.dropzone:hover, .dropzone.dragover { background: var(--active-bg); border-color: var(--mint); }
 .dropzone-icon { font-size: 42px; margin-bottom: 10px; }
 .dropzone-title { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
 .dropzone-sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
 .sheet-mapper {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;
-  margin-top: 16px; padding: 16px; border-radius: 18px; background: var(--glass-pill); border: 1px solid var(--glass-border);
+  margin-top: 16px; padding: 16px; border-radius: 10px; background: var(--surface-2);
 }
 
 .search-bar { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
 .search-input, .select-input {
-  flex: 1; min-width: 210px; padding: 11px 15px; border-radius: 15px;
-  border: 1px solid var(--glass-border); background: var(--glass-input);
-  box-shadow: var(--glass-highlight); backdrop-filter: blur(16px); color: var(--text); font-size: 14px;
+  flex: 1; min-width: 210px; padding: 11px 15px; border-radius: 10px;
+  border: 2px solid var(--border); background: var(--surface); color: var(--text); font-size: 14px;
 }
-.search-input:focus, .select-input:focus { outline: 2px solid var(--purple); border-color: transparent; }
+.search-input:focus, .select-input:focus { outline: none; border-color: var(--purple); }
 
 /* MATERIAL GRID */
 .material-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 18px; margin-top: 16px; }
 .material-card {
-  background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 22px;
-  overflow: hidden; backdrop-filter: blur(24px) saturate(190%);
-  box-shadow: var(--glass-highlight), var(--glass-shadow); display: flex; flex-direction: column;
-  transition: transform .25s ease; animation: enter .45s ease both;
+  background: var(--surface); border: 2px solid var(--border); border-radius: 12px;
+  overflow: hidden; display: flex; flex-direction: column; transition: border-color .15s ease;
 }
-.material-card:hover { transform: translateY(-5px); background: var(--glass-panel-hover); }
+.material-card:hover { border-color: var(--purple); }
 .material-img-wrap {
-  height: 170px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.16), rgba(20, 184, 166, 0.16));
+  height: 170px; background: var(--surface-2);
   display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
-  border-bottom: 1px solid var(--glass-border-subtle);
+  border-bottom: 2px solid var(--border);
 }
-.material-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
-.material-card:hover .material-img-wrap img { transform: scale(1.05); }
+.material-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
 .material-plant-badge {
-  position: absolute; top: 12px; right: 12px; padding: 5px 12px; border-radius: 99px;
-  font-size: 11px; font-weight: 700; background: var(--glass-pill); color: var(--text);
-  border: 1px solid var(--glass-border); backdrop-filter: blur(14px);
+  position: absolute; top: 12px; right: 12px; padding: 4px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; background: var(--primary); color: var(--primary-text);
 }
 .material-body { padding: 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .material-code { font-size: 12px; font-weight: 750; color: var(--purple); }
 .material-title { font-size: 16px; font-weight: 750; line-height: 1.4; }
-.material-specs { margin-top: auto; padding-top: 12px; border-top: 1px dashed var(--line); display: grid; gap: 6px; font-size: 12.5px; color: var(--muted); }
+.material-specs { margin-top: auto; padding-top: 12px; border-top: 2px solid var(--line); display: grid; gap: 6px; font-size: 12.5px; color: var(--muted); }
 .material-specs strong { color: var(--text); }
 
 /* COMPANY CHIPS & TABLES */
 .company-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .company-chip {
-  padding: 7px 15px; border-radius: 99px; border: 1px solid var(--glass-border);
-  background: var(--glass-pill); box-shadow: var(--glass-highlight); color: var(--text);
-  font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all .2s ease;
+  padding: 7px 14px; border-radius: 8px; border: 2px solid var(--border);
+  background: var(--surface); color: var(--text);
+  font-size: 12.5px; font-weight: 600; cursor: pointer; transition: background-color .15s ease, border-color .15s ease;
 }
-.company-chip.active, .company-chip:hover { background: var(--active-bg); color: var(--active-text); border-color: var(--purple); }
+.company-chip:hover { background: var(--surface-2); }
+.company-chip.active { background: var(--active-bg); color: var(--active-text); border-color: var(--purple); }
 
 .table-card { margin-top: 18px; }
-.table-wrap { overflow-x: auto; margin-top: 14px; max-height: 430px; overflow-y: auto; border-radius: 16px; border: 1px solid var(--glass-border-subtle); }
+.table-wrap { overflow-x: auto; margin-top: 14px; max-height: 430px; overflow-y: auto; border-radius: 10px; border: 2px solid var(--border); }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-tbody tr:hover { background: var(--glass-pill); }
-th { color: var(--muted); font-weight: 700; position: sticky; top: 0; background: var(--table-head); backdrop-filter: blur(16px); z-index: 1; }
+tbody tr:hover { background: var(--surface-hover); }
+th { color: var(--muted); font-weight: 700; position: sticky; top: 0; background: var(--table-head); z-index: 1; border-bottom: 2px solid var(--border); }
 footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
 
-@keyframes enter { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
 @keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 
 @media (max-width: 1100px) {
@@ -369,31 +319,184 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
 }
 @media (max-width: 720px) {
   .app { grid-template-columns: 1fr; }
-  .sidebar { border-right: 0; border-bottom: 1px solid var(--glass-border); padding: 18px; }
+  .sidebar { border-right: 0; border-bottom: 2px solid var(--border); padding: 18px; }
   main { padding: 20px 15px; }
   .kpis { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ===== DIGITAL TWIN THEME (HUD) ===== */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #050a14; --surface: #0c1626; --surface-2: #101f36; --surface-hi: #14263f;
+  --border: #1c3556; --text: #e6f1ff; --muted: #7f9bbd; --line: #172b47;
+  --cyan: #22d3ee; --purple: #a78bfa; --mint: #34d399; --amber: #fbbf24; --red: #f87171;
+  --active-bg: rgba(34,211,238,.14); --active-text: #7ee7f7;
+  --notice-bg: rgba(52,211,153,.12); --notice-text: #6ee7b7;
+  --warn-bg: rgba(251,191,36,.12); --warn-text: #fde68a;
+  --grid-line: #12243d; --donut-center: #0c1626; --table-head: #0f1d33;
+  --chart-purple: #a78bfa; --chart-mint: #22d3ee; --chart-amber: #fbbf24; --chart-neutral: #24405f;
+}
+body { background: radial-gradient(ellipse at 50% -10%, #0e2442 0%, #050a14 60%); color: var(--text); }
+.ambient-bg { display: none; }
+.sidebar { background: #08111f; border-right: 1px solid var(--border); }
+.brand span { color: var(--cyan); }
+.nav-btn { border: 1px solid transparent; border-radius: 8px; }
+.nav-btn:hover { background: var(--surface-2); }
+.nav-btn.active { background: var(--active-bg); color: var(--active-text); border-color: var(--cyan); box-shadow: 0 0 14px rgba(34,211,238,.25); }
+.nav-sub { border-left: 1px solid var(--border); }
+.badge-sheet, .tag { background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); border-radius: 6px; box-shadow: none; }
+.sidebar-note { background: var(--surface); border: 1px solid var(--border); box-shadow: none; }
+.sidebar-note a { color: var(--cyan); }
+.eyebrow { color: var(--cyan); letter-spacing: 3px; }
+h1 { text-shadow: 0 0 18px rgba(34,211,238,.35); }
+.source-switcher, .plant-bar, .card, .material-card { background: linear-gradient(160deg, #0f1e34, #0a1424); border: 1px solid var(--border); box-shadow: 0 0 0 1px rgba(34,211,238,.04), 0 10px 30px rgba(0,0,0,.45); border-radius: 12px; }
+.card::before, .kpis .card::before { content: none; }
+.card:hover, .material-card:hover { transform: none; border-color: #2a5d8f; box-shadow: 0 0 18px rgba(34,211,238,.15); }
+.source-btn.active, .plant-pill.active, .btn.active-mode { background: linear-gradient(135deg, #0891b2, #6d28d9); color: #fff; border-color: transparent; box-shadow: 0 0 14px rgba(34,211,238,.35); transform: none; }
+.btn, .plant-pill, .company-chip { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); box-shadow: none; border-radius: 8px; }
+.btn:hover, .plant-pill:hover, .company-chip:hover { background: var(--surface-hi); border-color: var(--cyan); transform: none; }
+.company-chip.active { background: var(--active-bg); border-color: var(--cyan); color: var(--active-text); box-shadow: none; }
+.theme-track { background: var(--surface-2); box-shadow: none; border: 1px solid var(--border); }
+.notice { border: 1px solid var(--border); box-shadow: none; }
+.search-input, .select-input { background: var(--surface); border: 1px solid var(--border); box-shadow: none; color: var(--text); }
+.search-input:focus, .select-input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 10px rgba(34,211,238,.3); }
+.table-wrap, .chart, .sheet-mapper, .dropzone { background-color: var(--surface); box-shadow: none; border: 1px solid var(--border); }
+.dropzone { outline: 0; border: 2px dashed var(--cyan); }
+th { background: var(--table-head); box-shadow: none; border-bottom: 1px solid var(--border); }
+tbody tr:hover { background: var(--surface-2); }
+.bar-top-value { background: var(--surface-2); border: 1px solid var(--border); box-shadow: none; }
+.donut-center { box-shadow: none; border: 1px solid var(--border); }
+.material-img-wrap { box-shadow: none; border-bottom: 1px solid var(--border); }
+.material-plant-badge { background: var(--cyan); color: #04202a; box-shadow: none; }
+.material-card:hover { transform: none; }
+
+/* ===== TWIN SCENE ===== */
+.twin-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; }
+.twin-stage {
+  position: relative; height: 560px; overflow: hidden; border-radius: 14px; cursor: grab; touch-action: none;
+  background: radial-gradient(ellipse at 50% 70%, #0d2547 0%, #060d1b 70%); border: 1px solid var(--border);
+}
+.twin-stage:active { cursor: grabbing; }
+.twin-stage::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(34,211,238,.035) 0 1px, transparent 1px 4px); }
+.twin-hud { position: absolute; z-index: 5; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--cyan); pointer-events: none; }
+.twin-hud.tl { top: 14px; left: 16px; } .twin-hud.tr { top: 14px; right: 16px; text-align: right; color: var(--muted); }
+.twin-hud.bl { bottom: 14px; left: 16px; color: var(--muted); font-weight: 600; letter-spacing: .5px; }
+.live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--mint); margin-right: 6px; animation: pulse 1.6s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(52,211,153,.7); } 100% { box-shadow: 0 0 0 10px rgba(52,211,153,0); } }
+.twin-view { position: absolute; inset: 0; perspective: 1300px; perspective-origin: 50% 38%; }
+.twin-world { position: absolute; left: 50%; top: 56%; width: 0; height: 0; transform-style: preserve-3d; }
+.floor {
+  position: absolute; width: 900px; height: 520px; left: -450px; top: -260px; transform-style: preserve-3d;
+  background: #0a1830; border: 2px solid #1d4a7a; border-radius: 6px;
+  background-image: linear-gradient(rgba(34,211,238,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,.13) 1px, transparent 1px);
+  background-size: 40px 40px; box-shadow: 0 0 60px rgba(34,211,238,.18);
+}
+.aisle { position: absolute; background: rgba(251,191,36,.10); border: 1px dashed rgba(251,191,36,.35); }
+.aisle.a1 { left: 0; right: 0; top: 240px; height: 40px; }
+.zone { position: absolute; transform-style: preserve-3d; cursor: pointer; }
+.zone-pad { position: absolute; inset: 0; border: 2px solid var(--zc); background: color-mix(in srgb, var(--zc) 12%, transparent); border-radius: 4px; transition: background .25s, box-shadow .25s; }
+.zone.sel .zone-pad, .zone:hover .zone-pad { background: color-mix(in srgb, var(--zc) 28%, transparent); box-shadow: 0 0 26px var(--zc); }
+.zone.dim { opacity: .35; }
+.zone { transition: opacity .3s; }
+.cube { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
+.cube > i { position: absolute; display: block; backface-visibility: hidden; }
+.cube .f { background: color-mix(in srgb, var(--zc) 70%, #000); border: 1px solid color-mix(in srgb, var(--zc) 85%, #fff); }
+.cube .r { background: color-mix(in srgb, var(--zc) 45%, #000); border: 1px solid color-mix(in srgb, var(--zc) 60%, #000); }
+.cube .t { background: color-mix(in srgb, var(--zc) 92%, #fff); border: 1px solid #fff3; }
+.cube .l { background: color-mix(in srgb, var(--zc) 55%, #000); border: 1px solid color-mix(in srgb, var(--zc) 60%, #000); }
+.cube .b { background: color-mix(in srgb, var(--zc) 40%, #000); }
+.cube .k { background: color-mix(in srgb, var(--zc) 60%, #000); border: 1px solid color-mix(in srgb, var(--zc) 80%, #000); }
+.pending-cap { position: absolute; transform-style: preserve-3d; }
+.pending-cap i { position: absolute; display: block; background: rgba(251,191,36,.75); border: 1px solid #fde68a; }
+.zone-label {
+  position: absolute; left: 0; top: 0; transform-style: preserve-3d; pointer-events: none;
+}
+.zone-label span { position: absolute; left: 50%; top: 0; transform: translate(-50%, -100%); white-space: nowrap;
+  padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 800; color: #04101f; background: var(--zc); box-shadow: 0 0 14px var(--zc); }
+.zone-label small { position: absolute; left: 50%; top: 0; transform: translate(-50%, 8px); white-space: nowrap; font-size: 10px; font-weight: 700; color: var(--text); }
+.beacon { position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 14px var(--mint); animation: blink 1.4s infinite; }
+.beacon.warn { background: var(--amber); box-shadow: 0 0 14px var(--amber); }
+@keyframes blink { 50% { opacity: .25; } }
+.forklift { position: absolute; width: 26px; height: 16px; left: -13px; top: -8px; transform-style: preserve-3d; }
+.forklift i { position: absolute; display: block; inset: 0; background: var(--amber); border: 1px solid #fff6; }
+.forklift .up { transform: translateZ(8px); }
+.twin-ctrl { position: absolute; right: 14px; bottom: 14px; z-index: 6; display: flex; gap: 6px; }
+.twin-ctrl button { padding: 6px 11px; min-height: 0; font-size: 12px; }
+.twin-tip { position: absolute; z-index: 7; pointer-events: none; padding: 9px 12px; border-radius: 8px; font-size: 12px; line-height: 1.6;
+  background: rgba(6,13,27,.94); border: 1px solid var(--cyan); box-shadow: 0 0 18px rgba(34,211,238,.35); display: none; min-width: 170px; }
+.twin-tip b { color: var(--cyan); }
+.twin-side { display: flex; flex-direction: column; gap: 14px; }
+.stat-row { display: flex; justify-content: space-between; font-size: 13px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.stat-row:last-child { border: 0; }
+.meter { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; margin-top: 6px; }
+.meter > div { height: 100%; background: linear-gradient(90deg, #0891b2, #34d399); box-shadow: 0 0 10px rgba(52,211,153,.6); transition: width .5s; }
+.zone-list button { width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+.zone-list i { width: 10px; height: 10px; border-radius: 2px; background: var(--zc); box-shadow: 0 0 8px var(--zc); display: inline-block; margin-right: 8px; }
+@media (max-width: 1100px) { .twin-wrap { grid-template-columns: 1fr; } .twin-stage { height: 460px; } }
+
+/* extras */
+.kpis .card:nth-child(n) { border-top: 2px solid var(--cyan); }
+.kpis .card:nth-child(2) { border-top-color: var(--purple); }
+.kpis .card:nth-child(3) { border-top-color: var(--mint); }
+.kpis .card:nth-child(4) { border-top-color: #fb923c; }
+.pending-cap i { background: #fb923c; }
+.fk { position: absolute; left: 0; transform-style: preserve-3d; animation: fkmove linear infinite; }
+@keyframes fkmove { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(850px, 0, 0); } }
+.bar-top-value { color: var(--text); }
+
+
+/* ===== LIGHT THEME (ปุ่มสลับธีม) ===== */
+:root[data-theme="light"] { --cyan: #0891b2; --red: #dc2626; }
+:root[data-theme="light"] body { background: linear-gradient(160deg, #f3f6fb, #dde6f2); }
+:root[data-theme="light"] .sidebar { background: #ffffff; border-right: 1px solid var(--border); }
+:root[data-theme="light"] .source-switcher,
+:root[data-theme="light"] .plant-bar,
+:root[data-theme="light"] .card,
+:root[data-theme="light"] .material-card { background: #ffffff; border: 1px solid var(--border); box-shadow: 0 6px 18px rgba(30, 50, 90, .08); }
+:root[data-theme="light"] .card:hover,
+:root[data-theme="light"] .material-card:hover { border-color: var(--cyan); box-shadow: 0 8px 22px rgba(8, 145, 178, .18); }
+:root[data-theme="light"] h1 { text-shadow: none; }
+:root[data-theme="light"] .nav-btn.active,
+:root[data-theme="light"] .source-btn.active,
+:root[data-theme="light"] .plant-pill.active,
+:root[data-theme="light"] .btn.active-mode { box-shadow: none; }
+:root[data-theme="light"] .search-input:focus,
+:root[data-theme="light"] .select-input:focus { box-shadow: 0 0 0 3px rgba(8, 145, 178, .2); }
+:root[data-theme="light"] .sidebar-note,
+:root[data-theme="light"] .table-wrap,
+:root[data-theme="light"] .chart,
+:root[data-theme="light"] .sheet-mapper { background-color: var(--surface-2); }
+
+/* ฉากจำลองเป็นจอมืดเสมอ ไม่ว่าธีมหน้าเว็บจะเป็นแบบไหน */
+.twin-stage {
+  --cyan: #22d3ee; --mint: #34d399; --amber: #fbbf24; --purple: #a78bfa;
+  --text: #e6f1ff; --muted: #7f9bbd; --border: #1c3556; --line: #172b47;
+  --surface: #0c1626; --surface-2: #101f36; --surface-hi: #14263f;
+  color: var(--text);
+}
 </style>
 </head>
 
 <body>
-<div class="ambient-bg" aria-hidden="true">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
+
 
 <div class="app">
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="brand">PRPO<span>.</span></div>
+    <div class="brand">orbit<span>.</span></div>
 
     <div class="sidebar-label">เมนูหลัก</div>
     <nav class="nav-menu" aria-label="เมนูแดชบอร์ด">
-      <button class="nav-btn active" type="button" data-view="overview">
+      <button class="nav-btn active" type="button" data-view="twin">
+        <span>🏭 Digital Twin คลัง (3D)</span>
+        <span class="badge-sheet">LIVE</span>
+      </button>
+
+      <button class="nav-btn" type="button" data-view="overview">
         <span>📊 ภาพรวมคลัง (Overview)</span>
       </button>
 
@@ -436,9 +539,9 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
   <main>
     <header>
       <div>
-        <div class="eyebrow" id="pageEyebrow">WAREHOUSE INTELLIGENCE · GLASS UI</div>
-        <h1 id="pageTitle">ภาพรวมข้อมูลจัดซื้อจัดจ้าง</h1>
-        <p id="pageSub">เลือกคลังเพื่อดูสรุปข้อมูล หรือสลับที่มาของข้อมูลระหว่าง Google Sheets กับ Excel</p>
+        <div class="eyebrow" id="pageEyebrow">DIGITAL TWIN · WAREHOUSE 3D</div>
+        <h1 id="pageTitle">Digital Twin คลังพัสดุและเวชภัณฑ์</h1>
+        <p id="pageSub">แบบจำลองคลัง 3 มิติที่เชื่อมกับข้อมูล PO / PR จริง ลากเพื่อหมุน คลิกโซนเพื่อเลือกคลัง</p>
       </div>
 
       <div class="header-actions">
@@ -472,7 +575,58 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
     </div>
 
     <!-- VIEW 1: ภาพรวม (OVERVIEW) -->
-    <section id="view-overview" class="view-section active">
+    <!-- VIEW 0: DIGITAL TWIN -->
+    <section id="view-twin" class="view-section active">
+      <div class="twin-wrap">
+        <div class="twin-stage" id="twinStage">
+          <div class="twin-hud tl"><span class="live-dot"></span>LIVE TWIN · <span id="twinClock">--:--:--</span></div>
+          <div class="twin-hud tr" id="twinHudSrc">DATA SOURCE · --</div>
+          <div class="twin-hud bl">ลากเพื่อหมุน · ล้อเมาส์เพื่อซูม · คลิกโซนเพื่อเลือกคลัง</div>
+          <div class="twin-ctrl">
+            <button type="button" class="btn" id="twinAutoBtn">⟳ หมุนอัตโนมัติ</button>
+            <button type="button" class="btn" id="twinResetBtn">⌖ รีเซ็ตมุมมอง</button>
+          </div>
+          <div class="twin-view">
+            <div class="twin-world" id="twinWorld"><div class="floor" id="twinFloor"></div></div>
+          </div>
+          <div class="twin-tip" id="twinTip"></div>
+        </div>
+
+        <div class="twin-side">
+          <article class="card">
+            <div class="panel-head"><h2 id="twSelName">ทุกคลัง</h2><span class="tag" id="twSelTag">ALL ZONES</span></div>
+            <div style="margin-top:12px;">
+              <div class="stat-row"><span>รายการ PO</span><strong id="twSPo">0</strong></div>
+              <div class="stat-row"><span>รายการ PR</span><strong id="twSPr">0</strong></div>
+              <div class="stat-row"><span>PO ดำเนินการแล้ว</span><strong class="mint" id="twSDone">0</strong></div>
+              <div class="stat-row"><span>PO ค้างดำเนินการ</span><strong class="amber" id="twSPend">0</strong></div>
+              <div class="stat-row"><span>ผู้ขาย</span><strong id="twSVendor">0</strong></div>
+              <div class="stat-row"><span>มูลค่าสั่งซื้อ (บาท)</span><strong id="twSValue">0</strong></div>
+            </div>
+            <div class="meta" style="margin-top:12px;">ความคืบหน้าการจัดซื้อ <strong id="twSPct">0%</strong></div>
+            <div class="meter"><div id="twSMeter" style="width:0%"></div></div>
+          </article>
+          <article class="card">
+            <div class="panel-head"><h2>โซนคลัง</h2><span class="tag">คลิกเพื่อโฟกัส</span></div>
+            <div class="zone-list" id="twZoneList" style="margin-top:12px;"></div>
+            <div class="meta" style="line-height:1.9;margin-top:6px;">
+              ▮ ความสูงชั้นวาง = จำนวน PO<br>
+              <span style="color:#fb923c;">▮</span> ฝาสีส้ม = PO ที่ยังค้างดำเนินการ<br>
+              <span style="color:#c084fc;">▮</span> พาเลทหน้าโซน = PR ที่รอเข้าคลัง
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="kpis" style="margin-top: 18px;">
+        <article class="card"><div class="label">รายการ PO (ตามคลังที่เลือก)</div><div class="value" id="twTotalPO" data-count="0">0</div><div class="meta" id="twKpiMeta">ทุกคลังรวมกัน</div></article>
+        <article class="card"><div class="label">รายการ PR (ตามคลังที่เลือก)</div><div class="value purple" id="twTotalPR" data-count="0">0</div><div class="meta">พาเลทขาเข้าที่หน้าโซน</div></article>
+        <article class="card"><div class="label">PO ที่ดำเนินการแล้ว</div><div class="value mint" id="twDonePO" data-count="0">0</div><div class="meta">ไฟสีเขียวในฉากจำลอง</div></article>
+        <article class="card"><div class="label">PO ที่ค้างดำเนินการ</div><div class="value amber" id="twPendPO" data-count="0">0</div><div class="meta">ฝาสีส้มบนชั้นวาง</div></article>
+      </div>
+    </section>
+
+    <section id="view-overview" class="view-section">
       <div class="kpis">
         <article class="card">
           <div class="label">รายการ PO ทั้งหมด (ตามคลังที่เลือก)</div>
@@ -853,12 +1007,12 @@ const PR_TABLE_ORDER = [
   { label: "รหัสวัสดุ",     match: [/^รหัสวัสดุ$/i, /รหัสวัสดุ/i, /รหัสสินค้า/i, /material/i, /^รหัส$/i, /code/i] },
   { label: "วัสดุ",         match: [/^วัสดุ$/i, /^ชื่อวัสดุ$/i, /รายการขอซื้อ/i, /ชื่อวัสดุ/i, /รายการวัสดุ/i, /วัสดุ/i, /short.*text/i, /description/i, /รายการ/i] },
   { label: "จำนวน",        match: [/^จำนวน$/i, /จำนวนสั่ง/i, /จำนวนขอซื้อ/i, /จำนวน/i, /^qty$/i, /quantity/i] },
-  { label: "หน่วยนับ",      match: [/^หน่วยนับ$/i, /หน่วยนับ/i, /^หน่วย$/i, /unit/i, /uom/i] },
+  { label: "หน่วยนับ",      match: [/^หน่วยนับ$/i, /หน่วยนับ/i, /^หน่วย$/i, /unit/i, /uom/i, /^ราคาเต็ม$/i] },
   { label: "ราคาต่อหน่วย",  match: [/^ราคาต่อหน่วย$/i, /ราคาต่อหน่วย/i, /ราคา\/หน่วย/i, /unit\s*price/i, /ราคา/i] }
 ];
 
 let STATE = {
-  activeView: "overview",
+  activeView: "twin",
   dataSource: "google",
   selectedPlant: "ALL",
   selectedCompany: "ALL",
@@ -971,8 +1125,8 @@ function detectSheetColumns(headers, rows) {
     plantCol = headers.find(h => rows.some(r => /^(2000|2100|2200|2400|2500)$/.test(normalizePlantCode(r[h])))) || headers[0] || "";
   }
 
-  const matCodeCol = findCol([/^รหัสวัสดุ$/i, /รหัสวัสดุ/i, /material/i, /mat.*code/i, /item.*code/i, /รหัสสินค้า/i, /^รหัส$/i, /code/i]) || headers[1] || headers[0] || "";
-  const matNameCol = findCol([/^วัสดุ$/i, /^ชื่อวัสดุ$/i, /ชื่อวัสดุ/i, /รายการวัสดุ/i, /รายการขอซื้อ/i, /วัสดุ/i, /short.*text/i, /description/i, /ชื่อสินค้า/i, /รายละเอียด/i, /รายการ/i, /name/i]) || headers[2] || matCodeCol;
+  const matCodeCol = findCol([/^รหัสวัสดุ$/i, /รหัสวัสดุ/i, /^รหัสยา$/i, /รหัสยา/i, /material/i, /mat.*code/i, /item.*code/i, /รหัสสินค้า/i, /^รหัส$/i, /code/i]) || headers[1] || headers[0] || "";
+  const matNameCol = findCol([/^วัสดุ$/i, /^ชื่อวัสดุ$/i, /^ชื่อยา$/i, /ชื่อวัสดุ/i, /ชื่อยา/i, /รายการวัสดุ/i, /รายการขอซื้อ/i, /วัสดุ/i, /short.*text/i, /description/i, /ชื่อสินค้า/i, /รายละเอียด/i, /รายการ/i, /name/i]) || headers[2] || matCodeCol;
   const companyCol = findCol([/ผู้ขาย/i, /ชื่อผู้ขาย/i, /บริษัท/i, /คู่ค้า/i, /ร้านค้า/i, /vendor/i, /supplier/i, /company/i]) || "";
   const imageCol = findCol([/image/i, /img/i, /photo/i, /pic/i, /รูป/i, /ภาพ/i, /ลิงก์รูป/i, /url/i]) || "";
   const poNoCol = findCol([/^po$/i, /^เลขที่\s*po$/i, /เลข\s*po/i, /po\s*no/i, /po\s*number/i, /purchasing\s*doc/i, /ใบสั่งซื้อ/i]) || "";
@@ -1062,6 +1216,15 @@ function buildDatasetFrom2DArray(raw2D) {
   return { headers, rows, cols: detectSheetColumns(headers, rows) };
 }
 
+// ตัดแถว PR ที่ถูกทำเครื่องหมาย "ลบ PR" = TRUE ในชีต
+function dropDeletedPR(ds) {
+  if (!ds || !ds.headers) return ds;
+  const h = ds.headers.find(x => /ลบ\s*pr/i.test(String(x)));
+  if (!h) return ds;
+  const rows = ds.rows.filter(r => !/^(true|1|ใช่|ลบ)$/i.test(String(r[h] ?? "").trim()));
+  return { ...ds, rows, removed: ds.rows.length - rows.length };
+}
+
 function fetchSheetByParam(queryParam) {
   return new Promise((resolve, reject) => {
     const callbackName = "gvizCb_" + Math.random().toString(36).slice(2);
@@ -1137,7 +1300,7 @@ function extractExcelSheetsData() {
   const pr2D = prWs ? XLSX.utils.sheet_to_json(prWs, { header: 1, raw: false, defval: "" }) : [];
 
   STATE.excelStore.po = buildDatasetFrom2DArray(po2D);
-  STATE.excelStore.pr = pr2D.length ? buildDatasetFrom2DArray(pr2D) : STATE.excelStore.po;
+  STATE.excelStore.pr = pr2D.length ? dropDeletedPR(buildDatasetFrom2DArray(pr2D)) : STATE.excelStore.po;
 }
 
 function populateExcelSheetSelectors() {
@@ -1179,12 +1342,12 @@ function switchDataSource(targetSource) {
 
     if (STATE.googleStore.isDemo) {
       banner.className = "notice warn";
-      banner.innerHTML = `<span>⚠️ <strong>ที่มาของข้อมูล: Google Sheets (โหมดข้อมูลจำลอง)</strong> — PO: ${STATE.po.rows.length.toLocaleString("th-TH")} แถว · PR: ${STATE.pr.rows.length.toLocaleString("th-TH")} แถว</span>`;
+      banner.innerHTML = `<span>⚠️ <strong>ที่มาของข้อมูล: Google Sheets (โหมดข้อมูลจำลอง)</strong> — PO: ${STATE.po.rows.length.toLocaleString("th-TH")} แถว · PR: ${STATE.pr.rows.length.toLocaleString("th-TH")} แถว${STATE.googleStore.errorMsg ? "<br><small>เชื่อมต่อไม่สำเร็จ → " + STATE.googleStore.errorMsg + "<br>ถ้าเปิดไฟล์ในหน้าพรีวิว ให้ดาวน์โหลดไฟล์แล้วเปิดด้วยเบราว์เซอร์โดยตรง (Chrome/Edge)</small>" : ""}</span>`;
     } else {
       banner.className = "notice";
       banner.innerHTML = `
         <span>☁️ <strong>ที่มาของข้อมูล: Google Sheets</strong> — PO: ${STATE.po.rows.length.toLocaleString("th-TH")} แถว · PR: ${STATE.pr.rows.length.toLocaleString("th-TH")} แถว</span>
-        <span>โหมด: Google Sheets</span>
+        <span>โหมด: Google Sheets${STATE.googleStore.via ? " · ช่องทาง: " + STATE.googleStore.via : ""}</span>
       `;
     }
   }
@@ -1730,9 +1893,212 @@ function renderImportExcelView() {
 }
 
 // =========================================================
+// DIGITAL TWIN — ฉากคลัง 3 มิติ (CSS 3D) ผูกกับข้อมูล PO / PR
+// =========================================================
+const TWIN_ZONES = {
+  "2000": { x: 30,  y: 30,  w: 260, h: 190, c: "#22d3ee" },
+  "2100": { x: 320, y: 30,  w: 260, h: 190, c: "#a78bfa" },
+  "2200": { x: 610, y: 30,  w: 260, h: 190, c: "#34d399" },
+  "2400": { x: 30,  y: 300, w: 400, h: 190, c: "#60a5fa" },
+  "2500": { x: 470, y: 300, w: 400, h: 190, c: "#f472b6" }
+};
+const TWIN_DEFAULT = { yaw: -32, tilt: 58, zoom: 1 };
+const twin = { ...TWIN_DEFAULT, auto: false, raf: 0, drag: null, moved: false, bound: false, stats: {} };
+
+function twCube(w, d, h, x, y, z, zc) {
+  const v = zc ? `--zc:${zc};` : "";
+  return `<div class="cube" style="${v}transform:translate3d(${x}px,${y}px,${z}px)">
+    <i class="t" style="width:${w}px;height:${d}px;transform:translateZ(${h}px)"></i>
+    <i class="f" style="left:0;top:${d - h}px;width:${w}px;height:${h}px;transform-origin:bottom;transform:rotateX(-90deg)"></i>
+    <i class="k" style="left:0;top:0;width:${w}px;height:${h}px;transform-origin:top;transform:rotateX(90deg)"></i>
+    <i class="r" style="left:${w - h}px;top:0;width:${h}px;height:${d}px;transform-origin:right;transform:rotateY(90deg)"></i>
+    <i class="l" style="left:0;top:0;width:${h}px;height:${d}px;transform-origin:left;transform:rotateY(-90deg)"></i>
+  </div>`;
+}
+
+function twCompute() {
+  const out = {};
+  PLANT_ORDER.forEach(code => {
+    const po = filterRowsByPlant(STATE.po, code);
+    const pr = filterRowsByPlant(STATE.pr, code);
+    const done = po.filter(r => classifyPurchaseStatus(r, STATE.po.cols) === "done").length;
+    const fp = STATE.po.cols && STATE.po.cols.fullPriceCol;
+    const value = fp ? po.reduce((s, r) => s + parseNumber(r[fp]), 0) : 0;
+    const cc = STATE.po.cols && STATE.po.cols.companyCol;
+    const vendors = cc ? new Set(po.map(r => cleanVendorName(r[cc])).filter(v => v !== "ไม่ระบุผู้ขาย")).size : 0;
+    out[code] = { po: po.length, pr: pr.length, done, pending: po.length - done, value, vendors };
+  });
+  return out;
+}
+
+function twApply() {
+  const stage = document.getElementById("twinStage");
+  const world = document.getElementById("twinWorld");
+  if (!stage || !world) return;
+  stage.style.setProperty("--yaw", twin.yaw + "deg");
+  stage.style.setProperty("--tilt", twin.tilt + "deg");
+  world.style.transform = `scale(${twin.zoom}) rotateX(${twin.tilt}deg) rotateZ(${twin.yaw}deg)`;
+}
+
+function twBuildFloor(stats) {
+  const maxPo = Math.max(1, ...PLANT_ORDER.map(c => stats[c].po));
+  const maxPr = Math.max(1, ...PLANT_ORDER.map(c => stats[c].pr));
+  let html = `<div class="aisle a1"></div>`;
+
+  PLANT_ORDER.forEach(code => {
+    const z = TWIN_ZONES[code]; const s = stats[code];
+    const cols = Math.max(1, Math.floor((z.w - 24) / 50));
+    const rows = Math.max(1, Math.floor((z.h - 24 - 34) / 50));
+    const cells = cols * rows;
+    const racks = s.po ? Math.min(cells, Math.max(2, Math.round((s.po / maxPo) * cells))) : 0;
+    const pendRacks = s.po ? Math.round(racks * (s.pending / s.po)) : 0;
+    const cls = STATE.selectedPlant === "ALL" ? "" : (STATE.selectedPlant === code ? "sel" : "dim");
+
+    let cubes = "", maxH = 20;
+    for (let i = 0; i < racks; i++) {
+      const cx = 14 + (i % cols) * 50;
+      const cy = 14 + Math.floor(i / cols) * 50;
+      const h = Math.round(26 + 74 * (s.po / maxPo) * (0.6 + 0.4 * ((i * 7) % 5) / 4));
+      cubes += twCube(36, 36, h, cx, cy, 0);
+      if (i >= racks - pendRacks) cubes += twCube(36, 36, 7, cx, cy, h, "#fb923c");
+      maxH = Math.max(maxH, h + 7);
+    }
+    const pallets = s.pr ? Math.min(cols, Math.max(1, Math.round((s.pr / maxPr) * cols))) : 0;
+    for (let p = 0; p < pallets; p++) cubes += twCube(26, 18, 12, 18 + p * 50, z.h - 34, 0, "#c084fc");
+
+    const warn = s.po && s.pending / s.po >= 0.5;
+    html += `<div class="zone ${cls}" data-plant="${code}" style="--zc:${z.c};left:${z.x}px;top:${z.y}px;width:${z.w}px;height:${z.h}px;">
+      <div class="zone-pad"></div>${cubes}
+      <div class="zone-label" style="transform:translate3d(${z.w / 2}px,${z.h / 2}px,${maxH + 26}px) rotateZ(calc(var(--yaw) * -1)) rotateX(calc(var(--tilt) * -1))">
+        <span>${PLANT_NAMES[code]}</span><small><i class="beacon ${warn ? "warn" : ""}" style="position:static;display:inline-block;margin:0 5px 0 0;width:8px;height:8px;"></i>${s.po.toLocaleString("th-TH")} PO · ${s.pr.toLocaleString("th-TH")} PR</small>
+      </div></div>`;
+  });
+
+  const totalPo = PLANT_ORDER.reduce((a, c) => a + stats[c].po, 0);
+  const totalPend = PLANT_ORDER.reduce((a, c) => a + stats[c].pending, 0);
+  const fk = Math.min(4, Math.max(1, Math.ceil((totalPo ? totalPend / totalPo : 0) * 4)));
+  for (let i = 0; i < fk; i++) {
+    html += `<div class="fk" style="top:${252 + (i % 2) * 14}px;animation-duration:${16 + i * 3}s;animation-delay:-${i * 5}s">
+      ${twCube(26, 12, 9, 0, 0, 0, "#fb923c")}${twCube(9, 12, 20, 0, 0, 0, "#fde68a")}</div>`;
+  }
+  document.getElementById("twinFloor").innerHTML = html;
+}
+
+function twBindOnce() {
+  if (twin.bound) return;
+  twin.bound = true;
+  const stage = document.getElementById("twinStage");
+  const tip = document.getElementById("twinTip");
+
+  stage.addEventListener("pointerdown", e => {
+    if (e.target.closest(".twin-ctrl")) return;
+    twin.drag = { x: e.clientX, y: e.clientY, yaw: twin.yaw, tilt: twin.tilt };
+    twin.moved = false;
+  });
+  window.addEventListener("pointermove", e => {
+    if (!twin.drag) return;
+    const dx = e.clientX - twin.drag.x, dy = e.clientY - twin.drag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 5) twin.moved = true;
+    twin.yaw = twin.drag.yaw + dx * 0.4;
+    twin.tilt = Math.min(80, Math.max(25, twin.drag.tilt - dy * 0.3));
+    twApply();
+  });
+  window.addEventListener("pointerup", () => { twin.drag = null; });
+
+  stage.addEventListener("wheel", e => {
+    e.preventDefault();
+    twin.zoom = Math.min(1.8, Math.max(0.55, twin.zoom - e.deltaY * 0.001));
+    twApply();
+  }, { passive: false });
+
+  stage.addEventListener("click", e => {
+    if (twin.moved) { twin.moved = false; return; }
+    const z = e.target.closest(".zone");
+    if (!z) return;
+    STATE.selectedPlant = STATE.selectedPlant === z.dataset.plant ? "ALL" : z.dataset.plant;
+    renderAllActiveViews();
+  });
+
+  stage.addEventListener("mousemove", e => {
+    const z = e.target.closest(".zone");
+    if (!z || twin.drag) { tip.style.display = "none"; return; }
+    const s = twin.stats[z.dataset.plant]; if (!s) return;
+    const pct = s.po ? Math.round((s.done / s.po) * 100) : 0;
+    const r = stage.getBoundingClientRect();
+    tip.innerHTML = `<b>${PLANT_NAMES[z.dataset.plant]}</b> (${z.dataset.plant})<br>PO ${s.po.toLocaleString("th-TH")} · PR ${s.pr.toLocaleString("th-TH")}<br>ดำเนินการแล้ว ${s.done.toLocaleString("th-TH")} (${pct}%)<br>ค้าง ${s.pending.toLocaleString("th-TH")}`;
+    tip.style.display = "block";
+    tip.style.left = Math.min(e.clientX - r.left + 16, r.width - 200) + "px";
+    tip.style.top = Math.min(e.clientY - r.top + 16, r.height - 110) + "px";
+  });
+  stage.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+
+  document.getElementById("twinAutoBtn").addEventListener("click", e => {
+    twin.auto = !twin.auto;
+    e.currentTarget.classList.toggle("active-mode", twin.auto);
+    cancelAnimationFrame(twin.raf);
+    if (twin.auto) {
+      const loop = () => { if (!twin.auto) return; if (!twin.drag) { twin.yaw += 0.15; twApply(); } twin.raf = requestAnimationFrame(loop); };
+      loop();
+    }
+  });
+  document.getElementById("twinResetBtn").addEventListener("click", () => {
+    Object.assign(twin, TWIN_DEFAULT); twApply();
+  });
+
+  setInterval(() => {
+    const el = document.getElementById("twinClock");
+    if (el) el.textContent = new Date().toLocaleTimeString("th-TH");
+  }, 1000);
+}
+
+function renderTwinView() {
+  twBindOnce();
+  const stats = twCompute();
+  twin.stats = stats;
+  twBuildFloor(stats);
+  twApply();
+
+  const sel = STATE.selectedPlant;
+  const codes = sel === "ALL" ? PLANT_ORDER : [sel];
+  const agg = codes.reduce((a, c) => {
+    const s = stats[c] || { po: 0, pr: 0, done: 0, pending: 0, value: 0, vendors: 0 };
+    return { po: a.po + s.po, pr: a.pr + s.pr, done: a.done + s.done, pending: a.pending + s.pending, value: a.value + s.value, vendors: a.vendors + s.vendors };
+  }, { po: 0, pr: 0, done: 0, pending: 0, value: 0, vendors: 0 });
+  const fmt = n => Number(n).toLocaleString("th-TH");
+  const pct = agg.po ? Math.round((agg.done / agg.po) * 100) : 0;
+
+  document.getElementById("twSelName").textContent = sel === "ALL" ? "ทุกคลัง" : PLANT_NAMES[sel];
+  document.getElementById("twSelTag").textContent = sel === "ALL" ? "ALL ZONES" : `ZONE ${sel}`;
+  document.getElementById("twSPo").textContent = fmt(agg.po);
+  document.getElementById("twSPr").textContent = fmt(agg.pr);
+  document.getElementById("twSDone").textContent = fmt(agg.done);
+  document.getElementById("twSPend").textContent = fmt(agg.pending);
+  document.getElementById("twSVendor").textContent = fmt(agg.vendors);
+  document.getElementById("twSValue").textContent = fmt(Math.round(agg.value));
+  document.getElementById("twSPct").textContent = pct + "%";
+  document.getElementById("twSMeter").style.width = pct + "%";
+
+  document.getElementById("twTotalPO").dataset.count = agg.po;
+  document.getElementById("twTotalPR").dataset.count = agg.pr;
+  document.getElementById("twDonePO").dataset.count = agg.done;
+  document.getElementById("twPendPO").dataset.count = agg.pending;
+  document.getElementById("twKpiMeta").textContent = sel === "ALL" ? "ทุกคลังรวมกัน" : `เฉพาะคลัง: ${PLANT_NAMES[sel]}`;
+  document.getElementById("twinHudSrc").textContent = "DATA SOURCE · " + (STATE.dataSource === "excel" ? "EXCEL FILE" : (STATE.googleStore.isDemo ? "GOOGLE SHEETS (DEMO)" : "GOOGLE SHEETS"));
+
+  const list = document.getElementById("twZoneList");
+  list.innerHTML = PLANT_ORDER.map(c => `<button type="button" class="btn ${sel === c ? "active-mode" : ""}" data-plant="${c}" style="--zc:${TWIN_ZONES[c].c}">
+    <span><i></i>${PLANT_NAMES[c]}</span><span>${fmt(stats[c].po)} PO</span></button>`).join("");
+  list.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    STATE.selectedPlant = STATE.selectedPlant === b.dataset.plant ? "ALL" : b.dataset.plant;
+    renderAllActiveViews();
+  }));
+}
+
+// =========================================================
 // 7. การนำทาง (Navigation) และ Event Listeners
 // =========================================================
 const VIEW_META = {
+  "twin": { eyebrow: "DIGITAL TWIN · WAREHOUSE 3D", title: "Digital Twin คลังพัสดุและเวชภัณฑ์", sub: "แบบจำลองคลัง 3 มิติที่เชื่อมกับข้อมูล PO / PR จริง ลากเพื่อหมุน คลิกโซนเพื่อเลือกคลัง" },
   "overview": { eyebrow: "WAREHOUSE INTELLIGENCE · GLASS UI", title: "ภาพรวมข้อมูลคลังพัสดุและเวชภัณฑ์", sub: "เลือกคลัง (พัสดุ, คลังยา, คลังเวชภัณฑ์, คลังแลป, คลังห้องผ่าตัด) เพื่อดูสรุปข้อมูล" },
   "pr": { eyebrow: "PURCHASE REQUISITION (ชีต PR)", title: "รายการขอซื้อ (PR) แยกตามคลัง", sub: "แสดงข้อมูลทั้งหมดจากชีต PR คำนวณผลรวมจากช่อง ราคารวมใน PR และเรียงคอลัมน์ตารางตามกำหนด" },
   "po-overview": { eyebrow: "PURCHASE ORDER OVERVIEW (ชีต 1)", title: "ภาพรวมรายการใบสั่งซื้อ (PO)", sub: "สรุปจำนวนรายการ PO สถานะการจัดซื้อ มูลค่าสั่งซื้อรวม และตารางข้อมูล PO ทั้งหมดแยกตามคลัง" },
@@ -1743,6 +2109,7 @@ const VIEW_META = {
 
 function renderAllActiveViews() {
   renderPlantFilterBar();
+  if (STATE.activeView === "twin") renderTwinView();
   if (STATE.activeView === "overview") renderOverviewView();
   if (STATE.activeView === "pr") renderPRView();
   if (STATE.activeView === "po-overview") renderPOOverviewView();
@@ -1843,32 +2210,98 @@ function getDemoDataset() {
   };
 }
 
+// ---------------------------------------------------------
+// ตั้งค่าการดึงข้อมูลจาก Google Sheets (ปรับได้ทุกช่อง ไม่บังคับ)
+// ---------------------------------------------------------
+const SHEET_CONFIG = {
+  po: { gid: "0",          name: "ชีต1", csvUrl: "" }, // csvUrl = ลิงก์ CSV จาก ไฟล์ > แชร์ > เผยแพร่ไปยังเว็บ
+  pr: { gid: "1680340293", name: "PR",   csvUrl: "" },
+  apiKey: ""   // Google Sheets API key (ถ้ามี) จะถูกใช้เป็นช่องทางสำรอง
+};
+
+function parseCSV(text) {
+  const rows = []; let row = [], cell = "", inQ = false;
+  text = String(text || "").replace(/^\uFEFF/, "");
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQ) {
+      if (ch === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else inQ = false; }
+      else cell += ch;
+    } else if (ch === '"') inQ = true;
+    else if (ch === ",") { row.push(cell); cell = ""; }
+    else if (ch === "\n") { row.push(cell); rows.push(row); row = []; cell = ""; }
+    else if (ch !== "\r") cell += ch;
+  }
+  if (cell !== "" || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+async function fetchText(url) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 9000);
+  let res;
+  try { res = await fetch(url, { signal: ctrl.signal, credentials: "omit" }); }
+  catch (e) { throw new Error(e && e.name === "AbortError" ? "หมดเวลา" : "ถูกบล็อก/ออกเน็ตไม่ได้ (CORS, CSP หรือออฟไลน์)"); }
+  finally { clearTimeout(timer); }
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const text = await res.text();
+  if (/^\s*</.test(text)) throw new Error("ได้หน้า HTML แทนข้อมูล (ชีตอาจไม่ได้แชร์สาธารณะ)");
+  return text;
+}
+
+// ลองดึงทีละช่องทาง จนกว่าจะได้ข้อมูล แล้วรายงานสาเหตุของทุกช่องทางที่พลาด
+async function loadSheetDataset(spec) {
+  const errors = [];
+  const attempts = [];
+  if (spec.csvUrl) attempts.push(["CSV เผยแพร่", async () => buildDatasetFrom2DArray(parseCSV(await fetchText(spec.csvUrl)))]);
+  if (SHEET_CONFIG.apiKey) attempts.push(["Sheets API", async () => {
+    const u = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(spec.name)}?key=${SHEET_CONFIG.apiKey}`;
+    return buildDatasetFrom2DArray(JSON.parse(await fetchText(u)).values || []);
+  }]);
+  attempts.push(["gviz-script", async () => parseGvizTable(await fetchSheetByParam("gid=" + spec.gid))]);
+  attempts.push(["gviz-script(ชื่อชีต)", async () => parseGvizTable(await fetchSheetByParam("sheet=" + encodeURIComponent(spec.name)))]);
+  attempts.push(["gviz-csv", async () => buildDatasetFrom2DArray(parseCSV(await fetchText(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${spec.gid}`)))]);
+  attempts.push(["export-csv", async () => buildDatasetFrom2DArray(parseCSV(await fetchText(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${spec.gid}`)))]);
+
+  for (const [label, fn] of attempts) {
+    try {
+      const ds = await fn();
+      if (ds && ds.rows && ds.rows.length) return { ds, via: label };
+      errors.push(`${label}: ไม่พบแถวข้อมูล`);
+    } catch (e) {
+      errors.push(`${label}: ${(e && e.message) || e}`);
+    }
+  }
+  throw new Error(errors.join(" | "));
+}
+
 async function loadAllSheets() {
   const banner = document.getElementById("statusBanner");
   banner.className = "notice";
   banner.innerHTML = `<span>กำลังดึงข้อมูลจาก Google Sheets (ชีต 1 สำหรับ PO และ ชีต PR)...</span>`;
 
   try {
-    let poTable;
-    try { poTable = await fetchSheetByParam("gid=0"); }
-    catch { poTable = await fetchSheetByParam("sheet=" + encodeURIComponent("1")); }
-    const poData = parseGvizTable(poTable);
+    const poRes = await loadSheetDataset(SHEET_CONFIG.po);
+    const poData = poRes.ds;
 
     let prData;
     try {
-      const prTable = await fetchSheetByParam("sheet=" + encodeURIComponent("PR"));
-      prData = parseGvizTable(prTable);
+      const prRes = await loadSheetDataset(SHEET_CONFIG.pr);
+      prData = dropDeletedPR(prRes.ds);
     } catch {
       prData = poData;
     }
+    STATE.googleStore.via = poRes.via;
 
     STATE.googleStore.po = poData;
     STATE.googleStore.pr = prData;
     STATE.googleStore.loaded = true;
     STATE.googleStore.isDemo = false;
+    STATE.googleStore.errorMsg = "";
 
     if (STATE.dataSource === "google") switchDataSource("google");
   } catch (err) {
+    STATE.googleStore.errorMsg = (err && err.message) ? err.message : "ไม่ทราบสาเหตุ";
     const demo = getDemoDataset();
     STATE.googleStore.po = demo.po;
     STATE.googleStore.pr = demo.pr;
