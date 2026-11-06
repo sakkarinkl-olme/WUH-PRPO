@@ -529,6 +529,77 @@ mark { background: rgba(251, 191, 36, .45); color: inherit; border-radius: 3px; 
 .chart.dense .pair-bars { gap: 3px; }
 .chart.dense .bar-top-value { font-size: 10px; padding: 1px 4px; margin-bottom: 6px; }
 .chart.dense .month { font-size: 10.5px; }
+
+/* การ์ดสถานะ PO ที่กดแล้วกรองตารางด้านล่าง */
+.kpi-click { cursor: pointer; user-select: none; transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
+.kpi-click:hover { border-color: var(--cyan); transform: translateY(-2px); }
+.kpi-click:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.kpi-click.active { border-color: var(--cyan); box-shadow: 0 0 0 2px var(--cyan), 0 8px 22px rgba(34, 211, 238, .18); }
+
+/* การ์ดสรุป PO: สูงเท่ากัน ป้ายชื่อชิดบน ตัวเลขชิดล่างแนวเดียวกัน (ไม่ขึ้นกับว่าป้ายชื่อขึ้นกี่บรรทัด) */
+.po-kpis { align-items: stretch; }
+.po-kpis .card { display: flex; flex-direction: column; justify-content: space-between; min-height: 118px; }
+.po-kpis .label { line-height: 1.45; }
+.po-kpis .value { margin: 14px 0 0; line-height: 1.1; }
+
+/* ช่องค้นหารหัสวัสดุแบบพิมพ์ได้/เลือกได้ */
+.combo { position: relative; flex: 1; min-width: 260px; }
+.combo .search-input { width: 100%; flex: none; padding-right: 76px; }
+.combo-toggle, .combo-clear { position: absolute; top: 50%; transform: translateY(-50%); border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 14px; width: 30px; height: 30px; border-radius: 8px; }
+.combo-toggle { right: 6px; }
+.combo-clear { right: 38px; }
+.combo-toggle:hover, .combo-clear:hover { background: var(--surface-2); color: var(--text); }
+.combo-list { position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 6px); max-height: 340px; overflow-y: auto; background: var(--surface); border: 1px solid var(--cyan); border-radius: 12px; box-shadow: 0 14px 34px rgba(0, 0, 0, .3); padding: 6px; }
+.combo-list[hidden] { display: none; }
+.combo-opt { display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+.combo-opt:hover, .combo-opt.active { background: var(--active-bg); }
+.combo-opt.picked { box-shadow: inset 3px 0 0 var(--cyan); }
+.co-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 800; color: var(--cyan); font-size: 12.5px; }
+.co-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.co-meta { color: var(--muted); font-size: 11.5px; white-space: nowrap; }
+.combo-foot { padding: 8px 10px; color: var(--muted); font-size: 12px; }
+@media (max-width: 720px) { .combo-opt { grid-template-columns: 90px minmax(0, 1fr); } .co-meta { display: none; } }
+
+/* ===== ฉากโรงพยาบาล ===== */
+.floor {
+  background-color: #17423f;
+  background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 30px 30px; border: 2px solid #2d7a86; box-shadow: 0 0 60px rgba(34,211,238,.14);
+}
+.aisle.a1 { background-color: #243242; border: 0; border-top: 2px solid #3d5168; border-bottom: 2px solid #3d5168;
+  background-image: repeating-linear-gradient(to right, #e8eef5 0 22px, transparent 22px 44px); background-size: 100% 3px; background-repeat: no-repeat; background-position: 0 50%; }
+.zone-pad { background: color-mix(in srgb, var(--zc) 16%, #1f5a52); }
+.zone.sel .zone-pad, .zone:hover .zone-pad { background: color-mix(in srgb, var(--zc) 32%, #1f5a52); box-shadow: 0 0 26px var(--zc); }
+
+/* ผนังสีขาวของอาคาร */
+.cube.wall .t { background: #f6fbff; border: 1px solid #ffffff55; }
+.cube.wall .f { --wall: #e6eef6; background-color: var(--wall); }
+.cube.wall .k { --wall: #cfdbe8; background-color: var(--wall); }
+.cube.wall .r { --wall: #c4d2e0; background-color: var(--wall); }
+.cube.wall .l { --wall: #d6e1ec; background-color: var(--wall); }
+.cube.wall .f, .cube.wall .k, .cube.wall .r, .cube.wall .l { border: 1px solid rgba(120, 140, 165, .35); }
+/* หน้าต่าง: ฟ้า = PO ที่ดำเนินการแล้ว, ส้ม = ยังค้าง */
+.cube.win .f, .cube.win .k, .cube.win .r, .cube.win .l {
+  background-image:
+    repeating-linear-gradient(to right, transparent 0 13px, var(--wall) 13px 17px),
+    repeating-linear-gradient(to bottom, var(--wall) 0 3px, var(--glass) 3px 8px, var(--wall) 8px 12px);
+}
+.cube.win-blue { --glass: #5fb4ff; }
+.cube.win-warn { --glass: #ff9f43; }
+.cube.cab .t, .cube.cab .f, .cube.cab .k, .cube.cab .r, .cube.cab .l { background: #cfe8ff; }
+.cube.amb .f, .cube.amb .k, .cube.amb .r, .cube.amb .l { background: #f2f6fa; }
+/* ถนน ต้นไม้ กากบาท ไซเรน */
+.cube.road .t { background: #2b3a4b; border: 0; }
+.cube.road .f, .cube.road .k, .cube.road .r, .cube.road .l { background: #222f3d; border: 0; }
+.cube.trunk i { background: #7a4b2a; border: 0; }
+.cube.leaf .t { background: #5be08d; border: 0; }
+.cube.leaf .f, .cube.leaf .k { background: #26a85e; border: 0; }
+.cube.leaf .r, .cube.leaf .l { background: #1b8a4a; border: 0; }
+.cube.cross i { background: #ef4444; border: 0; box-shadow: 0 0 10px #ef4444; }
+.cube.siren i { background: #ff3b3b; border: 0; box-shadow: 0 0 12px #ff3b3b; }
+.cube.siren { animation: blink .7s infinite; }
+.helipad { position: absolute; width: 40px; height: 40px; border-radius: 50%; background: #2a3647; border: 3px solid #f1f5f9;
+  color: #f1f5f9; font-weight: 900; font-size: 22px; display: grid; place-items: center; pointer-events: none; }
 </style>
 </head>
 
@@ -543,7 +614,7 @@ mark { background: rgba(251, 191, 36, .45); color: inherit; border-radius: 3px; 
     <div class="sidebar-label">เมนูหลัก</div>
     <nav class="nav-menu" aria-label="เมนูแดชบอร์ด">
       <button class="nav-btn active" type="button" data-view="twin">
-        <span>🏭 Digital Twin คลัง (3D)</span>
+        <span>🏥 Digital Twin โรงพยาบาล (3D)</span>
         <span class="badge-sheet">LIVE</span>
       </button>
 
@@ -590,9 +661,9 @@ mark { background: rgba(251, 191, 36, .45); color: inherit; border-radius: 3px; 
   <main>
     <header>
       <div>
-        <div class="eyebrow" id="pageEyebrow">DIGITAL TWIN · WAREHOUSE 3D</div>
-        <h1 id="pageTitle">Digital Twin คลังพัสดุและเวชภัณฑ์</h1>
-        <p id="pageSub">แบบจำลองคลัง 3 มิติที่เชื่อมกับข้อมูล PO / PR จริง ลากเพื่อหมุน คลิกโซนเพื่อเลือกคลัง</p>
+        <div class="eyebrow" id="pageEyebrow">DIGITAL TWIN · HOSPITAL 3D</div>
+        <h1 id="pageTitle">Digital Twin โรงพยาบาล · คลังพัสดุและเวชภัณฑ์</h1>
+        <p id="pageSub">แบบจำลองโรงพยาบาล 3 มิติที่เชื่อมกับข้อมูล PO / PR จริง ลากเพื่อหมุน คลิกอาคารเพื่อเลือกคลัง</p>
       </div>
 
       <div class="header-actions">
@@ -632,7 +703,7 @@ mark { background: rgba(251, 191, 36, .45); color: inherit; border-radius: 3px; 
         <div class="twin-stage" id="twinStage">
           <div class="twin-hud tl"><span class="live-dot"></span>LIVE TWIN · <span id="twinClock">--:--:--</span></div>
           <div class="twin-hud tr" id="twinHudSrc">DATA SOURCE · --</div>
-          <div class="twin-hud bl">ลากเพื่อหมุน · ล้อเมาส์เพื่อซูม · คลิกโซนเพื่อเลือกคลัง</div>
+          <div class="twin-hud bl">ลากเพื่อหมุน · ล้อเมาส์เพื่อซูม · คลิกอาคารเพื่อเลือกคลัง</div>
           <div class="twin-ctrl">
             <button type="button" class="btn" id="twinAutoBtn">⟳ หมุนอัตโนมัติ</button>
             <button type="button" class="btn" id="twinResetBtn">⌖ รีเซ็ตมุมมอง</button>
@@ -658,12 +729,13 @@ mark { background: rgba(251, 191, 36, .45); color: inherit; border-radius: 3px; 
             <div class="meter"><div id="twSMeter" style="width:0%"></div></div>
           </article>
           <article class="card">
-            <div class="panel-head"><h2>โซนคลัง</h2><span class="tag">คลิกเพื่อโฟกัส</span></div>
+            <div class="panel-head"><h2>อาคารในโรงพยาบาล</h2><span class="tag">คลิกเพื่อโฟกัส</span></div>
             <div class="zone-list" id="twZoneList" style="margin-top:12px;"></div>
             <div class="meta" style="line-height:1.9;margin-top:6px;">
-              ▮ ความสูงชั้นวาง = จำนวน PO<br>
-              <span style="color:#fb923c;">▮</span> ฝาสีส้ม = PO ที่ยังค้างดำเนินการ<br>
-              <span style="color:#c084fc;">▮</span> พาเลทหน้าโซน = PR ที่รอเข้าคลัง
+              ▮ ความสูงอาคาร = จำนวน PO<br>
+              <span style="color:#5fb4ff;">▮</span> ชั้นสีฟ้า = PO ที่ดำเนินการแล้ว<br>
+              <span style="color:#fb923c;">▮</span> ชั้นสีส้ม = PO ที่ยังค้างดำเนินการ<br>
+              <span style="color:#c084fc;">▮</span> รถตู้สีม่วงหน้าอาคาร = PR ที่รอเข้าคลัง
             </div>
           </article>
         </div>
@@ -671,9 +743,9 @@ mark { background: rgba(251, 191, 36, .45); color: inherit; border-radius: 3px; 
 
       <div class="kpis" style="margin-top: 18px;">
         <article class="card"><div class="label">รายการ PO (ตามคลังที่เลือก)</div><div class="value" id="twTotalPO" data-count="0">0</div><div class="meta" id="twKpiMeta">ทุกคลังรวมกัน</div></article>
-        <article class="card"><div class="label">รายการ PR (ตามคลังที่เลือก)</div><div class="value purple" id="twTotalPR" data-count="0">0</div><div class="meta">พาเลทขาเข้าที่หน้าโซน</div></article>
-        <article class="card"><div class="label">PO ที่ดำเนินการแล้ว</div><div class="value mint" id="twDonePO" data-count="0">0</div><div class="meta">ไฟสีเขียวในฉากจำลอง</div></article>
-        <article class="card"><div class="label">PO ที่ค้างดำเนินการ</div><div class="value amber" id="twPendPO" data-count="0">0</div><div class="meta">ฝาสีส้มบนชั้นวาง</div></article>
+        <article class="card"><div class="label">รายการ PR (ตามคลังที่เลือก)</div><div class="value purple" id="twTotalPR" data-count="0">0</div><div class="meta">รถตู้ขาเข้าหน้าอาคาร</div></article>
+        <article class="card"><div class="label">PO ที่ดำเนินการแล้ว</div><div class="value mint" id="twDonePO" data-count="0">0</div><div class="meta">ชั้นสีฟ้าบนอาคาร</div></article>
+        <article class="card"><div class="label">PO ที่ค้างดำเนินการ</div><div class="value amber" id="twPendPO" data-count="0">0</div><div class="meta">ชั้นสีส้มบนอาคาร</div></article>
       </div>
     </section>
 
@@ -793,26 +865,22 @@ mark { background: rgba(251, 191, 36, .45); color: inherit; border-radius: 3px; 
 
     <!-- VIEW 3: หน้าจอภาพรวม PO (เมื่อคลิก 📦 รายการ PO) -->
     <section id="view-po-overview" class="view-section">
-      <div class="kpis">
-        <article class="card">
+      <div class="kpis po-kpis">
+        <article class="card kpi-click" data-po-filter="all" role="button" tabindex="0" title="คลิกเพื่อดูรายการด้านล่าง">
           <div class="label">จำนวนรายการ PO ทั้งหมด</div>
           <div class="value purple" id="poOvTotalRows" data-count="0">0</div>
-          <div class="meta" id="poOvPlantMeta">แสดงข้อมูลตามคลังที่เลือก</div>
         </article>
-        <article class="card">
+        <article class="card kpi-click" data-po-filter="pending" role="button" tabindex="0" title="คลิกเพื่อดูรายการด้านล่าง">
           <div class="label">สถานะจัดซื้อที่ยังไม่ได้ดำเนินการ</div>
           <div class="value amber" id="poOvPending" data-count="0">0</div>
-          <div class="meta">รายการ PO ที่อยู่ระหว่างรอดำเนินการ</div>
         </article>
-        <article class="card">
+        <article class="card kpi-click" data-po-filter="done" role="button" tabindex="0" title="คลิกเพื่อดูรายการด้านล่าง">
           <div class="label">สถานะจัดซื้อที่ดำเนินการแล้ว</div>
           <div class="value mint" id="poOvDone" data-count="0">0</div>
-          <div class="meta">รายการ PO ที่ดำเนินการจัดซื้อเรียบร้อย</div>
         </article>
         <article class="card">
           <div class="label">มูลค่าสั่งซื้อรวม (บาท)</div>
           <div class="value" id="poOvFullPrice" data-count="0">0</div>
-          <div class="meta" id="poOvPriceColMeta">รวมจาก ราคาเต็มใน PO</div>
         </article>
       </div>
 
@@ -855,9 +923,13 @@ mark { background: rgba(251, 191, 36, .45); color: inherit; border-radius: 3px; 
 
       <article class="card table-card">
         <div class="panel-head">
-          <h2>ตารางรายการใบสั่งซื้อ (PO) ทั้งหมด</h2>
-          <span class="tag" id="poOvTableBadge">0 แถว</span>
+          <h2 id="poOvTableTitle">ตารางรายการใบสั่งซื้อ (PO) ทั้งหมด</h2>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <button type="button" class="btn" id="poOvClearFilter" style="display:none;min-height:34px;padding:5px 12px;">✕ ล้างตัวกรอง</button>
+            <span class="tag" id="poOvTableBadge">0 แถว</span>
+          </div>
         </div>
+        <div class="meta" id="poOvFilterSummary" style="margin-top:8px;"></div>
         <div class="search-bar" style="margin-top: 14px; margin-bottom: 0;">
           <input type="search" id="poOvSearchInput" class="search-input" placeholder="พิมพ์ค้นหาเลข PO, รหัสวัสดุ, ชื่อวัสดุ, ผู้ขาย หรือสถานะจัดซื้อ...">
         </div>
@@ -873,13 +945,18 @@ mark { background: rgba(251, 191, 36, .45); color: inherit; border-radius: 3px; 
         <div class="panel-head">
           <div>
             <h2>ค้นหารหัสวัสดุ</h2>
-            <p class="meta" style="margin:4px 0 0;">พิมพ์รหัสหรือชื่อวัสดุ ระบบจะรวมเป็น 1 บรรทัดต่อ 1 วัสดุ พร้อมยอดเงินรวม คลิกที่บรรทัดเพื่อดู PO ที่เกี่ยวข้อง</p>
+            <p class="meta" style="margin:4px 0 0;">พิมพ์หรือเลือกรหัสวัสดุจากรายการ เมื่อเลือกแล้วข้อมูลจะแสดงด้านล่าง (กด Enter เพื่อดูทุกรายการที่ตรงกับคำที่พิมพ์)</p>
           </div>
           <span class="tag" id="poMatResultTag">0 วัสดุ</span>
         </div>
         <div class="search-bar" style="margin-top: 16px;">
-          <input type="search" id="poMatSearchInput" class="search-input" placeholder="🔍 พิมพ์รหัสวัสดุ หรือ ชื่อวัสดุ เพื่อค้นหา...">
-          <select id="poMatSortSelect" class="select-input" style="max-width: 250px;">
+          <div class="combo" id="poMatCombo">
+            <input type="text" id="poMatSearchInput" class="search-input" placeholder="🔍 พิมพ์หรือเลือกรหัสวัสดุ..." autocomplete="off" role="combobox" aria-expanded="false" aria-controls="poMatSuggest">
+            <button type="button" class="combo-clear" id="poMatClear" aria-label="ล้างการค้นหา" style="display:none;">✕</button>
+            <button type="button" class="combo-toggle" id="poMatToggle" aria-label="แสดงรายการรหัสวัสดุ">▾</button>
+            <div class="combo-list" id="poMatSuggest" role="listbox" hidden></div>
+          </div>
+          <select id="poMatSortSelect" class="select-input" style="max-width: 250px; display:none;">
             <option value="amount">เรียง: มูลค่ามาก → น้อย</option>
             <option value="count">เรียง: จำนวน PO มาก → น้อย</option>
             <option value="code">เรียง: รหัสวัสดุ A → Z</option>
@@ -1806,6 +1883,18 @@ const PO_OV_LEGEND_STATUS = `
   <span class="chart-legend-item"><i class="dot" style="background:var(--chart-amber);margin:0;"></i>ยังไม่ได้ดำเนินการ</span>`;
 const PO_OV_DEFAULT_NOTE = "แสดงจำนวนด้านบนแท่งกราฟในแต่ละคลัง (ไม่มีข้อความเสร็จแล้ว/รอดำเนินการใต้กราฟ)";
 
+let poOvStatusFilter = "all";
+const PO_OV_FILTER_LABEL = { all: "ทั้งหมด", pending: "ยังไม่ได้ดำเนินการ", done: "ดำเนินการแล้ว" };
+// กดการ์ดซ้ำ = ยกเลิกตัวกรอง (ยกเว้นการ์ด "ทั้งหมด")
+function setPoOvFilter(f, scroll) {
+  poOvStatusFilter = (f !== "all" && poOvStatusFilter === f) ? "all" : f;
+  renderPOOverviewView();
+  if (scroll) {
+    const el = document.getElementById("poOvTableTitle");
+    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
 function renderPOOverviewView() {
   const poByPlant = filterRowsByPlant(STATE.po, STATE.selectedPlant);
   const keyword = document.getElementById("poOvSearchInput").value.trim().toLowerCase();
@@ -1825,8 +1914,6 @@ function renderPOOverviewView() {
   document.getElementById("poOvPending").dataset.count = pendingCount;
   document.getElementById("poOvDone").dataset.count = doneCount;
   document.getElementById("poOvFullPrice").dataset.count = Math.round(totalFullPrice);
-  document.getElementById("poOvPlantMeta").textContent = `คลัง: ${getPlantDisplayName(STATE.selectedPlant)}`;
-  document.getElementById("poOvPriceColMeta").textContent = fullPriceCol ? `รวมจากคอลัมน์ "${fullPriceCol}"` : "รวมมูลค่าสั่งซื้อใน PO";
 
   const titleEl = document.getElementById("poOvChartTitle");
   const legendEl = document.getElementById("poOvChartLegend");
@@ -1874,8 +1961,39 @@ function renderPOOverviewView() {
   document.getElementById("poOvDonutPct").textContent = `${donePct}%`;
   document.getElementById("poOvLegDone").textContent = doneCount.toLocaleString("th-TH");
   document.getElementById("poOvLegPending").textContent = pendingCount.toLocaleString("th-TH");
-  document.getElementById("poOvTableBadge").textContent = `แสดง ${finalPO.length.toLocaleString("th-TH")} แถว`;
-  renderTable("poOvTable", STATE.po.headers, finalPO, 60);
+  // ตารางด้านล่าง: กรองตามการ์ดที่กด (ทั้งหมด / ยังไม่ได้ดำเนินการ / ดำเนินการแล้ว)
+  const isPendingRow = r => classifyPurchaseStatus(r, cols) === "pending";
+  const tableRows = poOvStatusFilter === "all" ? finalPO
+    : finalPO.filter(r => isPendingRow(r) === (poOvStatusFilter === "pending"));
+  document.querySelectorAll("[data-po-filter]").forEach(el => el.classList.toggle("active", el.dataset.poFilter === poOvStatusFilter));
+  document.getElementById("poOvTableTitle").textContent = poOvStatusFilter === "all"
+    ? "ตารางรายการใบสั่งซื้อ (PO) ทั้งหมด" : `รายการ PO · ${PO_OV_FILTER_LABEL[poOvStatusFilter]}`;
+  document.getElementById("poOvClearFilter").style.display = poOvStatusFilter === "all" ? "none" : "";
+  const tableValue = fullPriceCol ? tableRows.reduce((s, r) => s + parseNumber(r[fullPriceCol]), 0) : 0;
+  document.getElementById("poOvFilterSummary").innerHTML =
+    `${poOvStatusFilter === "all" ? "แสดงทุกสถานะ" : "เฉพาะสถานะ <strong>" + PO_OV_FILTER_LABEL[poOvStatusFilter] + "</strong>"}` +
+    ` · คลัง: ${escHtml(getPlantDisplayName(STATE.selectedPlant))} · ${tableRows.length.toLocaleString("th-TH")} รายการ` +
+    (fullPriceCol ? ` · มูลค่ารวม <strong>${fmtBaht(tableValue)}</strong>` : "");
+
+  const TABLE_LIMIT = 200;
+  document.getElementById("poOvTableBadge").textContent = tableRows.length > TABLE_LIMIT
+    ? `แสดง ${TABLE_LIMIT} จาก ${tableRows.length.toLocaleString("th-TH")} แถว` : `แสดง ${tableRows.length.toLocaleString("th-TH")} แถว`;
+
+  // เลือกคอลัมน์ที่อ่านง่าย (รวมมูลค่าและสถานะ ซึ่งเดิมถูกตัดทิ้งเพราะอยู่ท้ายชีต)
+  const colQty = STATE.po.headers.find(h => /^จำนวน$/.test(String(h).trim()));
+  const colUnit = STATE.po.headers.find(h => /^หน่วยนับ$/.test(String(h).trim()));
+  const tableHeaders = ["เลข PO", "คลัง", "ผู้ขาย", "รหัส", "ชื่อวัสดุ", "จำนวน", "มูลค่า (บาท)", "สถานะ"];
+  const view = tableRows.map(r => ({
+    "เลข PO": escHtml((cols.poNoCol && r[cols.poNoCol]) || "-"),
+    "คลัง": escHtml(PLANT_NAMES[normalizePlantCode(r[cols.plantCol])] || "-"),
+    "ผู้ขาย": escHtml(cols.companyCol ? cleanVendorName(r[cols.companyCol]) : "-"),
+    "รหัส": escHtml((cols.matCodeCol && r[cols.matCodeCol]) || "-"),
+    "ชื่อวัสดุ": escHtml((cols.matNameCol && r[cols.matNameCol]) || "-"),
+    "จำนวน": colQty ? escHtml((String(r[colQty] ?? "") + " " + String(colUnit ? (r[colUnit] ?? "") : "")).trim() || "-") : "-",
+    "มูลค่า (บาท)": fullPriceCol ? parseNumber(r[fullPriceCol]).toLocaleString("th-TH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "-",
+    "สถานะ": isPendingRow(r) ? '<span class="mchip warn">ยังไม่ได้ดำเนินการ</span>' : '<span class="mchip ok">ดำเนินการแล้ว</span>'
+  }));
+  renderTable("poOvTable", tableHeaders, view, TABLE_LIMIT);
 }
 
 function escHtml(s) {
@@ -1891,27 +2009,29 @@ function hl(text, q) {
 }
 
 let matShowCount = 30;
+let matSelectedKey = null;   // วัสดุที่เลือกจากช่องค้นหา
+let matCommitText = "";      // คำค้นที่กด Enter (แสดงทุกรายการที่ตรงกัน)
+let matActiveIdx = -1;       // รายการที่เลื่อนด้วยลูกศรใน dropdown
 
-function renderPOMaterialView() {
+function matCmpCode(a, b) {
+  return (!a.code - !b.code) || a.code.localeCompare(b.code, "en", { numeric: true }) || a.name.localeCompare(b.name, "th");
+}
+
+// รวม PO เป็น 1 กลุ่มต่อ 1 วัสดุ (ตามคลังที่เลือก) ยังไม่กรองด้วยคำค้น
+function buildMatGroups() {
   const rows = filterRowsByPlant(STATE.po, STATE.selectedPlant);
-  const q = document.getElementById("poMatSearchInput").value.trim().toLowerCase();
-  const sortBy = document.getElementById("poMatSortSelect").value || "amount";
   const cols = STATE.po.cols;
   const { plantCol, matCodeCol, matNameCol, companyCol, fullPriceCol, amountCol, docNoCol, poNoCol } = cols;
   const priceCol = fullPriceCol || amountCol;
   const qtyCol = STATE.po.headers.find(h => /^จำนวน$/.test(String(h).trim()));
   const unitCol = STATE.po.headers.find(h => /^หน่วยนับ$/.test(String(h).trim()));
-
-  // รวมเป็น 1 บรรทัดต่อ 1 วัสดุ
   const groups = new Map();
-  let lineCount = 0;
   rows.forEach(r => {
     const code = String(r[matCodeCol] || "").trim();
     const name = String(r[matNameCol] || "").trim();
-    if (q && !(code.toLowerCase().includes(q) || name.toLowerCase().includes(q))) return;
     const key = code || name || "ไม่ระบุ";
     let g = groups.get(key);
-    if (!g) { g = { code, name, amount: 0, qty: 0, unit: "", plants: new Set(), vendors: new Set(), lines: [], pending: 0 }; groups.set(key, g); }
+    if (!g) { g = { key, code, name, amount: 0, qty: 0, unit: "", plants: new Set(), vendors: new Set(), lines: [], pending: 0 }; groups.set(key, g); }
     if (!g.name && name) g.name = name;
     const amt = priceCol ? parseNumber(r[priceCol]) : 0;
     const qty = qtyCol ? parseNumber(r[qtyCol]) : 0;
@@ -1923,67 +2043,173 @@ function renderPOMaterialView() {
     g.plants.add(plant); g.vendors.add(vendor);
     if (isPending) g.pending++;
     g.lines.push({ po: String((poNoCol && r[poNoCol]) || (docNoCol && r[docNoCol]) || "-"), vendor, plant, qty, unit, amount: amt, pending: isPending });
-    lineCount++;
   });
+  groups.priceCol = priceCol;
+  return groups;
+}
 
-  let list = [...groups.values()];
-  if (sortBy === "count") list.sort((a, b) => b.lines.length - a.lines.length || b.amount - a.amount);
-  else if (sortBy === "code") list.sort((a, b) => (!a.code - !b.code) || a.code.localeCompare(b.code, "en", { numeric: true }));
-  else list.sort((a, b) => b.amount - a.amount || b.lines.length - a.lines.length);
+function matRowHtml(g, maxAmt, q, open, priceCol) {
+  const plantNames = [...g.plants].map(c => PLANT_NAMES[c] || "ไม่ระบุคลัง");
+  const plantChips = plantNames.slice(0, 3).map(n => `<span class="mchip">${escHtml(n)}</span>`).join("") +
+    (plantNames.length > 3 ? `<span class="mchip">+${plantNames.length - 3}</span>` : "");
+  const status = g.pending
+    ? `<span class="mchip warn">ค้างดำเนินการ ${g.pending}</span>`
+    : `<span class="mchip ok">ดำเนินการแล้ว</span>`;
+  const qtyText = g.qty ? `รวม ${g.qty.toLocaleString("th-TH")} ${escHtml(g.unit)}` : "";
+  const lines = [...g.lines].sort((x, y) => y.amount - x.amount).map(l => `
+    <tr><td>${escHtml(l.po)}</td><td>${escHtml(l.vendor)}</td><td>${escHtml(PLANT_NAMES[l.plant] || "-")}</td>
+    <td style="text-align:right">${l.qty ? l.qty.toLocaleString("th-TH") + " " + escHtml(l.unit) : "-"}</td>
+    <td style="text-align:right"><strong>${priceCol ? fmtBaht(l.amount) : "-"}</strong></td>
+    <td>${l.pending ? '<span class="mchip warn">ค้าง</span>' : '<span class="mchip ok">เสร็จ</span>'}</td></tr>`).join("");
+  return `
+    <details class="mat-row"${open ? " open" : ""}>
+      <summary>
+        <div class="mat-main">
+          <div class="mat-code">${g.code ? hl(g.code, q) : "ไม่มีรหัสวัสดุ"}</div>
+          <div class="mat-name">${hl(g.name || "ไม่ระบุชื่อวัสดุ", q)}</div>
+          <div class="mat-tags">${plantChips}<span class="mchip">${g.lines.length} PO</span><span class="mchip">${g.vendors.size} ผู้ขาย</span>${status}</div>
+        </div>
+        <div class="mat-money">
+          <strong>${priceCol ? fmtBaht(g.amount) : "-"}</strong>
+          <div class="mat-bar"><i style="width:${Math.max(2, Math.round((g.amount / maxAmt) * 100))}%"></i></div>
+          <small>${qtyText}</small>
+        </div>
+      </summary>
+      <div class="mat-lines">
+        <table><thead><tr><th>เลข PO</th><th>ผู้ขาย</th><th>คลัง</th><th style="text-align:right">จำนวน</th><th style="text-align:right">มูลค่า</th><th>สถานะ</th></tr></thead>
+        <tbody>${lines}</tbody></table>
+      </div>
+    </details>`;
+}
 
-  const totalAmt = list.reduce((s, g) => s + g.amount, 0);
-  const maxAmt = Math.max(1, ...list.map(g => g.amount));
-
-  document.getElementById("poMatResultTag").textContent = `${list.length.toLocaleString("th-TH")} วัสดุ · ${getPlantDisplayName(STATE.selectedPlant)}`;
-  document.getElementById("matSummary").innerHTML = `
-    <div class="mat-stat"><strong>${list.length.toLocaleString("th-TH")}</strong>วัสดุที่พบ</div>
-    <div class="mat-stat"><strong>${lineCount.toLocaleString("th-TH")}</strong>บรรทัด PO</div>
-    <div class="mat-stat"><strong>${priceCol ? fmtBaht(totalAmt) : "-"}</strong>มูลค่ารวม</div>`;
-
+function renderPOMaterialView() {
+  const input = document.getElementById("poMatSearchInput");
   const grid = document.getElementById("materialGrid");
+  const summary = document.getElementById("matSummary");
+  const sortSel = document.getElementById("poMatSortSelect");
+  const groups = buildMatGroups();
+  const all = [...groups.values()];
+  const priceCol = groups.priceCol;
+
+  if (matSelectedKey && !groups.has(matSelectedKey)) { matSelectedKey = null; input.value = ""; }   // เปลี่ยนคลังแล้วไม่มีรหัสนี้
+  document.getElementById("poMatClear").style.display = (input.value || matSelectedKey) ? "" : "none";
+  document.getElementById("poMatResultTag").textContent = `${all.length.toLocaleString("th-TH")} วัสดุ · ${getPlantDisplayName(STATE.selectedPlant)}`;
+
+  let mode = "empty", list = [], q = "";
+  if (matSelectedKey) { mode = "one"; list = [groups.get(matSelectedKey)]; }
+  else if (matCommitText) {
+    mode = "list"; q = matCommitText.toLowerCase();
+    list = all.filter(g => g.code.toLowerCase().includes(q) || g.name.toLowerCase().includes(q));
+  }
+  sortSel.style.display = mode === "list" ? "" : "none";
+
+  // ยังไม่ได้เลือก -> ยังไม่แสดงข้อมูล
+  if (mode === "empty") {
+    summary.innerHTML = "";
+    grid.innerHTML = `<div class="card mat-empty"><div style="font-size:32px;">🔎</div><strong style="color:var(--text);font-size:15px;">เลือกรหัสวัสดุเพื่อดูข้อมูล</strong><br>คลิกช่องค้นหาแล้วเลือกจากรายการ หรือพิมพ์รหัส/ชื่อวัสดุ<br><small>กด Enter เพื่อดูทุกรายการที่ตรงกับคำที่พิมพ์</small></div>`;
+    return;
+  }
   if (!list.length) {
-    grid.innerHTML = `<div class="card mat-empty">ไม่พบวัสดุที่ตรงกับ “${escHtml(q)}” ในคลังที่เลือก<br><small>ลองพิมพ์ให้สั้นลง หรือเลือก “ทุกคลัง” ที่แถบด้านบน</small></div>`;
+    summary.innerHTML = "";
+    grid.innerHTML = `<div class="card mat-empty">ไม่พบวัสดุที่ตรงกับ “${escHtml(matCommitText)}” ในคลังที่เลือก<br><small>ลองพิมพ์ให้สั้นลง หรือเลือก “ทุกคลัง” ที่แถบด้านบน</small></div>`;
     return;
   }
 
-  const shown = list.slice(0, matShowCount);
-  grid.innerHTML = shown.map(g => {
-    const plantNames = [...g.plants].map(c => PLANT_NAMES[c] || "ไม่ระบุคลัง");
-    const plantChips = plantNames.slice(0, 3).map(n => `<span class="mchip">${escHtml(n)}</span>`).join("") +
-      (plantNames.length > 3 ? `<span class="mchip">+${plantNames.length - 3}</span>` : "");
-    const status = g.pending
-      ? `<span class="mchip warn">ค้างดำเนินการ ${g.pending}</span>`
-      : `<span class="mchip ok">ดำเนินการแล้ว</span>`;
-    const qtyText = g.qty ? `รวม ${g.qty.toLocaleString("th-TH")} ${escHtml(g.unit)}` : "";
-    const lines = [...g.lines].sort((x, y) => y.amount - x.amount).map(l => `
-      <tr><td>${escHtml(l.po)}</td><td>${escHtml(l.vendor)}</td><td>${escHtml(PLANT_NAMES[l.plant] || "-")}</td>
-      <td style="text-align:right">${l.qty ? l.qty.toLocaleString("th-TH") + " " + escHtml(l.unit) : "-"}</td>
-      <td style="text-align:right"><strong>${priceCol ? fmtBaht(l.amount) : "-"}</strong></td>
-      <td>${l.pending ? '<span class="mchip warn">ค้าง</span>' : '<span class="mchip ok">เสร็จ</span>'}</td></tr>`).join("");
-    return `
-      <details class="mat-row">
-        <summary>
-          <div class="mat-main">
-            <div class="mat-code">${g.code ? hl(g.code, q) : "ไม่มีรหัสวัสดุ"}</div>
-            <div class="mat-name">${hl(g.name || "ไม่ระบุชื่อวัสดุ", q)}</div>
-            <div class="mat-tags">${plantChips}<span class="mchip">${g.lines.length} PO</span><span class="mchip">${g.vendors.size} ผู้ขาย</span>${status}</div>
-          </div>
-          <div class="mat-money">
-            <strong>${priceCol ? fmtBaht(g.amount) : "-"}</strong>
-            <div class="mat-bar"><i style="width:${Math.max(2, Math.round((g.amount / maxAmt) * 100))}%"></i></div>
-            <small>${qtyText}</small>
-          </div>
-        </summary>
-        <div class="mat-lines">
-          <table><thead><tr><th>เลข PO</th><th>ผู้ขาย</th><th>คลัง</th><th style="text-align:right">จำนวน</th><th style="text-align:right">มูลค่า</th><th>สถานะ</th></tr></thead>
-          <tbody>${lines}</tbody></table>
-        </div>
-      </details>`;
-  }).join("") + (list.length > shown.length
-    ? `<button type="button" class="btn mat-more" id="matMoreBtn">แสดงเพิ่มอีก 30 วัสดุ (เหลือ ${(list.length - shown.length).toLocaleString("th-TH")})</button>` : "");
+  const sortBy = sortSel.value || "amount";
+  if (sortBy === "count") list.sort((a, b) => b.lines.length - a.lines.length || b.amount - a.amount);
+  else if (sortBy === "code") list.sort(matCmpCode);
+  else list.sort((a, b) => b.amount - a.amount || b.lines.length - a.lines.length);
 
+  const lineCount = list.reduce((s, g) => s + g.lines.length, 0);
+  const totalAmt = list.reduce((s, g) => s + g.amount, 0);
+  const maxAmt = Math.max(1, ...list.map(g => g.amount));
+  summary.innerHTML = mode === "one"
+    ? `<div class="mat-stat"><strong>${lineCount.toLocaleString("th-TH")}</strong>PO ที่เกี่ยวข้อง</div>
+       <div class="mat-stat"><strong>${list[0].vendors.size.toLocaleString("th-TH")}</strong>ผู้ขาย</div>
+       <div class="mat-stat"><strong>${priceCol ? fmtBaht(totalAmt) : "-"}</strong>มูลค่ารวม</div>`
+    : `<div class="mat-stat"><strong>${list.length.toLocaleString("th-TH")}</strong>วัสดุที่พบ</div>
+       <div class="mat-stat"><strong>${lineCount.toLocaleString("th-TH")}</strong>บรรทัด PO</div>
+       <div class="mat-stat"><strong>${priceCol ? fmtBaht(totalAmt) : "-"}</strong>มูลค่ารวม</div>`;
+
+  const shown = list.slice(0, matShowCount);
+  const openAll = mode === "one" || list.length === 1;
+  grid.innerHTML = shown.map(g => matRowHtml(g, maxAmt, q, openAll, priceCol)).join("") +
+    (list.length > shown.length
+      ? `<button type="button" class="btn mat-more" id="matMoreBtn">แสดงเพิ่มอีก 30 วัสดุ (เหลือ ${(list.length - shown.length).toLocaleString("th-TH")})</button>` : "");
   const more = document.getElementById("matMoreBtn");
   if (more) more.addEventListener("click", () => { matShowCount += 30; renderPOMaterialView(); });
+}
+
+// ---------- ช่องค้นหาแบบ พิมพ์ได้/เลือกได้ ----------
+function renderMatSuggest() {
+  const input = document.getElementById("poMatSearchInput");
+  const box = document.getElementById("poMatSuggest");
+  const q = matSelectedKey ? "" : input.value.trim().toLowerCase();   // เลือกแล้วให้โชว์ทั้งรายการ
+  const opts = [...buildMatGroups().values()]
+    .filter(g => !q || g.code.toLowerCase().includes(q) || g.name.toLowerCase().includes(q))
+    .sort(matCmpCode);
+  const LIMIT = 60, shown = opts.slice(0, LIMIT);
+  if (!shown.length) { box.innerHTML = `<div class="combo-foot">ไม่พบรหัสหรือชื่อที่ตรงกับ “${escHtml(q)}”</div>`; return; }
+  box.innerHTML = shown.map((g, i) => `
+    <div class="combo-opt${i === matActiveIdx ? " active" : ""}${g.key === matSelectedKey ? " picked" : ""}" role="option" data-key="${escHtml(g.key)}">
+      <span class="co-code">${g.code ? hl(g.code, q) : "ไม่มีรหัส"}</span>
+      <span class="co-name">${hl(g.name || "ไม่ระบุชื่อวัสดุ", q)}</span>
+      <span class="co-meta">${g.lines.length} PO</span>
+    </div>`).join("") +
+    (opts.length > LIMIT ? `<div class="combo-foot">แสดง ${LIMIT} จาก ${opts.length.toLocaleString("th-TH")} รายการ — พิมพ์เพื่อค้นหาให้แคบลง</div>` : "");
+}
+
+function pickMaterial(key) {
+  const g = buildMatGroups().get(key);
+  if (!g) return;
+  matSelectedKey = key; matCommitText = ""; matActiveIdx = -1;
+  document.getElementById("poMatSearchInput").value = g.code || g.name;
+  const box = document.getElementById("poMatSuggest");
+  box.hidden = true;
+  document.getElementById("poMatSearchInput").setAttribute("aria-expanded", "false");
+  renderPOMaterialView();
+}
+
+function bindMatCombo() {
+  const input = document.getElementById("poMatSearchInput");
+  const box = document.getElementById("poMatSuggest");
+  const combo = document.getElementById("poMatCombo");
+  const open = () => { renderMatSuggest(); box.hidden = false; input.setAttribute("aria-expanded", "true"); };
+  const close = () => { box.hidden = true; input.setAttribute("aria-expanded", "false"); matActiveIdx = -1; };
+  const reset = () => { input.value = ""; matSelectedKey = null; matCommitText = ""; matActiveIdx = -1; renderPOMaterialView(); };
+
+  input.addEventListener("input", () => { matSelectedKey = null; matCommitText = ""; matActiveIdx = -1; renderPOMaterialView(); open(); });
+  input.addEventListener("focus", open);
+  input.addEventListener("click", () => { if (box.hidden) open(); });
+  input.addEventListener("keydown", e => {
+    const opts = box.querySelectorAll(".combo-opt");
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      if (box.hidden) { open(); return; }
+      if (!opts.length) return;
+      matActiveIdx = e.key === "ArrowDown" ? Math.min(opts.length - 1, matActiveIdx + 1) : Math.max(0, matActiveIdx - 1);
+      opts.forEach((o, i) => o.classList.toggle("active", i === matActiveIdx));
+      if (opts[matActiveIdx] && opts[matActiveIdx].scrollIntoView) opts[matActiveIdx].scrollIntoView({ block: "nearest" });
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      const act = opts[matActiveIdx];
+      if (!box.hidden && act) { pickMaterial(act.dataset.key); return; }
+      const v = input.value.trim();
+      if (!v) return;
+      const exact = [...buildMatGroups().values()].find(g => g.code && g.code.toLowerCase() === v.toLowerCase());
+      if (exact) { pickMaterial(exact.key); return; }
+      matSelectedKey = null; matCommitText = v; matShowCount = 30; close(); renderPOMaterialView();
+    } else if (e.key === "Escape") { close(); }
+  });
+  box.addEventListener("mousedown", e => {
+    const o = e.target.closest(".combo-opt");
+    if (!o) return;
+    e.preventDefault();
+    pickMaterial(o.dataset.key);
+  });
+  document.getElementById("poMatToggle").addEventListener("click", () => { if (box.hidden) { open(); input.focus(); } else close(); });
+  document.getElementById("poMatClear").addEventListener("click", () => { reset(); close(); input.focus(); });
+  document.addEventListener("click", e => { if (!combo.contains(e.target)) close(); });
 }
 
 let compShowAllMats = false;
@@ -2161,9 +2387,9 @@ const TWIN_ZONES = {
 const TWIN_DEFAULT = { yaw: -32, tilt: 58, zoom: 1 };
 const twin = { ...TWIN_DEFAULT, auto: false, raf: 0, drag: null, moved: false, bound: false, stats: {} };
 
-function twCube(w, d, h, x, y, z, zc) {
+function twCube(w, d, h, x, y, z, zc, cls) {
   const v = zc ? `--zc:${zc};` : "";
-  return `<div class="cube" style="${v}transform:translate3d(${x}px,${y}px,${z}px)">
+  return `<div class="cube${cls ? " " + cls : ""}" style="${v}transform:translate3d(${x}px,${y}px,${z}px)">
     <i class="t" style="width:${w}px;height:${d}px;transform:translateZ(${h}px)"></i>
     <i class="f" style="left:0;top:${d - h}px;width:${w}px;height:${h}px;transform-origin:bottom;transform:rotateX(-90deg)"></i>
     <i class="k" style="left:0;top:0;width:${w}px;height:${h}px;transform-origin:top;transform:rotateX(90deg)"></i>
@@ -2196,46 +2422,71 @@ function twApply() {
   world.style.transform = `scale(${twin.zoom}) rotateX(${twin.tilt}deg) rotateZ(${twin.yaw}deg)`;
 }
 
+const TWIN_ICONS = { "2000": "📦", "2100": "💊", "2200": "🩺", "2400": "🧪", "2500": "🏥" };
+// ต้นไม้ประดับในสวนของโรงพยาบาล (ตำแหน่งอยู่ในช่องว่างระหว่างอาคาร ไม่ทับโซน)
+const TWIN_TREES = [[305, 60], [305, 150], [595, 60], [595, 150], [450, 340], [450, 430],
+                    [8, 40], [8, 140], [876, 40], [876, 140], [8, 335], [8, 440], [876, 335], [876, 440]];
+
 function twBuildFloor(stats) {
   const maxPo = Math.max(1, ...PLANT_ORDER.map(c => stats[c].po));
   const maxPr = Math.max(1, ...PLANT_ORDER.map(c => stats[c].pr));
+  // อาคารที่มี PO มากที่สุดได้ลานจอดเฮลิคอปเตอร์
+  const heliCode = PLANT_ORDER.reduce((best, c) => (stats[c].po > stats[best].po ? c : best), PLANT_ORDER[0]);
   let html = `<div class="aisle a1"></div>`;
+
+  TWIN_TREES.forEach(([x, y]) => { html += twCube(4, 4, 7, x + 4, y + 4, 0, null, "trunk") + twCube(13, 13, 11, x, y, 7, null, "leaf"); });
 
   PLANT_ORDER.forEach(code => {
     const z = TWIN_ZONES[code]; const s = stats[code];
-    const cols = Math.max(1, Math.floor((z.w - 24) / 50));
-    const rows = Math.max(1, Math.floor((z.h - 24 - 34) / 50));
-    const cells = cols * rows;
-    const racks = s.po ? Math.min(cells, Math.max(2, Math.round((s.po / maxPo) * cells))) : 0;
-    const pendRacks = s.po ? Math.round(racks * (s.pending / s.po)) : 0;
     const cls = STATE.selectedPlant === "ALL" ? "" : (STATE.selectedPlant === code ? "sel" : "dim");
 
-    let cubes = "", maxH = 20;
-    for (let i = 0; i < racks; i++) {
-      const cx = 14 + (i % cols) * 50;
-      const cy = 14 + Math.floor(i / cols) * 50;
-      const h = Math.round(26 + 74 * (s.po / maxPo) * (0.6 + 0.4 * ((i * 7) % 5) / 4));
-      cubes += twCube(36, 36, h, cx, cy, 0);
-      if (i >= racks - pendRacks) cubes += twCube(36, 36, 7, cx, cy, h, "#fb923c");
-      maxH = Math.max(maxH, h + 7);
+    // ตัวอาคารหลัก: ความสูงรวม = จำนวน PO, ชั้นล่างสีฟ้า = เสร็จแล้ว, ชั้นบนสีส้ม = ค้าง
+    const mw = Math.round(z.w * 0.6), md = 76, mx = 16, my = 20;
+    const wx = mx + mw + 12, ww = z.w - wx - 14;
+    let doneH = 22, pendH = 0;
+    if (s.po) {
+      const total = 36 + 84 * (s.po / maxPo);
+      doneH = total * (s.done / s.po); pendH = total - doneH;
+      if (s.done && doneH < 10) doneH = 10;
+      if (s.pending && pendH < 10) pendH = 10;
     }
-    const pallets = s.pr ? Math.min(cols, Math.max(1, Math.round((s.pr / maxPr) * cols))) : 0;
-    for (let p = 0; p < pallets; p++) cubes += twCube(26, 18, 12, 18 + p * 50, z.h - 34, 0, "#c084fc");
+    doneH = Math.round(doneH); pendH = Math.round(pendH);
+    const H = doneH + pendH;
+
+    let b = "";
+    if (doneH > 0) b += twCube(mw, md, doneH, mx, my, 0, null, "wall win win-blue");
+    if (pendH > 0) b += twCube(mw, md, pendH, mx, my, doneH, null, "wall win win-warn");
+    b += twCube(mw, 7, 4, mx, my + md - 7, H, z.c);                                   // แถบสีประจำอาคาร
+    const cx = mx + mw / 2, cy = my + (md - 7) / 2;
+    b += twCube(22, 7, 2, cx - 11, cy - 3.5, H, null, "cross") + twCube(7, 22, 3, cx - 3.5, cy - 11, H, null, "cross");   // กากบาทแดงบนหลังคา
+    b += twCube(ww, 58, 26, wx, my + 10, 0, null, "wall win win-blue");               // ตึกปีกเตี้ย
+    const heli = code === heliCode
+      ? `<div class="helipad" style="left:${Math.round(wx + ww / 2 - 20)}px;top:${my + 10 + 29 - 20}px;transform:translateZ(27px)">H</div>` : "";
+
+    // ถนนหน้าอาคาร + รถตู้ส่งวัสดุ (PR ที่รอเข้า)
+    b += twCube(z.w - 32, 24, 1, 16, z.h - 42, 0, null, "road");
+    const vans = s.pr ? Math.min(6, Math.floor((z.w - 44) / 40), Math.max(1, Math.round((s.pr / maxPr) * 6))) : 0;
+    for (let i = 0; i < vans; i++) {
+      const vx = 22 + i * 40, vy = z.h - 37;
+      b += twCube(18, 14, 10, vx, vy, 1, "#c084fc") + twCube(10, 14, 7, vx + 18, vy, 1, null, "wall cab");
+    }
 
     const warn = s.po && s.pending / s.po >= 0.5;
     html += `<div class="zone ${cls}" data-plant="${code}" style="--zc:${z.c};left:${z.x}px;top:${z.y}px;width:${z.w}px;height:${z.h}px;">
-      <div class="zone-pad"></div>${cubes}
-      <div class="zone-label" style="transform:translate3d(${z.w / 2}px,${z.h / 2}px,${maxH + 26}px) rotateZ(calc(var(--yaw) * -1)) rotateX(calc(var(--tilt) * -1))">
-        <span>${PLANT_NAMES[code]}</span><small><i class="beacon ${warn ? "warn" : ""}" style="position:static;display:inline-block;margin:0 5px 0 0;width:8px;height:8px;"></i>${s.po.toLocaleString("th-TH")} PO · ${s.pr.toLocaleString("th-TH")} PR</small>
+      <div class="zone-pad"></div>${b}${heli}
+      <div class="zone-label" style="transform:translate3d(${z.w / 2}px,${z.h / 2}px,${H + 34}px) rotateZ(calc(var(--yaw) * -1)) rotateX(calc(var(--tilt) * -1))">
+        <span>${TWIN_ICONS[code] || ""} ${PLANT_NAMES[code]}</span><small><i class="beacon ${warn ? "warn" : ""}" style="position:static;display:inline-block;margin:0 5px 0 0;width:8px;height:8px;"></i>${s.po.toLocaleString("th-TH")} PO · ${s.pr.toLocaleString("th-TH")} PR</small>
       </div></div>`;
   });
 
+  // รถพยาบาลวิ่งบนถนนกลาง (จำนวนเพิ่มตามสัดส่วน PO ที่ค้าง)
   const totalPo = PLANT_ORDER.reduce((a, c) => a + stats[c].po, 0);
   const totalPend = PLANT_ORDER.reduce((a, c) => a + stats[c].pending, 0);
-  const fk = Math.min(4, Math.max(1, Math.ceil((totalPo ? totalPend / totalPo : 0) * 4)));
-  for (let i = 0; i < fk; i++) {
-    html += `<div class="fk" style="top:${252 + (i % 2) * 14}px;animation-duration:${16 + i * 3}s;animation-delay:-${i * 5}s">
-      ${twCube(26, 12, 9, 0, 0, 0, "#fb923c")}${twCube(9, 12, 20, 0, 0, 0, "#fde68a")}</div>`;
+  const amb = Math.min(4, Math.max(1, Math.ceil((totalPo ? totalPend / totalPo : 0) * 4)));
+  for (let i = 0; i < amb; i++) {
+    html += `<div class="fk" style="top:${250 + (i % 2) * 15}px;animation-duration:${16 + i * 3}s;animation-delay:-${i * 5}s">
+      ${twCube(26, 13, 9, 0, 0, 1, null, "wall amb")}${twCube(10, 13, 7, 26, 0, 1, null, "wall cab")}
+      ${twCube(26, 13, 2, 0, 0, 4, null, "cross")}${twCube(5, 5, 3, 9, 4, 10, null, "siren")}</div>`;
   }
   document.getElementById("twinFloor").innerHTML = html;
 }
@@ -2354,7 +2605,7 @@ function renderTwinView() {
 // 7. การนำทาง (Navigation) และ Event Listeners
 // =========================================================
 const VIEW_META = {
-  "twin": { eyebrow: "DIGITAL TWIN · WAREHOUSE 3D", title: "Digital Twin คลังพัสดุและเวชภัณฑ์", sub: "แบบจำลองคลัง 3 มิติที่เชื่อมกับข้อมูล PO / PR จริง ลากเพื่อหมุน คลิกโซนเพื่อเลือกคลัง" },
+  "twin": { eyebrow: "DIGITAL TWIN · HOSPITAL 3D", title: "Digital Twin โรงพยาบาล · คลังพัสดุและเวชภัณฑ์", sub: "แบบจำลองโรงพยาบาล 3 มิติที่เชื่อมกับข้อมูล PO / PR จริง ลากเพื่อหมุน คลิกอาคารเพื่อเลือกคลัง" },
   "overview": { eyebrow: "WAREHOUSE INTELLIGENCE · GLASS UI", title: "ภาพรวมข้อมูลคลังพัสดุและเวชภัณฑ์", sub: "เลือกคลัง (พัสดุ, คลังยา, คลังเวชภัณฑ์, คลังแลป, คลังห้องผ่าตัด) เพื่อดูสรุปข้อมูล" },
   "pr": { eyebrow: "PURCHASE REQUISITION (ชีต PR)", title: "รายการขอซื้อ (PR) แยกตามคลัง", sub: "แสดงข้อมูลทั้งหมดจากชีต PR คำนวณผลรวมจากช่อง ราคารวมใน PR และเรียงคอลัมน์ตารางตามกำหนด" },
   "po-overview": { eyebrow: "PURCHASE ORDER OVERVIEW (ชีต 1)", title: "ภาพรวมรายการใบสั่งซื้อ (PO)", sub: "สรุปจำนวนรายการ PO สถานะการจัดซื้อ มูลค่าสั่งซื้อรวม และตารางข้อมูล PO ทั้งหมดแยกตามคลัง" },
@@ -2431,7 +2682,12 @@ document.getElementById("excelPrSheetSelect").addEventListener("change", (e) => 
 
 document.getElementById("prSearchInput").addEventListener("input", () => { renderPRView(); animateVisibleNumbers(); });
 document.getElementById("poOvSearchInput").addEventListener("input", () => { renderPOOverviewView(); animateVisibleNumbers(); });
-document.getElementById("poMatSearchInput").addEventListener("input", () => { matShowCount = 30; renderPOMaterialView(); });
+document.querySelectorAll("[data-po-filter]").forEach(el => {
+  el.addEventListener("click", () => setPoOvFilter(el.dataset.poFilter, true));
+  el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setPoOvFilter(el.dataset.poFilter, true); } });
+});
+document.getElementById("poOvClearFilter").addEventListener("click", () => setPoOvFilter("all", false));
+bindMatCombo();
 document.getElementById("poMatSortSelect").addEventListener("change", () => { matShowCount = 30; renderPOMaterialView(); });
 document.getElementById("poCompanySearchInput").addEventListener("input", () => { renderPOCompanyView(); animateVisibleNumbers(); });
 document.getElementById("poCompanySelect").addEventListener("change", (e) => { STATE.selectedCompany = e.target.value; renderPOCompanyView(); animateVisibleNumbers(); });
