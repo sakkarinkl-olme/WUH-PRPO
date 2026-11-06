@@ -478,6 +478,57 @@ tbody tr:hover { background: var(--surface-2); }
   --surface: #0c1626; --surface-2: #101f36; --surface-hi: #14263f;
   color: var(--text);
 }
+
+/* ===== ค้นหารหัสวัสดุ (รายการแบบอ่านง่าย) ===== */
+.mat-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.mat-stat { padding: 9px 16px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); font-size: 12.5px; color: var(--muted); min-width: 130px; }
+.mat-stat strong { display: block; font-size: 19px; color: var(--text); font-variant-numeric: tabular-nums; }
+.mat-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.mat-row { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.mat-row[open] { border-color: var(--cyan); }
+.mat-row > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 18px; padding: 14px 18px; align-items: center; }
+.mat-row > summary::-webkit-details-marker { display: none; }
+.mat-row > summary:hover { background: var(--surface-2); }
+.mat-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; font-weight: 800; color: var(--cyan); letter-spacing: .5px; }
+.mat-name { font-size: 15px; font-weight: 700; margin: 3px 0 8px; line-height: 1.4; }
+.mat-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.mchip { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 99px; background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); }
+.mchip.warn { color: #b45309; background: rgba(251, 191, 36, .16); border-color: rgba(251, 191, 36, .5); }
+.mchip.ok { color: #047857; background: rgba(52, 211, 153, .14); border-color: rgba(52, 211, 153, .45); }
+:root[data-theme="dark"] .mchip.warn { color: #fde68a; }
+:root[data-theme="dark"] .mchip.ok { color: #6ee7b7; }
+.mat-money { text-align: right; }
+.mat-money strong { font-size: 19px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mat-money small { display: block; color: var(--muted); font-size: 11.5px; margin-top: 4px; min-height: 14px; }
+.mat-bar, .tm-bar { height: 7px; border-radius: 99px; background: var(--surface-2); margin-top: 7px; overflow: hidden; }
+.mat-bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #0891b2, #34d399); }
+.tm-bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #8b5cf6, #22d3ee); }
+.mat-lines { padding: 0 18px 16px; overflow-x: auto; }
+.mat-lines table { font-size: 12.5px; }
+.mat-more { align-self: center; margin-top: 6px; }
+.mat-empty { text-align: center; color: var(--muted); line-height: 1.8; }
+mark { background: rgba(251, 191, 36, .45); color: inherit; border-radius: 3px; padding: 0 2px; }
+
+/* ===== วัสดุหลักของบริษัท (จำนวนเงิน) ===== */
+.top-mats { display: flex; flex-direction: column; gap: 16px; margin-top: 18px; }
+.top-mat { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+.rank { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-weight: 800; font-size: 13px; background: var(--surface-2); border: 1px solid var(--border); }
+.top-mat:nth-child(1) .rank { background: var(--cyan); color: #04202a; border-color: transparent; }
+.tm-name { font-size: 14px; font-weight: 700; line-height: 1.35; }
+.tm-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.tm-money { text-align: right; }
+.tm-money strong { display: block; font-size: 16px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tm-money small { color: var(--muted); font-size: 11.5px; }
+@media (max-width: 720px) {
+  .mat-row > summary { grid-template-columns: 1fr; gap: 10px; }
+  .mat-money { text-align: left; }
+}
+
+/* กราฟรายเดือน (แท่งเยอะ) */
+.chart.dense { gap: 8px; }
+.chart.dense .pair-bars { gap: 3px; }
+.chart.dense .bar-top-value { font-size: 10px; padding: 1px 4px; margin-bottom: 6px; }
+.chart.dense .month { font-size: 10.5px; }
 </style>
 </head>
 
@@ -768,13 +819,13 @@ tbody tr:hover { background: var(--surface-2); }
       <div class="content">
         <article class="card">
           <div class="panel-head">
-            <h2>จำนวนรายการ PO แยกตามคลัง</h2>
-            <div class="chart-legend-inline">
+            <h2 id="poOvChartTitle">จำนวนรายการ PO แยกตามคลัง</h2>
+            <div class="chart-legend-inline" id="poOvChartLegend">
               <span class="chart-legend-item"><i class="dot" style="background:var(--chart-mint);margin:0;"></i>ดำเนินการแล้ว</span>
               <span class="chart-legend-item"><i class="dot" style="background:var(--chart-amber);margin:0;"></i>ยังไม่ได้ดำเนินการ</span>
             </div>
           </div>
-          <p class="meta">แสดงจำนวนด้านบนแท่งกราฟในแต่ละคลัง (ไม่มีข้อความเสร็จแล้ว/รอดำเนินการใต้กราฟ)</p>
+          <p class="meta" id="poOvChartNote">แสดงจำนวนด้านบนแท่งกราฟในแต่ละคลัง (ไม่มีข้อความเสร็จแล้ว/รอดำเนินการใต้กราฟ)</p>
           <div class="chart" id="poOvBarChart"></div>
         </article>
 
@@ -821,16 +872,22 @@ tbody tr:hover { background: var(--surface-2); }
       <article class="card">
         <div class="panel-head">
           <div>
-            <h2>ค้นหาวัสดุจากชีต PO (แยกตามคลัง พร้อมรูปภาพวัสดุ)</h2>
-            <p class="meta" style="margin:4px 0 0;">เลือกคลังจากแถบด้านบน แล้วพิมพ์รหัสวัสดุหรือชื่อวัสดุที่ต้องการค้นหา</p>
+            <h2>ค้นหารหัสวัสดุ</h2>
+            <p class="meta" style="margin:4px 0 0;">พิมพ์รหัสหรือชื่อวัสดุ ระบบจะรวมเป็น 1 บรรทัดต่อ 1 วัสดุ พร้อมยอดเงินรวม คลิกที่บรรทัดเพื่อดู PO ที่เกี่ยวข้อง</p>
           </div>
-          <span class="tag" id="poMatResultTag">พบ 0 รายการ</span>
+          <span class="tag" id="poMatResultTag">0 วัสดุ</span>
         </div>
         <div class="search-bar" style="margin-top: 16px;">
           <input type="search" id="poMatSearchInput" class="search-input" placeholder="🔍 พิมพ์รหัสวัสดุ หรือ ชื่อวัสดุ เพื่อค้นหา...">
+          <select id="poMatSortSelect" class="select-input" style="max-width: 250px;">
+            <option value="amount">เรียง: มูลค่ามาก → น้อย</option>
+            <option value="count">เรียง: จำนวน PO มาก → น้อย</option>
+            <option value="code">เรียง: รหัสวัสดุ A → Z</option>
+          </select>
         </div>
+        <div class="mat-stats" id="matSummary"></div>
       </article>
-      <div id="materialGrid" class="material-grid"></div>
+      <div id="materialGrid" class="mat-list"></div>
     </section>
 
     <!-- VIEW 5: PO - ค้นหาจากบริษัท -->
@@ -882,17 +939,18 @@ tbody tr:hover { background: var(--surface-2); }
       <div class="content">
         <article class="card">
           <div class="panel-head">
+            <h2>รายการวัสดุหลักจากบริษัทนี้</h2>
+            <span class="tag">เรียงตามจำนวนเงิน</span>
+          </div>
+          <div class="meta" id="compTopSub" style="margin-top:6px;"></div>
+          <div id="compTopMaterials" class="top-mats"></div>
+        </article>
+        <article class="card">
+          <div class="panel-head">
             <h2 id="compChartTitle">จำนวนการสั่งซื้อแยกตามบริษัท / คลัง</h2>
             <span class="tag">PO Overview</span>
           </div>
           <div class="chart" id="compBarChart"></div>
-        </article>
-        <article class="card">
-          <div class="panel-head">
-            <h2>รายการวัสดุหลักจากบริษัทนี้</h2>
-            <span class="tag">Top Items</span>
-          </div>
-          <div id="compTopMaterials" class="legend" style="margin-top:18px;"></div>
         </article>
       </div>
 
@@ -1667,6 +1725,87 @@ function renderPRView() {
   renderOrderedTable("prTable", prOrderedCols, finalPR, 100);
 }
 
+// ---------------------------------------------------------
+// กราฟรายเดือน: นับ PO / PR ตามเดือนที่สร้าง
+// ---------------------------------------------------------
+const TH_MONTHS_SHORT = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+
+// อ่านวันที่จากหลายรูปแบบ -> { y (ค.ศ.), m (1-12) } หรือ null
+function parseDateParts(v) {
+  if (v === null || v === undefined || v === "") return null;
+  if (v instanceof Date && !isNaN(v)) return { y: v.getFullYear(), m: v.getMonth() + 1 };
+  if (typeof v === "number") {                       // เลขลำดับวันที่ของ Excel
+    if (v > 20000 && v < 90000) { const d = new Date(Math.round((v - 25569) * 86400000)); return { y: d.getUTCFullYear(), m: d.getUTCMonth() + 1 }; }
+    return null;
+  }
+  const s = String(v).trim();
+  if (/^\d{5}(\.\d+)?$/.test(s)) return parseDateParts(parseFloat(s));          // เลขลำดับวันที่ที่เป็นข้อความ
+  let m = s.match(/^Date\((\d{4}),\s*(\d{1,2}),\s*(\d{1,2})/);           // รูปแบบ gviz (เดือนเริ่มที่ 0)
+  if (m) return { y: +m[1], m: +m[2] + 1 };
+  m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);                  // 2026-10-22
+  if (m) return fixDate(+m[1], +m[2], +m[3]);
+  m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);              // 22/10/2026 (วัน/เดือน/ปี)
+  if (m) {
+    let a = +m[1], b = +m[2], y = +m[3];
+    if (y < 100) y += 2000;
+    if (b > 12 && a <= 12) { const tmp = a; a = b; b = tmp; }             // ถ้าเป็นเดือน/วัน/ปี ให้สลับ
+    return fixDate(y, b, a);
+  }
+  return null;
+}
+function fixDate(y, mo, d) {
+  if (y > 2400) y -= 543;                                                  // ปี พ.ศ. -> ค.ศ.
+  if (mo < 1 || mo > 12 || d < 1 || d > 31 || y < 1990 || y > 2100) return null;
+  return { y, m: mo };
+}
+function findHeaderBy(headers, regexes) {
+  for (const rx of regexes) { const h = (headers || []).find(x => rx.test(String(x).trim())); if (h) return h; }
+  return "";
+}
+
+// poRows = แถว PO ของคลังที่เลือก; PR ดึงจากชีต PR ตามคลังเดียวกัน
+function buildMonthlyPoPrItems(poRows) {
+  const poDateCol = findHeaderBy(STATE.po.headers, [/^วันที่เอกสาร$/, /^po\s*date$/i, /วันที่.*(เอกสาร|สั่งซื้อ)/, /^วันที่$/, /^date$/i]);
+  const prSame = STATE.pr === STATE.po || STATE.pr.rows === STATE.po.rows;   // โหลดชีต PR ไม่สำเร็จ -> ใช้ PO แทน
+  const prDateCol = prSame ? "" : findHeaderBy(STATE.pr.headers, [/^pr\s*date$/i, /วันที่.*pr/i, /pr.*date/i, /วันที่สร้าง/, /^วันที่$/, /^date$/i]);
+  if (!poDateCol && !prDateCol) return null;
+
+  const prRows = prSame ? [] : filterRowsByPlant(STATE.pr, STATE.selectedPlant);
+  const bucket = new Map();
+  const bump = (d, key) => {
+    const k = d.y * 100 + d.m;
+    if (!bucket.has(k)) bucket.set(k, { poCount: 0, prCount: 0 });
+    bucket.get(k)[key]++;
+  };
+  let poMissing = 0, prMissing = 0;
+  if (poDateCol) poRows.forEach(r => { const d = parseDateParts(r[poDateCol]); if (d) bump(d, "poCount"); else poMissing++; });
+  if (prDateCol) prRows.forEach(r => { const d = parseDateParts(r[prDateCol]); if (d) bump(d, "prCount"); else prMissing++; });
+  if (!bucket.size) return null;
+
+  // เติมเดือนที่ไม่มีข้อมูลให้ต่อเนื่อง และแสดงไม่เกิน 12 เดือนล่าสุด
+  const keys = [...bucket.keys()].sort((a, b) => a - b);
+  let y = Math.floor(keys[0] / 100), m = keys[0] % 100;
+  const endY = Math.floor(keys[keys.length - 1] / 100), endM = keys[keys.length - 1] % 100;
+  const all = [];
+  while (y < endY || (y === endY && m <= endM)) {
+    const b = bucket.get(y * 100 + m) || { poCount: 0, prCount: 0 };
+    all.push({ label: `${TH_MONTHS_SHORT[m - 1]} ${String((y + 543) % 100).padStart(2, "0")}`, poCount: b.poCount, prCount: b.prCount });
+    m++; if (m > 12) { m = 1; y++; }
+  }
+  const items = all.slice(-12);
+
+  const parts = [`นับตามเดือนที่สร้าง — PO: “${poDateCol || "ไม่พบคอลัมน์วันที่"}”`, prSame ? "PR: ไม่พบข้อมูลชีต PR" : `PR: “${prDateCol || "ไม่พบคอลัมน์วันที่"}”`];
+  let note = parts.join(" · ");
+  if (poMissing || prMissing) note += ` (ไม่มีวันที่: PO ${poMissing.toLocaleString("th-TH")} · PR ${prMissing.toLocaleString("th-TH")} แถว)`;
+  if (all.length > 12) note += ` · แสดง 12 เดือนล่าสุด`;
+  return { items, note };
+}
+
+const PO_OV_LEGEND_STATUS = `
+  <span class="chart-legend-item"><i class="dot" style="background:var(--chart-mint);margin:0;"></i>ดำเนินการแล้ว</span>
+  <span class="chart-legend-item"><i class="dot" style="background:var(--chart-amber);margin:0;"></i>ยังไม่ได้ดำเนินการ</span>`;
+const PO_OV_DEFAULT_NOTE = "แสดงจำนวนด้านบนแท่งกราฟในแต่ละคลัง (ไม่มีข้อความเสร็จแล้ว/รอดำเนินการใต้กราฟ)";
+
 function renderPOOverviewView() {
   const poByPlant = filterRowsByPlant(STATE.po, STATE.selectedPlant);
   const keyword = document.getElementById("poOvSearchInput").value.trim().toLowerCase();
@@ -1689,19 +1828,44 @@ function renderPOOverviewView() {
   document.getElementById("poOvPlantMeta").textContent = `คลัง: ${getPlantDisplayName(STATE.selectedPlant)}`;
   document.getElementById("poOvPriceColMeta").textContent = fullPriceCol ? `รวมจากคอลัมน์ "${fullPriceCol}"` : "รวมมูลค่าสั่งซื้อใน PO";
 
-  const targetPlants = STATE.selectedPlant === "ALL" ? getAvailablePlants() : [STATE.selectedPlant];
-  const poPlantStatusItems = targetPlants.map(code => {
-    const rowsOfPlant = filterRowsByPlant(STATE.po, code);
-    let done = 0, pending = 0;
-    rowsOfPlant.forEach(r => { if (classifyPurchaseStatus(r, cols) === "pending") pending++; else done++; });
-    return { label: PLANT_NAMES[code], doneCount: done, pendingCount: pending };
-  }).filter(item => item.doneCount > 0 || item.pendingCount > 0);
+  const titleEl = document.getElementById("poOvChartTitle");
+  const legendEl = document.getElementById("poOvChartLegend");
+  const noteEl = document.getElementById("poOvChartNote");
+  const chartEl = document.getElementById("poOvBarChart");
 
-  renderDualPlantChart("poOvBarChart", poPlantStatusItems, {
-    firstKey: "doneCount", secondKey: "pendingCount",
-    firstLabel: "ดำเนินการแล้ว", secondLabel: "ยังไม่ได้ดำเนินการ",
-    firstClass: "po-bar", secondClass: "amber-bar", showSubLabels: false
-  });
+  // เลือกคลังเฉพาะ -> รายเดือน (PO และ PR) / เลือกทั้งหมด -> แยกตามคลังเหมือนเดิม
+  const monthly = STATE.selectedPlant !== "ALL" ? buildMonthlyPoPrItems(poByPlant) : null;
+  if (monthly) {
+    titleEl.textContent = `จำนวน PO และ PR ที่สร้างรายเดือน · ${getPlantDisplayName(STATE.selectedPlant)}`;
+    legendEl.innerHTML = `
+      <span class="chart-legend-item"><i class="dot" style="background:var(--chart-mint);margin:0;"></i>PO</span>
+      <span class="chart-legend-item"><i class="dot" style="background:var(--chart-purple);margin:0;"></i>PR</span>`;
+    noteEl.textContent = monthly.note;
+    chartEl.classList.toggle("dense", monthly.items.length > 7);
+    renderDualPlantChart("poOvBarChart", monthly.items, {
+      firstKey: "poCount", secondKey: "prCount", firstLabel: "PO", secondLabel: "PR",
+      firstClass: "po-bar", secondClass: "pr-bar", showSubLabels: false
+    });
+  } else {
+    titleEl.textContent = "จำนวนรายการ PO แยกตามคลัง";
+    legendEl.innerHTML = PO_OV_LEGEND_STATUS;
+    noteEl.textContent = STATE.selectedPlant === "ALL"
+      ? PO_OV_DEFAULT_NOTE
+      : "ไม่พบคอลัมน์วันที่ในชีต จึงแสดงสถานะ PO ของคลังนี้แทนกราฟรายเดือน";
+    chartEl.classList.remove("dense");
+    const targetPlants = STATE.selectedPlant === "ALL" ? getAvailablePlants() : [STATE.selectedPlant];
+    const poPlantStatusItems = targetPlants.map(code => {
+      const rowsOfPlant = filterRowsByPlant(STATE.po, code);
+      let done = 0, pending = 0;
+      rowsOfPlant.forEach(r => { if (classifyPurchaseStatus(r, cols) === "pending") pending++; else done++; });
+      return { label: PLANT_NAMES[code], doneCount: done, pendingCount: pending };
+    }).filter(item => item.doneCount > 0 || item.pendingCount > 0);
+    renderDualPlantChart("poOvBarChart", poPlantStatusItems, {
+      firstKey: "doneCount", secondKey: "pendingCount",
+      firstLabel: "ดำเนินการแล้ว", secondLabel: "ยังไม่ได้ดำเนินการ",
+      firstClass: "po-bar", secondClass: "amber-bar", showSubLabels: false
+    });
+  }
 
   const totalPO = finalPO.length;
   const donePct = totalPO ? Math.round((doneCount / totalPO) * 100) : 0;
@@ -1714,54 +1878,115 @@ function renderPOOverviewView() {
   renderTable("poOvTable", STATE.po.headers, finalPO, 60);
 }
 
-function renderPOMaterialView() {
-  const poByPlant = filterRowsByPlant(STATE.po, STATE.selectedPlant);
-  const query = document.getElementById("poMatSearchInput").value.trim().toLowerCase();
-  const { plantCol, matCodeCol, matNameCol, companyCol, imageCol, fullPriceCol, amountCol, docNoCol } = STATE.po.cols;
-  const priceColToUse = fullPriceCol || amountCol;
+function escHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function fmtBaht(n) { return "฿" + Math.round(n || 0).toLocaleString("th-TH"); }
+function hl(text, q) {
+  const s = String(text == null ? "" : text);
+  if (!q) return escHtml(s);
+  const i = s.toLowerCase().indexOf(q);
+  if (i < 0) return escHtml(s);
+  return escHtml(s.slice(0, i)) + "<mark>" + escHtml(s.slice(i, i + q.length)) + "</mark>" + escHtml(s.slice(i + q.length));
+}
 
-  const matched = poByPlant.filter(r => {
-    if (!query) return true;
-    return String(r[matCodeCol] || "").toLowerCase().includes(query) || String(r[matNameCol] || "").toLowerCase().includes(query);
+let matShowCount = 30;
+
+function renderPOMaterialView() {
+  const rows = filterRowsByPlant(STATE.po, STATE.selectedPlant);
+  const q = document.getElementById("poMatSearchInput").value.trim().toLowerCase();
+  const sortBy = document.getElementById("poMatSortSelect").value || "amount";
+  const cols = STATE.po.cols;
+  const { plantCol, matCodeCol, matNameCol, companyCol, fullPriceCol, amountCol, docNoCol, poNoCol } = cols;
+  const priceCol = fullPriceCol || amountCol;
+  const qtyCol = STATE.po.headers.find(h => /^จำนวน$/.test(String(h).trim()));
+  const unitCol = STATE.po.headers.find(h => /^หน่วยนับ$/.test(String(h).trim()));
+
+  // รวมเป็น 1 บรรทัดต่อ 1 วัสดุ
+  const groups = new Map();
+  let lineCount = 0;
+  rows.forEach(r => {
+    const code = String(r[matCodeCol] || "").trim();
+    const name = String(r[matNameCol] || "").trim();
+    if (q && !(code.toLowerCase().includes(q) || name.toLowerCase().includes(q))) return;
+    const key = code || name || "ไม่ระบุ";
+    let g = groups.get(key);
+    if (!g) { g = { code, name, amount: 0, qty: 0, unit: "", plants: new Set(), vendors: new Set(), lines: [], pending: 0 }; groups.set(key, g); }
+    if (!g.name && name) g.name = name;
+    const amt = priceCol ? parseNumber(r[priceCol]) : 0;
+    const qty = qtyCol ? parseNumber(r[qtyCol]) : 0;
+    const unit = unitCol ? String(r[unitCol] || "").trim() : "";
+    const plant = normalizePlantCode(r[plantCol]);
+    const vendor = companyCol ? cleanVendorName(r[companyCol]) : "-";
+    const isPending = classifyPurchaseStatus(r, cols) === "pending";
+    g.amount += amt; g.qty += qty; if (unit) g.unit = unit;
+    g.plants.add(plant); g.vendors.add(vendor);
+    if (isPending) g.pending++;
+    g.lines.push({ po: String((poNoCol && r[poNoCol]) || (docNoCol && r[docNoCol]) || "-"), vendor, plant, qty, unit, amount: amt, pending: isPending });
+    lineCount++;
   });
 
-  document.getElementById("poMatResultTag").textContent = `พบ ${matched.length.toLocaleString("th-TH")} รายการ (${getPlantDisplayName(STATE.selectedPlant)})`;
+  let list = [...groups.values()];
+  if (sortBy === "count") list.sort((a, b) => b.lines.length - a.lines.length || b.amount - a.amount);
+  else if (sortBy === "code") list.sort((a, b) => (!a.code - !b.code) || a.code.localeCompare(b.code, "en", { numeric: true }));
+  else list.sort((a, b) => b.amount - a.amount || b.lines.length - a.lines.length);
+
+  const totalAmt = list.reduce((s, g) => s + g.amount, 0);
+  const maxAmt = Math.max(1, ...list.map(g => g.amount));
+
+  document.getElementById("poMatResultTag").textContent = `${list.length.toLocaleString("th-TH")} วัสดุ · ${getPlantDisplayName(STATE.selectedPlant)}`;
+  document.getElementById("matSummary").innerHTML = `
+    <div class="mat-stat"><strong>${list.length.toLocaleString("th-TH")}</strong>วัสดุที่พบ</div>
+    <div class="mat-stat"><strong>${lineCount.toLocaleString("th-TH")}</strong>บรรทัด PO</div>
+    <div class="mat-stat"><strong>${priceCol ? fmtBaht(totalAmt) : "-"}</strong>มูลค่ารวม</div>`;
+
   const grid = document.getElementById("materialGrid");
-  if (!matched.length) {
-    grid.innerHTML = `<div class="card" style="grid-column:1/-1;text-align:center;color:var(--muted);">ไม่พบวัสดุที่ตรงกับคำค้นหาในคลังที่เลือก</div>`;
+  if (!list.length) {
+    grid.innerHTML = `<div class="card mat-empty">ไม่พบวัสดุที่ตรงกับ “${escHtml(q)}” ในคลังที่เลือก<br><small>ลองพิมพ์ให้สั้นลง หรือเลือก “ทุกคลัง” ที่แถบด้านบน</small></div>`;
     return;
   }
 
-  grid.innerHTML = matched.slice(0, 24).map(row => {
-    const pCode = normalizePlantCode(row[plantCol]);
-    const pTitle = PLANT_NAMES[pCode] || "ไม่ระบุคลัง";
-    const mCode = row[matCodeCol] || "-";
-    const mName = row[matNameCol] || "ไม่ระบุชื่อวัสดุ";
-    const vendor = companyCol ? cleanVendorName(row[companyCol]) : "-";
-    const poNo = docNoCol ? (row[docNoCol] || "-") : "-";
-    const amt = priceColToUse ? (row[priceColToUse] || "-") : "-";
-    const imgUrl = resolveImageUrl(imageCol ? row[imageCol] : "", mName, pCode);
-    const fallbackSvg = resolveImageUrl("", mName, pCode);
-
+  const shown = list.slice(0, matShowCount);
+  grid.innerHTML = shown.map(g => {
+    const plantNames = [...g.plants].map(c => PLANT_NAMES[c] || "ไม่ระบุคลัง");
+    const plantChips = plantNames.slice(0, 3).map(n => `<span class="mchip">${escHtml(n)}</span>`).join("") +
+      (plantNames.length > 3 ? `<span class="mchip">+${plantNames.length - 3}</span>` : "");
+    const status = g.pending
+      ? `<span class="mchip warn">ค้างดำเนินการ ${g.pending}</span>`
+      : `<span class="mchip ok">ดำเนินการแล้ว</span>`;
+    const qtyText = g.qty ? `รวม ${g.qty.toLocaleString("th-TH")} ${escHtml(g.unit)}` : "";
+    const lines = [...g.lines].sort((x, y) => y.amount - x.amount).map(l => `
+      <tr><td>${escHtml(l.po)}</td><td>${escHtml(l.vendor)}</td><td>${escHtml(PLANT_NAMES[l.plant] || "-")}</td>
+      <td style="text-align:right">${l.qty ? l.qty.toLocaleString("th-TH") + " " + escHtml(l.unit) : "-"}</td>
+      <td style="text-align:right"><strong>${priceCol ? fmtBaht(l.amount) : "-"}</strong></td>
+      <td>${l.pending ? '<span class="mchip warn">ค้าง</span>' : '<span class="mchip ok">เสร็จ</span>'}</td></tr>`).join("");
     return `
-      <article class="material-card">
-        <div class="material-img-wrap">
-          <img src="${imgUrl}" alt="${mName}" loading="lazy" onerror="this.onerror=null;this.src='${fallbackSvg}';">
-          <span class="material-plant-badge">${pTitle}</span>
-        </div>
-        <div class="material-body">
-          <div class="material-code">รหัสวัสดุ: ${mCode}</div>
-          <div class="material-title">${mName}</div>
-          <div class="material-specs">
-            <div>🏢 ผู้ขาย: <strong>${vendor}</strong></div>
-            <div>📄 เลขที่เอกสาร: <strong>${poNo}</strong></div>
-            ${priceColToUse ? `<div>💰 มูลค่า/จำนวน: <strong>${amt}</strong></div>` : ""}
+      <details class="mat-row">
+        <summary>
+          <div class="mat-main">
+            <div class="mat-code">${g.code ? hl(g.code, q) : "ไม่มีรหัสวัสดุ"}</div>
+            <div class="mat-name">${hl(g.name || "ไม่ระบุชื่อวัสดุ", q)}</div>
+            <div class="mat-tags">${plantChips}<span class="mchip">${g.lines.length} PO</span><span class="mchip">${g.vendors.size} ผู้ขาย</span>${status}</div>
           </div>
+          <div class="mat-money">
+            <strong>${priceCol ? fmtBaht(g.amount) : "-"}</strong>
+            <div class="mat-bar"><i style="width:${Math.max(2, Math.round((g.amount / maxAmt) * 100))}%"></i></div>
+            <small>${qtyText}</small>
+          </div>
+        </summary>
+        <div class="mat-lines">
+          <table><thead><tr><th>เลข PO</th><th>ผู้ขาย</th><th>คลัง</th><th style="text-align:right">จำนวน</th><th style="text-align:right">มูลค่า</th><th>สถานะ</th></tr></thead>
+          <tbody>${lines}</tbody></table>
         </div>
-      </article>
-    `;
-  }).join("");
+      </details>`;
+  }).join("") + (list.length > shown.length
+    ? `<button type="button" class="btn mat-more" id="matMoreBtn">แสดงเพิ่มอีก 30 วัสดุ (เหลือ ${(list.length - shown.length).toLocaleString("th-TH")})</button>` : "");
+
+  const more = document.getElementById("matMoreBtn");
+  if (more) more.addEventListener("click", () => { matShowCount += 30; renderPOMaterialView(); });
 }
+
+let compShowAllMats = false;
 
 function renderPOCompanyView() {
   const { headers, cols } = STATE.po;
@@ -1834,15 +2059,46 @@ function renderPOCompanyView() {
     renderBarChart("compBarChart", Object.entries(byPlant).map(([label, value]) => ({ label, value })));
   }
 
-  const matCount = {};
+  // วัสดุหลักของบริษัท เรียงตามจำนวนเงิน
+  const matMap = new Map();
   compRows.forEach(r => {
-    const mName = String(r[cols.matNameCol] || r[cols.matCodeCol] || "ไม่ระบุ").trim();
-    matCount[mName] = (matCount[mName] || 0) + 1;
+    const code = String(r[cols.matCodeCol] || "").trim();
+    const name = String(r[cols.matNameCol] || "").trim();
+    const key = code || name || "ไม่ระบุ";
+    let m = matMap.get(key);
+    if (!m) { m = { code, name: name || code || "ไม่ระบุ", amount: 0, count: 0 }; matMap.set(key, m); }
+    m.amount += fullPriceCol ? parseNumber(r[fullPriceCol]) : 0;
+    m.count++;
   });
-  const topMats = Object.entries(matCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
-  document.getElementById("compTopMaterials").innerHTML = topMats.length
-    ? topMats.map(([name, cnt]) => `<div class="legend-row"><span><i class="dot" style="background:var(--chart-mint)"></i>${name}</span><strong>${cnt.toLocaleString("th-TH")} รายการ</strong></div>`).join("")
+  const matList = [...matMap.values()].sort((a, b) => (fullPriceCol ? b.amount - a.amount : 0) || b.count - a.count);
+  const matTotal = matList.reduce((s, m) => s + m.amount, 0);
+  const matMax = Math.max(1, ...matList.map(m => m.amount));
+  const topLimit = compShowAllMats ? 30 : 8;
+  const topShown = matList.slice(0, topLimit);
+  const who = STATE.selectedCompany === "ALL" ? "ทุกบริษัท" : STATE.selectedCompany;
+
+  document.getElementById("compTopSub").innerHTML = fullPriceCol
+    ? `${escHtml(who)} · ${matList.length.toLocaleString("th-TH")} รายการวัสดุ · มูลค่ารวม <strong>${fmtBaht(matTotal)}</strong>`
+    : `${escHtml(who)} · ไม่พบคอลัมน์จำนวนเงินในชีต จึงแสดงเป็นจำนวนรายการแทน`;
+
+  document.getElementById("compTopMaterials").innerHTML = topShown.length
+    ? topShown.map((m, i) => `
+        <div class="top-mat">
+          <span class="rank">${i + 1}</span>
+          <div class="tm-body">
+            <div class="tm-name">${escHtml(m.name)}</div>
+            <div class="tm-sub">${m.code ? escHtml(m.code) + " · " : ""}${m.count.toLocaleString("th-TH")} PO</div>
+            <div class="tm-bar"><i style="width:${Math.max(2, Math.round((fullPriceCol ? m.amount / matMax : m.count / Math.max(1, matList[0].count)) * 100))}%"></i></div>
+          </div>
+          <div class="tm-money">
+            <strong>${fullPriceCol ? fmtBaht(m.amount) : m.count.toLocaleString("th-TH") + " รายการ"}</strong>
+            <small>${fullPriceCol && matTotal ? (m.amount / matTotal * 100 < 0.1 ? "<0.1%" : (m.amount / matTotal * 100).toFixed(1) + "%") + " ของทั้งหมด" : ""}</small>
+          </div>
+        </div>`).join("") +
+      (matList.length > 8 ? `<button type="button" class="btn" id="compTopToggle" style="align-self:center;">${compShowAllMats ? "แสดงน้อยลง" : "ดูเพิ่ม (สูงสุด 30 รายการ)"}</button>` : "")
     : `<div class="meta">ไม่มีข้อมูลวัสดุ</div>`;
+  const tgl = document.getElementById("compTopToggle");
+  if (tgl) tgl.addEventListener("click", () => { compShowAllMats = !compShowAllMats; renderPOCompanyView(); });
 
   document.getElementById("compTableCount").textContent = `${compRows.length.toLocaleString("th-TH")} แถว`;
   renderTable("compTable", headers, compRows, 40);
@@ -2175,7 +2431,8 @@ document.getElementById("excelPrSheetSelect").addEventListener("change", (e) => 
 
 document.getElementById("prSearchInput").addEventListener("input", () => { renderPRView(); animateVisibleNumbers(); });
 document.getElementById("poOvSearchInput").addEventListener("input", () => { renderPOOverviewView(); animateVisibleNumbers(); });
-document.getElementById("poMatSearchInput").addEventListener("input", renderPOMaterialView);
+document.getElementById("poMatSearchInput").addEventListener("input", () => { matShowCount = 30; renderPOMaterialView(); });
+document.getElementById("poMatSortSelect").addEventListener("change", () => { matShowCount = 30; renderPOMaterialView(); });
 document.getElementById("poCompanySearchInput").addEventListener("input", () => { renderPOCompanyView(); animateVisibleNumbers(); });
 document.getElementById("poCompanySelect").addEventListener("change", (e) => { STATE.selectedCompany = e.target.value; renderPOCompanyView(); animateVisibleNumbers(); });
 document.getElementById("poCompanyPlantSelect").addEventListener("change", (e) => { STATE.selectedPlant = e.target.value; renderAllActiveViews(); });
