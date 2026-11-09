@@ -1475,7 +1475,7 @@ footer code {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 </style>
-<style data-link-removed-style>a[data-link-removed],a[href*="zPythonSafez"]:not([onclick]){pointer-events:none!important;cursor:default!important;opacity:.6}</style></head>
+</head>
 
 <body>
 
@@ -1524,7 +1524,7 @@ footer code {
     <div class="sidebar-note">
       ที่มาของข้อมูลที่เลือกอยู่:<br>
       <strong id="sidebarSourceLabel" style="color:var(--text);">☁️ Google Sheets</strong><br>
-      <a rel="noopener" data-link-removed aria-disabled="true" role="link" title="Link removed: its address didn't come from this conversation.">
+      <a href="https://docs.google.com/spreadsheets/d/1GS4iycdl-J68djNL9rEX_kahY0D_ygzdKX6uF6qcEJc/edit?gid=0#gid=0" target="_blank" rel="noopener">
         เปิดตาราง Google Sheets ↗
       </a>
     </div>
@@ -1997,6 +1997,8 @@ footer code {
 // 1. ตั้งค่าการเชื่อมต่อ ชื่อคลัง และคลังเก็บข้อมูลทั้ง 2 แหล่ง
 // =========================================================
 const SHEET_ID = "1GS4iycdl-J68djNL9rEX_kahY0D_ygzdKX6uF6qcEJc";
+const SHEET_EDIT_URL = "https://docs.google.com/spreadsheets/d/1GS4iycdl-J68djNL9rEX_kahY0D_ygzdKX6uF6qcEJc/edit?gid=0#gid=0";
+const SHEET_BASE_URL = SHEET_EDIT_URL.split("/edit")[0];
 
 const PLANT_NAMES = {
   "2000": "พัสดุ",
@@ -2176,8 +2178,6 @@ function classifyPurchaseStatus(row, cols) {
 function resolveImageUrl(rawUrl, titleText, plantCode) {
   const url = String(rawUrl || "").trim();
   if (url && /^https?:\/\//i.test(url)) {
-    const driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-    if (driveMatch) return `about:invalid#zPythonSafez`;
     return url;
   }
   const label = (titleText || "Material").slice(0, 22);
@@ -2243,7 +2243,7 @@ function fetchSheetByParam(queryParam) {
       resolve(res.table);
     };
     script.onerror = () => { cleanup(); reject(new Error("โหลดข้อมูลจาก Google Sheets ไม่สำเร็จ")); };
-    script.src = `about:invalid#zPythonSafez`;
+    script.src = SHEET_BASE_URL + "/gviz/tq?" + queryParam + "&tqx=responseHandler:" + callbackName;
     document.body.appendChild(script);
   });
 }
@@ -3621,14 +3621,10 @@ async function loadSheetDataset(spec) {
   const errors = [];
   const attempts = [];
   if (spec.csvUrl) attempts.push(["CSV เผยแพร่", async () => buildDatasetFrom2DArray(parseCSV(await fetchText(spec.csvUrl)))]);
-  if (SHEET_CONFIG.apiKey) attempts.push(["Sheets API", async () => {
-    const u = `about:invalid#zPythonSafez`;
-    return buildDatasetFrom2DArray(JSON.parse(await fetchText(u)).values || []);
-  }]);
   attempts.push(["gviz-script", async () => parseGvizTable(await fetchSheetByParam("gid=" + spec.gid))]);
   attempts.push(["gviz-script(ชื่อชีต)", async () => parseGvizTable(await fetchSheetByParam("sheet=" + encodeURIComponent(spec.name)))]);
-  attempts.push(["gviz-csv", async () => buildDatasetFrom2DArray(parseCSV(await fetchText(`about:invalid#zPythonSafez`)))]);
-  attempts.push(["export-csv", async () => buildDatasetFrom2DArray(parseCSV(await fetchText(`about:invalid#zPythonSafez`)))]);
+  attempts.push(["gviz-csv", async () => buildDatasetFrom2DArray(parseCSV(await fetchText(SHEET_BASE_URL + "/gviz/tq?tqx=out:csv&gid=" + spec.gid)))]);
+  attempts.push(["export-csv", async () => buildDatasetFrom2DArray(parseCSV(await fetchText(SHEET_BASE_URL + "/export?format=csv&gid=" + spec.gid)))]);
 
   for (const [label, fn] of attempts) {
     try {
