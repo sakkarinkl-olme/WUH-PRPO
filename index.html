@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-<!-- SheetJS สำหรับอ่านไฟล์ Excel (.xlsx, .xls, .csv) -->
+<!-- SheetJS Library สำหรับอ่านไฟล์ Excel (.xlsx, .xls, .csv) -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <script>
@@ -611,6 +611,7 @@ header p { margin: 0; font-size: 13.5px; max-width: 720px; }
 .mint { color: var(--mint); }
 .purple { color: var(--purple); }
 .amber { color: var(--amber); }
+.neg-red { color: var(--red) !important; }
 
 .content {
   display: grid;
@@ -882,7 +883,26 @@ header p { margin: 0; font-size: 13.5px; max-width: 720px; }
 }
 
 /* COMBOBOX */
-.combo { position: relative; flex: 1; min-width: 260px; }
+#view-po-material > .card { position: relative; z-index: 25; overflow: visible; }
+#poMatResultTag {
+  cursor: pointer;
+  user-select: none;
+  transition: all var(--transition);
+}
+#poMatResultTag:hover {
+  background: var(--primary-grad);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+}
+#poMatResultTag.active {
+  background: var(--primary-grad);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: var(--shadow-glow);
+}
+.combo { position: relative; flex: 1; min-width: 260px; z-index: 30; }
 .combo .search-input { width: 100%; flex: none; padding-right: 76px; }
 .combo-toggle, .combo-clear {
   position: absolute;
@@ -1088,6 +1108,169 @@ mark { background: rgba(251, 191, 36, 0.4); color: inherit; border-radius: 4px; 
   color: var(--active-text);
   border-color: var(--cyan);
   box-shadow: var(--shadow-glow);
+}
+
+/* =========================================================
+   EXECUTIVE BUDGET DASHBOARD (SUB-TABS & DECISION UI)
+   ========================================================= */
+.bg-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  margin-bottom: 18px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+}
+.bg-tab-btn {
+  flex: 1;
+  min-width: 170px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--transition);
+}
+.bg-tab-btn:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+.bg-tab-btn.active {
+  background: var(--primary-grad);
+  color: #ffffff;
+  box-shadow: var(--shadow-glow);
+}
+.bg-tab-step {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.16);
+  color: inherit;
+}
+.bg-part { display: none; animation: fadeSection 0.24s ease-out; }
+.bg-part.active { display: block; }
+
+.bg-filter-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  align-items: end;
+}
+.bg-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.bg-filter-group label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.exec-signal-card {
+  margin-top: 18px;
+  padding: 20px 22px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-card);
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+}
+.exec-progress-stack {
+  height: 16px;
+  border-radius: 99px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  margin: 12px 0 8px;
+}
+.exec-progress-stack > i {
+  display: block;
+  height: 100%;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hbar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+.hbar-item {
+  padding: 13px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  transition: border-color var(--transition);
+}
+.hbar-item:hover {
+  border-color: var(--border-strong);
+}
+.hbar-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.hbar-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+.hbar-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.hbar-track {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--surface);
+  overflow: hidden;
+  display: flex;
+  gap: 2px;
+}
+.hbar-track > i {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+}
+.num-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+@media (max-width: 980px) {
+  .exec-signal-card { grid-template-columns: 1fr; }
 }
 
 /* =========================================================
@@ -1514,6 +1697,11 @@ footer code {
         </button>
       </div>
 
+      <button class="nav-btn" type="button" data-view="budget">
+        <span>💰 งบประมาณผู้บริหาร</span>
+        <span class="badge-sheet">ชีตงบประมาณ</span>
+      </button>
+
       <div class="sidebar-label" style="margin-top:16px;">จัดการแหล่งข้อมูล</div>
       <button class="nav-btn" type="button" data-view="import-excel">
         <span>📥 Import ข้อมูล Excel</span>
@@ -1914,6 +2102,135 @@ footer code {
       </article>
     </section>
 
+    <!-- VIEW 5B: แดชบอร์ดงบประมาณผู้บริหาร (รายรับงบประมาณสุทธิ, รายรับรับจริง & ค่าใช้จ่ายจริง) -->
+    <section id="view-budget" class="view-section">
+      <div class="kpis" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        <!-- การ์ดที่ 1: รายรับงบประมาณสุทธิ -->
+        <article class="card" style="padding: 26px 30px;">
+          <div class="label" style="font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 6px;">
+            🟢 รายรับงบประมาณสุทธิ
+          </div>
+          <div class="value mint" id="bgNetIncomeCardVal" style="font-size: clamp(28px, 3vw, 38px); margin: 12px 0 10px; font-weight: 800; letter-spacing: -1.1px;">
+            ฿0.00
+          </div>
+          <div class="meta" id="bgNetIncomeCardMeta" style="font-size: 13px; line-height: 1.7; color: var(--muted);">
+            คำนวณผลรวมจากช่องงบประมาณสุทธิในชีตงบประมาณ โดยใช้ข้อมูลตามประเภทรายรับ จากชีต Master งานย่อย
+          </div>
+        </article>
+
+        <!-- การ์ดที่ 2: รายรับ (รับจริง) -->
+        <article class="card" style="padding: 26px 30px;">
+          <div class="label" style="font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 6px;">
+            🩵 รายรับ (รับจริง)
+          </div>
+          <div class="value" id="bgActualIncomeCardVal" style="color: var(--cyan); font-size: clamp(28px, 3vw, 38px); margin: 12px 0 10px; font-weight: 800; letter-spacing: -1.1px;">
+            ฿0.00
+          </div>
+          <div class="meta" id="bgActualIncomeCardMeta" style="font-size: 13px; line-height: 1.7; color: var(--muted);">
+            คำนวณผลรวมจากช่อง รับจริง/จ่ายจริง ในชีตงบประมาณ (เฉพาะส่วนที่เป็นประเภทรายรับ)
+          </div>
+          <div id="bgActualSubSummary" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); display: grid; gap: 6px; font-size: 13px;"></div>
+        </article>
+
+        <!-- การ์ดที่ 3: ค่าใช้จ่าย(จริง) -->
+        <article class="card" style="padding: 26px 30px;">
+          <div class="label" style="font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 6px;">
+            🟠 ค่าใช้จ่าย(จริง)
+          </div>
+          <div class="value amber" id="bgActualExpenseCardVal" style="font-size: clamp(28px, 3vw, 38px); margin: 12px 0 10px; font-weight: 800; letter-spacing: -1.1px;">
+            ฿0.00
+          </div>
+          <div class="meta" id="bgActualExpenseCardMeta" style="font-size: 13px; line-height: 1.7; color: var(--muted);">
+            คำนวณผลรวมจากคอลัมน์ รวม ในชีตงบประมาณ โดยใช้ประเภท ค่าใช้จ่าย จากชีต Master งานย่อย (เฉพาะรหัสงานย่อยเท่านั้น)
+          </div>
+        </article>
+      </div>
+
+      <!-- รายละเอียดรหัสงานย่อยของ รายรับงบประมาณสุทธิ -->
+      <article class="card table-card">
+        <div class="panel-head">
+          <h2>รายละเอียดรหัสงานย่อยที่นำมาคำนวณรายรับงบประมาณสุทธิ</h2>
+          <span class="tag" id="bgSubworkDetailBadge">0 รายการ</span>
+        </div>
+        <div class="table-wrap">
+          <table id="bgSubworkDetailTable">
+            <thead>
+              <tr>
+                <th>รหัสงานย่อย</th>
+                <th>รายละเอียดงานย่อย</th>
+                <th style="text-align:right;">ยอดเงิน (บาท)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+          </table>
+        </div>
+      </article>
+
+      <!-- รายละเอียดของ รายรับ (รับจริง) แยกเป็น 2 ส่วน: รายได้ กับ ส่วนลดและส่วนต่างค่าบริการ (อยู่ด้านล่างรายละเอียดรายรับงบประมาณสุทธิ) -->
+      <div class="content" style="grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); margin-top: 18px;">
+        <!-- ส่วนที่ 1: รายได้ -->
+        <article class="card">
+          <div class="panel-head">
+            <div>
+              <h2>🟢 รายละเอียด: รายได้ (ช่องรับจริง/จ่ายจริง)</h2>
+              <p class="meta" style="margin: 4px 0 0;">รายการส่วนที่เป็นรายได้ ภายใต้ประเภทรายรับ</p>
+            </div>
+            <span class="tag" id="bgActRevBadge">0 รายการ</span>
+          </div>
+          <div class="table-wrap" style="max-height: 360px;">
+            <table id="bgActualRevenueTable">
+              <thead>
+                <tr>
+                  <th>รหัสงานย่อย</th>
+                  <th>รายละเอียดงานย่อย</th>
+                  <th style="text-align:right;">ยอดรับจริง (บาท)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tfoot></tfoot>
+            </table>
+          </div>
+        </article>
+
+        <!-- ส่วนที่ 2: ส่วนลดและส่วนต่างค่าบริการ -->
+        <article class="card">
+          <div class="panel-head">
+            <div>
+              <h2>🔻 รายละเอียด: ส่วนลดและส่วนต่างค่าบริการ (ช่องรับจริง/จ่ายจริง)</h2>
+              <p class="meta" style="margin: 4px 0 0;">รายการส่วนลดและส่วนต่างค่าบริการ (ค่าติดลบแสดงเครื่องหมาย - ด้านหลังเป็นสีแดง)</p>
+            </div>
+            <span class="tag" id="bgActDiscBadge">0 รายการ</span>
+          </div>
+          <div class="table-wrap" style="max-height: 360px;">
+            <table id="bgActualDiscountTable">
+              <thead>
+                <tr>
+                  <th>รหัสงานย่อย</th>
+                  <th>รายละเอียดงานย่อย</th>
+                  <th style="text-align:right;">ยอดส่วนลด/ส่วนต่าง (บาท)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tfoot></tfoot>
+            </table>
+          </div>
+        </article>
+      </div>
+
+      <!-- รายละเอียดของ ค่าใช้จ่าย(จริง) แยกหมวดตามแผนย่อย ในชีต Master งานย่อย -->
+      <article class="card table-card">
+        <div class="panel-head">
+          <div>
+            <h2>🟠 รายละเอียด: ค่าใช้จ่าย(จริง) แยกหมวดตามแผนย่อย (Master งานย่อย)</h2>
+            <p class="meta" style="margin: 4px 0 0;">จัดกลุ่มรหัสงานย่อยประเภทค่าใช้จ่ายตามแผนย่อยในชีต Master งานย่อย พร้อมรวมมูลค่าจากคอลัมน์ รวม ในชีตงบประมาณ</p>
+          </div>
+          <span class="tag" id="bgExpSubplanBadge">0 แผนย่อย</span>
+        </div>
+        <div id="bgExpenseBySubplanList" class="mat-list"></div>
+      </article>
+    </section>
+
     <!-- VIEW 6: IMPORT ข้อมูลจากไฟล์ EXCEL -->
     <section id="view-import-excel" class="view-section">
       <article class="card">
@@ -1942,6 +2259,17 @@ footer code {
           <div>
             <div class="label" style="margin-bottom:6px;">📝 เลือกชีตสำหรับข้อมูล PR (ชีต PR):</div>
             <select id="excelPrSheetSelect" class="select-input" style="width:100%;"></select>
+          </div>
+          <div>
+            <div class="label" style="margin-bottom:6px;">💰 เลือกชีตสำหรับข้อมูล งบประมาณ (คอลัมน์ A–K):</div>
+            <select id="excelBudgetSheetSelect" class="select-input" style="width:100%;"></select>
+          </div>
+          <div>
+            <div class="label" style="margin-bottom:6px;">📌 เลือกชีต Master งบประมาณ &amp; Master งานย่อย:</div>
+            <div style="display:flex;gap:8px;">
+              <select id="excelMasterBudgetSelect" class="select-input" style="width:50%;min-width:0;"></select>
+              <select id="excelMasterSubworkSelect" class="select-input" style="width:50%;min-width:0;"></select>
+            </div>
           </div>
         </div>
       </article>
@@ -2018,7 +2346,8 @@ const PR_TABLE_ORDER = [
   { label: "วัสดุ",         match: [/^วัสดุ$/i, /^ชื่อวัสดุ$/i, /รายการขอซื้อ/i, /ชื่อวัสดุ/i, /รายการวัสดุ/i, /วัสดุ/i, /short.*text/i, /description/i, /รายการ/i] },
   { label: "จำนวน",        match: [/^จำนวน$/i, /จำนวนสั่ง/i, /จำนวนขอซื้อ/i, /จำนวน/i, /^qty$/i, /quantity/i] },
   { label: "หน่วยนับ",      match: [/^หน่วยนับ$/i, /หน่วยนับ/i, /^หน่วย$/i, /unit/i, /uom/i, /^ราคาเต็ม$/i] },
-  { label: "ราคาต่อหน่วย",  match: [/^ราคาต่อหน่วย$/i, /ราคาต่อหน่วย/i, /ราคา\/หน่วย/i, /unit\s*price/i, /ราคา/i] }
+  { label: "ราคาต่อหน่วย",  match: [/^ราคาต่อหน่วย$/i, /ราคาต่อหน่วย/i, /ราคา\/หน่วย/i, /unit\s*price/i, /^ราคา$/i] },
+  { label: "รวม",           match: [/^ราคารวมใน\s*pr$/i, /ราคารวมใน\s*pr/i, /^ราคารวม$/i, /มูลค่ารวมใน\s*pr/i, /ราคารวม/i, /มูลค่าประมาณการ/i] }
 ];
 
 let STATE = {
@@ -2026,13 +2355,25 @@ let STATE = {
   dataSource: "google",
   selectedPlant: "ALL",
   selectedCompany: "ALL",
+  budgetFilter: {
+    planCode: "ALL",
+    incomeType: "ALL",
+    subwork: "ALL",
+    search: ""
+  },
   po: { headers: [], rows: [], cols: {} },
   pr: { headers: [], rows: [], cols: {} },
+  budget: { headers: [], rows: [] },
+  masterBudget: { items: [], lookupMap: new Map() },
+  masterSubwork: { items: [], lookupMap: new Map() },
   googleStore: {
     loaded: false,
     isDemo: false,
     po: { headers: [], rows: [], cols: {} },
-    pr: { headers: [], rows: [], cols: {} }
+    pr: { headers: [], rows: [], cols: {} },
+    budget: { headers: [], rows: [] },
+    masterBudget: { items: [], lookupMap: new Map() },
+    masterSubwork: { items: [], lookupMap: new Map() }
   },
   excelStore: {
     loaded: false,
@@ -2041,8 +2382,14 @@ let STATE = {
     sheetNames: [],
     poSheetName: "",
     prSheetName: "",
+    budgetSheetName: "",
+    masterBudgetSheetName: "",
+    masterSubworkSheetName: "",
     po: { headers: [], rows: [], cols: {} },
-    pr: { headers: [], rows: [], cols: {} }
+    pr: { headers: [], rows: [], cols: {} },
+    budget: { headers: [], rows: [] },
+    masterBudget: { items: [], lookupMap: new Map() },
+    masterSubwork: { items: [], lookupMap: new Map() }
   }
 };
 
@@ -2152,10 +2499,18 @@ function detectSheetColumns(headers, rows) {
 }
 
 function parseNumber(val) {
-  if (typeof val === "number") return val;
-  if (!val) return 0;
-  const num = parseFloat(String(val).replace(/[^0-9.-]+/g, ""));
-  return isNaN(num) ? 0 : num;
+  if (typeof val === "number") return isNaN(val) ? 0 : val;
+  if (val === null || val === undefined || val === "") return 0;
+  const s = String(val).trim();
+  if (!s || s === "-") return 0;
+  const isParenNeg = /^\(.*\)$/.test(s);
+  const isTrailingNeg = /-\s*$/.test(s);
+  const isLeadingNeg = /^-\s*/.test(s);
+  const cleaned = s.replace(/[^0-9.]+/g, "");
+  if (!cleaned) return 0;
+  const num = parseFloat(cleaned);
+  if (isNaN(num)) return 0;
+  return (isParenNeg || isTrailingNeg || isLeadingNeg) ? -Math.abs(num) : num;
 }
 
 function hasValidPONumber(val) {
@@ -2260,6 +2615,278 @@ function parseGvizTable(table) {
   return buildDatasetFrom2DArray(rawRows);
 }
 
+function gvizTableTo2D(table) {
+  const cols = table.cols || [];
+  const hasLetterIds = cols.some(c => /^[A-Z]$/.test(String(c.id || "").trim()));
+  const maxIdx = cols.reduce((m, c, i) => {
+    const idx = hasLetterIds && /^[A-Z]$/.test(String(c.id || "").trim())
+      ? c.id.trim().charCodeAt(0) - 65
+      : i;
+    return Math.max(m, idx);
+  }, 0);
+  const width = Math.min(Math.max(maxIdx + 1, cols.length, 1), 15);
+
+  const colLabels = new Array(width).fill("");
+  cols.forEach((col, i) => {
+    const idx = hasLetterIds && /^[A-Z]$/.test(String(col.id || "").trim())
+      ? col.id.trim().charCodeAt(0) - 65
+      : i;
+    if (idx >= 0 && idx < width) colLabels[idx] = String(col.label || "").trim();
+  });
+
+  const rawRows = (table.rows || []).map(r => {
+    const arr = new Array(width).fill("");
+    cols.forEach((col, i) => {
+      const idx = hasLetterIds && /^[A-Z]$/.test(String(col.id || "").trim())
+        ? col.id.trim().charCodeAt(0) - 65
+        : i;
+      if (idx >= 0 && idx < width) {
+        const cell = r.c ? r.c[i] : null;
+        if (!cell) {
+          arr[idx] = "";
+        } else if (typeof cell.v === "number") {
+          arr[idx] = cell.v;
+        } else {
+          arr[idx] = cell.f !== undefined && cell.f !== null ? cell.f : (cell.v ?? "");
+        }
+      }
+    });
+    return arr;
+  });
+
+  if (colLabels.some(Boolean)) return [colLabels, ...rawRows];
+  return rawRows;
+}
+
+function normMasterKey(v) {
+  return String(v ?? "").trim().replace(/\.0+$/, "").replace(/\s+/g, " ").toLowerCase();
+}
+
+function cleanSubworkDescText(rawDesc, code) {
+  let s = String(rawDesc ?? "").trim();
+  if (!s) return code || "-";
+  if (code && s === String(code).trim()) return s;
+  // ตัดตัวเลขหรือรหัสที่ติดอยู่ท้ายชื่อรายละเอียดงานย่อยออก (ถ้ามีข้อความภาษาไทย/ตัวอักษรนำหน้าอยู่แล้ว)
+  const stripped = s.replace(/\s*(?:[·|:]|-\s+)?\(?\d[\d,.\-/]*\)?\s*$/, "").trim();
+  return stripped || s;
+}
+
+// อ่านชีตงบประมาณ โดยบังคับใช้เฉพาะคอลัมน์ A ถึง K (11 คอลัมน์แรกเท่านั้น) และเก็บ _cols[0..10] โดย _cols[4] = ช่อง E เสมอ
+function buildBudgetDatasetFrom2D(raw2D) {
+  if (!raw2D || !raw2D.length) return { headers: [], rows: [], raw2D: [], multiHeaders: [] };
+  const colLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
+  const sliced = raw2D.map(r => {
+    const arr = new Array(11).fill("");
+    for (let i = 0; i < 11; i++) {
+      arr[i] = r && r[i] !== undefined && r[i] !== null ? r[i] : "";
+    }
+    return arr;
+  });
+
+  // หาแถวหัวตาราง (ต้องมีอย่างน้อย 2 ช่องที่มีข้อมูล เพื่อข้ามแถวชื่อรายงานบรรทัดบนสุด และไม่ใช่แถวข้อมูล Z4010103001)
+  let headerIdx = sliced.findIndex(rowArr =>
+    !rowArr.some(c => /z4010103001/i.test(String(c ?? ""))) &&
+    rowArr.some(c => /งบประมาณสุทธิ|รับจริง|จ่ายจริง|แผนย่อย|งานย่อย|ขอซื้อ|ขอจ้าง/i.test(String(c ?? ""))) &&
+    rowArr.filter(c => String(c ?? "").trim() !== "").length >= 3
+  );
+  if (headerIdx === -1) {
+    headerIdx = sliced.findIndex(rowArr =>
+      !rowArr.some(c => /z4010103001/i.test(String(c ?? ""))) &&
+      rowArr.some(c => /งบประมาณ|แผนย่อย|งานย่อย|รายได้|รับจริง|ค่าใช้จ่าย|จ่ายจริง|ขอซื้อ|ขอจ้าง|รายการ|หมวด|วันที่|จำนวนเงิน|รหัส/i.test(String(c ?? ""))) &&
+      rowArr.filter(c => String(c ?? "").trim() !== "").length >= 2
+    );
+  }
+  if (headerIdx === -1) {
+    headerIdx = sliced.findIndex(rowArr =>
+      !rowArr.some(c => /z4010103001/i.test(String(c ?? ""))) &&
+      rowArr.filter(c => String(c ?? "").trim() !== "").length >= 2
+    );
+  }
+  if (headerIdx === -1) headerIdx = 0;
+
+  const headerRow = sliced[headerIdx] || [];
+  const hasZ401InFirstRow = headerRow.some(c => /z4010103001/i.test(String(c ?? "")));
+
+  // รวมข้อความหัวคอลัมน์จากแถวหัวตารางหลายชั้น (กรณี Merge Header 2–3 แถวใน Google Sheets) โดยไม่รวมแถวชื่อรายงานที่มีแค่ 1 ช่อง
+  const multiHeaders = new Array(11).fill("");
+  const scanLimit = Math.min(sliced.length, headerIdx + 3);
+  for (let rIdx = 0; rIdx < scanLimit; rIdx++) {
+    const r = sliced[rIdx];
+    const nonEmptyCnt = r.filter(c => String(c ?? "").trim() !== "").length;
+    if (nonEmptyCnt < 2) continue;
+    if (r.some(c => /z4010103001|bo05000000/i.test(String(c ?? "")))) break;
+    // ถ้าแถวถัดจาก headerIdx มีตัวเลขจำนวนเงินในช่อง E แปลว่าเป็นแถวข้อมูลจริงแล้ว ไม่ใช่หัวตารางชั้นที่ 2
+    if (rIdx > headerIdx && parseNumber(r[4]) !== 0) break;
+    for (let cIdx = 0; cIdx < 11; cIdx++) {
+      const txt = String(r[cIdx] ?? "").replace(/\s+/g, " ").trim();
+      if (txt && !multiHeaders[cIdx].includes(txt)) {
+        multiHeaders[cIdx] = (multiHeaders[cIdx] ? multiHeaders[cIdx] + " " : "") + txt;
+      }
+    }
+  }
+
+  const headers = [];
+  const usedNames = new Set();
+  for (let i = 0; i < 11; i++) {
+    let h = !hasZ401InFirstRow ? (multiHeaders[i] || String(headerRow[i] ?? "").replace(/\s+/g, " ").trim()) : "";
+    if (!h) h = `ช่อง ${colLetters[i]}`;
+    else if (!h.includes(`(${colLetters[i]})`) && i === 4) h = `${h} (ช่อง E)`;
+    if (usedNames.has(h)) h = `${h} (${colLetters[i]})`;
+    usedNames.add(h);
+    headers.push(h);
+  }
+
+  const dataStartIdx = hasZ401InFirstRow ? 0 : headerIdx + 1;
+  const rows = [];
+  for (let sIdx = dataStartIdx; sIdx < sliced.length; sIdx++) {
+    const rowArr = sliced[sIdx];
+    if (!rowArr.some(v => String(v ?? "").trim() !== "")) continue;
+    const obj = {};
+    headers.forEach((h, i) => {
+      obj[h] = rowArr[i] !== undefined && rowArr[i] !== null ? rowArr[i] : "";
+    });
+    Object.defineProperty(obj, "_cols", {
+      value: rowArr,
+      enumerable: false,
+      configurable: true
+    });
+    Object.defineProperty(obj, "_sheetRow", {
+      value: sIdx + 1,
+      enumerable: false,
+      configurable: true
+    });
+    rows.push(obj);
+  }
+
+  return { headers, rows, raw2D: sliced, multiHeaders };
+}
+
+// อ่านชีต Master งบประมาณ และ Master งานย่อย (เก็บทั้งรายการหลัก, ตาราง 2 มิติ และการจับคู่ รหัสแผนย่อย <-> งานย่อย)
+function buildMasterFrom2D(raw2D) {
+  const items = [];
+  const lookupMap = new Map();
+  const subplanItems = [];
+  const subplanLookup = new Map();
+  const subworkItems = [];
+  const subworkLookup = new Map();
+  const subworkToSubplan = new Map();
+  const subplanToSubworks = new Map();
+
+  if (!raw2D || !raw2D.length) {
+    return { items, lookupMap, subplanItems, subplanLookup, subworkItems, subworkLookup, subworkToSubplan, subplanToSubworks, raw2D: [] };
+  }
+
+  const cleanedRows = raw2D
+    .map(r => (r || []).map(c => String(c ?? "").trim().replace(/\.0+$/, "")))
+    .filter(r => r.some(Boolean));
+  if (!cleanedRows.length) {
+    return { items, lookupMap, subplanItems, subplanLookup, subworkItems, subworkLookup, subworkToSubplan, subplanToSubworks, raw2D: [] };
+  }
+
+  let startIdx = 0;
+  const headerRow = cleanedRows[0] || [];
+  if (cleanedRows.length > 1) {
+    const firstJoined = headerRow.join(" ");
+    if (/^(ลำดับ|no\.?|id|รหัส|ชื่อ|หมวด|ประเภท|master|งบประมาณ|แผนย่อย|งานย่อย)/i.test(firstJoined) && headerRow.every(c => c.length < 45)) {
+      startIdx = 1;
+    }
+  }
+
+  // ตรวจหาคอลัมน์ รหัสแผนย่อย และ งานย่อย ในชีต Master (กรณีชีตเดียวมีทั้ง 2 คอลัมน์ หรือแยกคอลัมน์รหัส/ชื่อ)
+  let spColIdx = headerRow.findIndex(h => /แผนย่อย|รหัสแผน/i.test(h));
+  let spNameColIdx = headerRow.findIndex((h, idx) => idx !== spColIdx && /ชื่อแผนย่อย|ชื่อแผน/i.test(h));
+  let swColIdx = headerRow.findIndex(h => /งานย่อย|รหัสงานย่อย/i.test(h));
+  let swNameColIdx = headerRow.findIndex((h, idx) => idx !== swColIdx && /ชื่องานย่อย|ชื่องาน/i.test(h));
+
+  const seenCanonical = new Set();
+  const seenSp = new Set();
+  const seenSw = new Set();
+
+  const indexKeyAndParts = (map, rawStr, canonical) => {
+    const nk = normMasterKey(rawStr);
+    if (!nk) return;
+    if (!map.has(nk)) map.set(nk, canonical);
+    // แยกรหัสหน้าขีดหรือเว้นวรรค เช่น "10101 - งานคลัง" -> จับคู่ได้ทั้ง "10101" และ "งานคลัง"
+    const parts = String(rawStr).split(/\s*[-:/|·]\s*|\s+/);
+    if (parts[0] && parts[0].length >= 2) {
+      const p0 = normMasterKey(parts[0]);
+      if (p0 && !map.has(p0)) map.set(p0, canonical);
+    }
+    const dashParts = String(rawStr).split(/\s*[-:|]\s*/);
+    if (dashParts.length >= 2) {
+      dashParts.forEach(dp => {
+        const ndp = normMasterKey(dp);
+        if (ndp && ndp.length >= 2 && !map.has(ndp)) map.set(ndp, canonical);
+      });
+    }
+  };
+
+  for (let i = startIdx; i < cleanedRows.length; i++) {
+    const row = cleanedRows[i];
+    const nonEmpty = row.filter(Boolean);
+    if (!nonEmpty.length) continue;
+
+    // สร้างรายการหลักของ Master นี้
+    const meaningful = nonEmpty.filter(c => !/^\d{1,2}$/.test(c));
+    let canonical = "";
+    if (meaningful.length >= 2 && meaningful[0].length <= 18 && meaningful[1].length > 1) {
+      canonical = `${meaningful[0]} · ${meaningful[1]}`;
+    } else {
+      canonical = meaningful[meaningful.length - 1] || nonEmpty[0];
+    }
+
+    const normCan = normMasterKey(canonical);
+    if (normCan && !seenCanonical.has(normCan)) {
+      seenCanonical.add(normCan);
+      items.push(canonical);
+    }
+    nonEmpty.forEach(c => indexKeyAndParts(lookupMap, c, canonical));
+    indexKeyAndParts(lookupMap, canonical, canonical);
+
+    // ถ้าชีต Master มีคอลัมน์ แผนย่อย / งานย่อย แยกกัน
+    let spVal = spColIdx >= 0 ? row[spColIdx] : (row[0] || "");
+    let spName = spNameColIdx >= 0 ? row[spNameColIdx] : "";
+    let swVal = swColIdx >= 0 ? row[swColIdx] : (row.length >= 2 ? row[1] : row[0] || "");
+    let swName = swNameColIdx >= 0 ? row[swNameColIdx] : (row.length >= 3 && swColIdx === 1 ? row[2] : "");
+
+    const spCanonical = (spVal && spName && spVal !== spName) ? `${spVal} · ${spName}` : (spVal || spName);
+    const swCanonical = (swVal && swName && swVal !== swName) ? `${swVal} · ${swName}` : (swVal || swName);
+
+    if (spCanonical) {
+      const nsp = normMasterKey(spCanonical);
+      if (!seenSp.has(nsp)) { seenSp.add(nsp); subplanItems.push(spCanonical); }
+      indexKeyAndParts(subplanLookup, spVal, spCanonical);
+      if (spName) indexKeyAndParts(subplanLookup, spName, spCanonical);
+      indexKeyAndParts(subplanLookup, spCanonical, spCanonical);
+    }
+    if (swCanonical) {
+      const nsw = normMasterKey(swCanonical);
+      if (!seenSw.has(nsw)) { seenSw.add(nsw); subworkItems.push(swCanonical); }
+      indexKeyAndParts(subworkLookup, swVal, swCanonical);
+      if (swName) indexKeyAndParts(subworkLookup, swName, swCanonical);
+      indexKeyAndParts(subworkLookup, swCanonical, swCanonical);
+    }
+    if (spCanonical && swCanonical) {
+      subworkToSubplan.set(normMasterKey(swCanonical), spCanonical);
+      if (swVal) subworkToSubplan.set(normMasterKey(swVal), spCanonical);
+      if (swName) subworkToSubplan.set(normMasterKey(swName), spCanonical);
+    }
+  }
+
+  return {
+    items,
+    lookupMap,
+    subplanItems,
+    subplanLookup,
+    subworkItems,
+    subworkLookup,
+    subworkToSubplan,
+    subplanToSubworks,
+    headerRow,
+    raw2D: cleanedRows
+  };
+}
+
 function showInlineError(msg) {
   const banner = document.getElementById("statusBanner");
   banner.className = "notice warn";
@@ -2282,13 +2909,19 @@ function handleExcelFile(file) {
       if (!sheetNames.length) return showInlineError("ไม่พบชีตข้อมูลในไฟล์ Excel นี้");
 
       const poSheet = sheetNames.find(n => /^(1|ชีต\s*1|sheet\s*1|po)$/i.test(n.trim())) || sheetNames[0];
-      const prSheet = sheetNames.find(n => /pr/i.test(n.trim())) || (sheetNames[1] || poSheet);
+      const prSheet = sheetNames.find(n => /^pr$/i.test(n.trim()) || /pr/i.test(n.trim())) || (sheetNames[1] || poSheet);
+      const budgetSheet = sheetNames.find(n => /^งบประมาณ$/i.test(n.trim()) || (!/master/i.test(n) && /งบประมาณ|budget/i.test(n.trim()))) || "";
+      const masterBgSheet = sheetNames.find(n => /master.*งบประมาณ|งบประมาณ.*master/i.test(n.trim())) || "";
+      const masterSwSheet = sheetNames.find(n => /master.*งานย่อย|งานย่อย.*master/i.test(n.trim())) || "";
 
       STATE.excelStore.workbook = workbook;
       STATE.excelStore.fileName = file.name;
       STATE.excelStore.sheetNames = sheetNames;
       STATE.excelStore.poSheetName = poSheet;
       STATE.excelStore.prSheetName = prSheet;
+      STATE.excelStore.budgetSheetName = budgetSheet;
+      STATE.excelStore.masterBudgetSheetName = masterBgSheet;
+      STATE.excelStore.masterSubworkSheetName = masterSwSheet;
       STATE.excelStore.loaded = true;
 
       extractExcelSheetsData();
@@ -2304,25 +2937,45 @@ function handleExcelFile(file) {
 function extractExcelSheetsData() {
   const wb = STATE.excelStore.workbook;
   if (!wb) return;
-  const poWs = wb.Sheets[STATE.excelStore.poSheetName];
-  const prWs = wb.Sheets[STATE.excelStore.prSheetName];
+  const to2D = (sheetName) => {
+    if (!sheetName || !wb.Sheets[sheetName]) return [];
+    return XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, raw: false, defval: "" });
+  };
 
-  const po2D = poWs ? XLSX.utils.sheet_to_json(poWs, { header: 1, raw: false, defval: "" }) : [];
-  const pr2D = prWs ? XLSX.utils.sheet_to_json(prWs, { header: 1, raw: false, defval: "" }) : [];
+  const po2D = to2D(STATE.excelStore.poSheetName);
+  const pr2D = to2D(STATE.excelStore.prSheetName);
+  const bg2D = to2D(STATE.excelStore.budgetSheetName);
+  const mb2D = to2D(STATE.excelStore.masterBudgetSheetName);
+  const ms2D = to2D(STATE.excelStore.masterSubworkSheetName);
 
   STATE.excelStore.po = buildDatasetFrom2DArray(po2D);
   STATE.excelStore.pr = pr2D.length ? dropDeletedPR(buildDatasetFrom2DArray(pr2D)) : STATE.excelStore.po;
+  STATE.excelStore.budget = bg2D.length ? buildBudgetDatasetFrom2D(bg2D) : { headers: [], rows: [] };
+  STATE.excelStore.masterBudget = mb2D.length ? buildMasterFrom2D(mb2D) : { items: [], lookupMap: new Map() };
+  STATE.excelStore.masterSubwork = ms2D.length ? buildMasterFrom2D(ms2D) : { items: [], lookupMap: new Map() };
 }
 
 function populateExcelSheetSelectors() {
   const mapper = document.getElementById("excelSheetMapper");
   const poSel = document.getElementById("excelPoSheetSelect");
   const prSel = document.getElementById("excelPrSheetSelect");
+  const bgSel = document.getElementById("excelBudgetSheetSelect");
+  const mbSel = document.getElementById("excelMasterBudgetSelect");
+  const msSel = document.getElementById("excelMasterSubworkSelect");
   const names = STATE.excelStore.sheetNames;
   if (names.length > 0) {
     mapper.style.display = "grid";
-    poSel.innerHTML = names.map(n => `<option value="${n}" ${n === STATE.excelStore.poSheetName ? "selected" : ""}>${n}</option>`).join("");
-    prSel.innerHTML = names.map(n => `<option value="${n}" ${n === STATE.excelStore.prSheetName ? "selected" : ""}>${n}</option>`).join("");
+    poSel.innerHTML = names.map(n => `<option value="${escHtml(n)}" ${n === STATE.excelStore.poSheetName ? "selected" : ""}>${escHtml(n)}</option>`).join("");
+    prSel.innerHTML = names.map(n => `<option value="${escHtml(n)}" ${n === STATE.excelStore.prSheetName ? "selected" : ""}>${escHtml(n)}</option>`).join("");
+    if (bgSel) {
+      bgSel.innerHTML = `<option value="">-- ไม่ระบุ --</option>` + names.map(n => `<option value="${escHtml(n)}" ${n === STATE.excelStore.budgetSheetName ? "selected" : ""}>${escHtml(n)}</option>`).join("");
+    }
+    if (mbSel) {
+      mbSel.innerHTML = `<option value="">-- Master งบประมาณ --</option>` + names.map(n => `<option value="${escHtml(n)}" ${n === STATE.excelStore.masterBudgetSheetName ? "selected" : ""}>${escHtml(n)}</option>`).join("");
+    }
+    if (msSel) {
+      msSel.innerHTML = `<option value="">-- Master งานย่อย --</option>` + names.map(n => `<option value="${escHtml(n)}" ${n === STATE.excelStore.masterSubworkSheetName ? "selected" : ""}>${escHtml(n)}</option>`).join("");
+    }
   }
 }
 
@@ -2334,14 +2987,20 @@ function switchDataSource(targetSource) {
     if (STATE.excelStore.loaded) {
       STATE.po = STATE.excelStore.po;
       STATE.pr = STATE.excelStore.pr;
+      STATE.budget = STATE.excelStore.budget.rows.length ? STATE.excelStore.budget : STATE.googleStore.budget;
+      STATE.masterBudget = STATE.excelStore.masterBudget.items.length ? STATE.excelStore.masterBudget : STATE.googleStore.masterBudget;
+      STATE.masterSubwork = STATE.excelStore.masterSubwork.items.length ? STATE.excelStore.masterSubwork : STATE.googleStore.masterSubwork;
       banner.className = "notice";
       banner.innerHTML = `
-        <span>📂 <strong>ที่มาของข้อมูล: ไฟล์ Excel (${STATE.excelStore.fileName})</strong> — PO: ${STATE.po.rows.length.toLocaleString("th-TH")} แถว · PR: ${STATE.pr.rows.length.toLocaleString("th-TH")} แถว</span>
+        <span>📂 <strong>ที่มาของข้อมูล: ไฟล์ Excel (${escHtml(STATE.excelStore.fileName)})</strong> — PO: ${STATE.po.rows.length.toLocaleString("th-TH")} แถว · PR: ${STATE.pr.rows.length.toLocaleString("th-TH")} แถว · งบประมาณ: ${STATE.budget.rows.length.toLocaleString("th-TH")} แถว</span>
         <span>โหมด: Excel File</span>
       `;
     } else {
       STATE.po = { headers: ["เลขที่ PO", "Plant", "รหัสวัสดุ", "ชื่อวัสดุ", "ผู้ขาย", "สถานะจัดซื้อ", "ราคาเต็มใน PO"], rows: [], cols: {} };
       STATE.pr = { headers: ["PR Date", "PR", "PO", "Plant", "รหัสวัสดุ", "วัสดุ", "จำนวน", "หน่วยนับ", "ราคาต่อหน่วย", "ราคารวมใน PR"], rows: [], cols: {} };
+      STATE.budget = { headers: [], rows: [] };
+      STATE.masterBudget = { items: [], lookupMap: new Map() };
+      STATE.masterSubwork = { items: [], lookupMap: new Map() };
       activateMenuView("import-excel");
       banner.className = "notice warn";
       banner.innerHTML = `<span>📂 <strong>เลือกโหมดอ่านข้อมูลจากไฟล์ Excel แล้ว</strong> — กรุณาลากไฟล์ Excel มาวางในกรอบด้านล่างเพื่อแสดงข้อมูล</span>`;
@@ -2350,14 +3009,17 @@ function switchDataSource(targetSource) {
     STATE.dataSource = "google";
     STATE.po = STATE.googleStore.po;
     STATE.pr = STATE.googleStore.pr;
+    STATE.budget = STATE.googleStore.budget;
+    STATE.masterBudget = STATE.googleStore.masterBudget;
+    STATE.masterSubwork = STATE.googleStore.masterSubwork;
 
     if (STATE.googleStore.isDemo) {
       banner.className = "notice warn";
-      banner.innerHTML = `<span>⚠️ <strong>ที่มาของข้อมูล: Google Sheets (โหมดข้อมูลจำลอง)</strong> — PO: ${STATE.po.rows.length.toLocaleString("th-TH")} แถว · PR: ${STATE.pr.rows.length.toLocaleString("th-TH")} แถว${STATE.googleStore.errorMsg ? "<br><small>เชื่อมต่อไม่สำเร็จ → " + STATE.googleStore.errorMsg + "<br>ถ้าเปิดไฟล์ในหน้าพรีวิว ให้ดาวน์โหลดไฟล์แล้วเปิดด้วยเบราว์เซอร์โดยตรง (Chrome/Edge)</small>" : ""}</span>`;
+      banner.innerHTML = `<span>⚠️ <strong>ที่มาของข้อมูล: Google Sheets (โหมดข้อมูลจำลอง)</strong> — PO: ${STATE.po.rows.length.toLocaleString("th-TH")} แถว · PR: ${STATE.pr.rows.length.toLocaleString("th-TH")} แถว · งบประมาณ: ${STATE.budget.rows.length.toLocaleString("th-TH")} แถว${STATE.googleStore.errorMsg ? "<br><small>เชื่อมต่อไม่สำเร็จ → " + STATE.googleStore.errorMsg + "<br>ถ้าเปิดไฟล์ในหน้าพรีวิว ให้ดาวน์โหลดไฟล์แล้วเปิดด้วยเบราว์เซอร์โดยตรง (Chrome/Edge)</small>" : ""}</span>`;
     } else {
       banner.className = "notice";
       banner.innerHTML = `
-        <span>☁️ <strong>ที่มาของข้อมูล: Google Sheets</strong> — PO: ${STATE.po.rows.length.toLocaleString("th-TH")} แถว · PR: ${STATE.pr.rows.length.toLocaleString("th-TH")} แถว</span>
+        <span>☁️ <strong>ที่มาของข้อมูล: Google Sheets</strong> — PO: ${STATE.po.rows.length.toLocaleString("th-TH")} แถว · PR: ${STATE.pr.rows.length.toLocaleString("th-TH")} แถว · งบประมาณ (A–K): ${STATE.budget.rows.length.toLocaleString("th-TH")} แถว</span>
         <span>โหมด: Google Sheets${STATE.googleStore.via ? " · ช่องทาง: " + STATE.googleStore.via : ""}</span>
       `;
     }
@@ -2395,7 +3057,7 @@ function getAvailablePlants() {
 
 function renderPlantFilterBar() {
   const bar = document.getElementById("globalPlantBar");
-  if (STATE.activeView === "import-excel") {
+  if (STATE.activeView === "import-excel" || STATE.activeView === "budget") {
     bar.style.display = "none";
     return;
   }
@@ -2878,7 +3540,9 @@ function hl(text, q) {
 let matShowCount = 30;
 let matSelectedKey = null;
 let matCommitText = "";
+let matShowAll = false;
 let matActiveIdx = -1;
+let matSuggestItems = [];
 
 function matCmpCode(a, b) {
   return (!a.code - !b.code) || a.code.localeCompare(b.code, "en", { numeric: true }) || a.name.localeCompare(b.name, "th");
@@ -2953,19 +3617,31 @@ function renderPOMaterialView() {
   const grid = document.getElementById("materialGrid");
   const summary = document.getElementById("matSummary");
   const sortSel = document.getElementById("poMatSortSelect");
+  const resultTag = document.getElementById("poMatResultTag");
   const groups = buildMatGroups();
   const all = [...groups.values()];
   const priceCol = groups.priceCol;
 
   if (matSelectedKey && !groups.has(matSelectedKey)) { matSelectedKey = null; input.value = ""; }
-  document.getElementById("poMatClear").style.display = (input.value || matSelectedKey) ? "" : "none";
-  document.getElementById("poMatResultTag").textContent = `${all.length.toLocaleString("th-TH")} วัสดุ · ${getPlantDisplayName(STATE.selectedPlant)}`;
+  document.getElementById("poMatClear").style.display = (input.value || matSelectedKey || matShowAll) ? "" : "none";
+  resultTag.textContent = `${all.length.toLocaleString("th-TH")} วัสดุ · ${getPlantDisplayName(STATE.selectedPlant)}`;
+  resultTag.classList.toggle("active", matShowAll);
+  resultTag.setAttribute("role", "button");
+  resultTag.setAttribute("tabindex", "0");
+  resultTag.setAttribute("title", "คลิกเพื่อแสดงรายการวัสดุทั้งหมด");
 
   let mode = "empty", list = [], q = "";
-  if (matSelectedKey) { mode = "one"; list = [groups.get(matSelectedKey)]; }
-  else if (matCommitText) {
-    mode = "list"; q = matCommitText.toLowerCase();
+  if (matSelectedKey && groups.has(matSelectedKey)) {
+    mode = "one";
+    list = [groups.get(matSelectedKey)];
+  } else if (matCommitText) {
+    mode = "list";
+    q = matCommitText.toLowerCase();
     list = all.filter(g => g.code.toLowerCase().includes(q) || g.name.toLowerCase().includes(q));
+  } else if (matShowAll) {
+    mode = "list";
+    q = "";
+    list = [...all];
   }
   sortSel.style.display = mode === "list" ? "" : "none";
 
@@ -3013,9 +3689,10 @@ function renderMatSuggest() {
     .filter(g => !q || g.code.toLowerCase().includes(q) || g.name.toLowerCase().includes(q))
     .sort(matCmpCode);
   const LIMIT = 60, shown = opts.slice(0, LIMIT);
+  matSuggestItems = shown;
   if (!shown.length) { box.innerHTML = `<div class="combo-foot">ไม่พบรหัสหรือชื่อที่ตรงกับ “${escHtml(q)}”</div>`; return; }
   box.innerHTML = shown.map((g, i) => `
-    <div class="combo-opt${i === matActiveIdx ? " active" : ""}${g.key === matSelectedKey ? " picked" : ""}" role="option" data-key="${escHtml(g.key)}">
+    <div class="combo-opt${i === matActiveIdx ? " active" : ""}${g.key === matSelectedKey ? " picked" : ""}" role="option" data-idx="${i}" data-key="${escHtml(g.key)}">
       <span class="co-code">${g.code ? hl(g.code, q) : "ไม่มีรหัส"}</span>
       <span class="co-name">${hl(g.name || "ไม่ระบุชื่อวัสดุ", q)}</span>
       <span class="co-meta">${g.lines.length} PO</span>
@@ -3024,13 +3701,18 @@ function renderMatSuggest() {
 }
 
 function pickMaterial(key) {
-  const g = buildMatGroups().get(key);
+  const groups = buildMatGroups();
+  const g = groups.get(key);
   if (!g) return;
-  matSelectedKey = key; matCommitText = ""; matActiveIdx = -1;
-  document.getElementById("poMatSearchInput").value = g.code || g.name;
+  matSelectedKey = g.key;
+  matCommitText = "";
+  matShowAll = false;
+  matActiveIdx = -1;
+  const input = document.getElementById("poMatSearchInput");
+  input.value = g.code || g.name;
   const box = document.getElementById("poMatSuggest");
   box.hidden = true;
-  document.getElementById("poMatSearchInput").setAttribute("aria-expanded", "false");
+  input.setAttribute("aria-expanded", "false");
   renderPOMaterialView();
 }
 
@@ -3038,11 +3720,20 @@ function bindMatCombo() {
   const input = document.getElementById("poMatSearchInput");
   const box = document.getElementById("poMatSuggest");
   const combo = document.getElementById("poMatCombo");
+  const resultTag = document.getElementById("poMatResultTag");
   const open = () => { renderMatSuggest(); box.hidden = false; input.setAttribute("aria-expanded", "true"); };
   const close = () => { box.hidden = true; input.setAttribute("aria-expanded", "false"); matActiveIdx = -1; };
-  const reset = () => { input.value = ""; matSelectedKey = null; matCommitText = ""; matActiveIdx = -1; renderPOMaterialView(); };
+  const reset = () => { input.value = ""; matSelectedKey = null; matCommitText = ""; matShowAll = false; matShowCount = 30; matActiveIdx = -1; renderPOMaterialView(); };
 
-  input.addEventListener("input", () => { matSelectedKey = null; matCommitText = ""; matActiveIdx = -1; renderPOMaterialView(); open(); });
+  input.addEventListener("input", () => {
+    matSelectedKey = null;
+    matShowAll = false;
+    matCommitText = input.value.trim();
+    matShowCount = 30;
+    matActiveIdx = -1;
+    renderPOMaterialView();
+    open();
+  });
   input.addEventListener("focus", open);
   input.addEventListener("click", () => { if (box.hidden) open(); });
   input.addEventListener("keydown", e => {
@@ -3057,22 +3748,45 @@ function bindMatCombo() {
     } else if (e.key === "Enter") {
       e.preventDefault();
       const act = opts[matActiveIdx];
-      if (!box.hidden && act) { pickMaterial(act.dataset.key); return; }
+      if (!box.hidden && act) {
+        const item = matSuggestItems[Number(act.dataset.idx)];
+        pickMaterial(item ? item.key : act.dataset.key);
+        return;
+      }
       const v = input.value.trim();
       if (!v) return;
       const exact = [...buildMatGroups().values()].find(g => g.code && g.code.toLowerCase() === v.toLowerCase());
       if (exact) { pickMaterial(exact.key); return; }
-      matSelectedKey = null; matCommitText = v; matShowCount = 30; close(); renderPOMaterialView();
+      matSelectedKey = null; matShowAll = false; matCommitText = v; matShowCount = 30; close(); renderPOMaterialView();
     } else if (e.key === "Escape") { close(); }
   });
-  box.addEventListener("mousedown", e => {
+  const handleOptSelect = e => {
     const o = e.target.closest(".combo-opt");
     if (!o) return;
     e.preventDefault();
-    pickMaterial(o.dataset.key);
-  });
+    e.stopPropagation();
+    const item = matSuggestItems[Number(o.dataset.idx)];
+    pickMaterial(item ? item.key : o.dataset.key);
+  };
+  box.addEventListener("mousedown", handleOptSelect);
+  box.addEventListener("click", handleOptSelect);
   document.getElementById("poMatToggle").addEventListener("click", () => { if (box.hidden) { open(); input.focus(); } else close(); });
   document.getElementById("poMatClear").addEventListener("click", () => { reset(); close(); input.focus(); });
+  if (resultTag) {
+    const toggleShowAll = () => {
+      matShowAll = !matShowAll;
+      matSelectedKey = null;
+      matCommitText = "";
+      matShowCount = 30;
+      input.value = "";
+      close();
+      renderPOMaterialView();
+    };
+    resultTag.addEventListener("click", toggleShowAll);
+    resultTag.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleShowAll(); }
+    });
+  }
   document.addEventListener("click", e => { if (!combo.contains(e.target)) close(); });
 }
 
@@ -3460,6 +4174,1202 @@ function renderTwinView() {
 }
 
 // =========================================================
+// 6B. EXECUTIVE BUDGET DASHBOARD — การ์ดรายรับงบประมาณสุทธิ + รายละเอียดรหัสงานย่อย
+// ผลรวมจากช่องงบประมาณสุทธิในชีตงบประมาณ โดยใช้ข้อมูลตามประเภท รายรับ จากชีต Master งานย่อย
+// =========================================================
+function calculateNetIncomeBudget() {
+  const budgetDs = STATE.budget || { headers: [], rows: [] };
+  const headers = (budgetDs.headers || []).slice(0, 11);
+  const rows = budgetDs.rows || [];
+  const ms = STATE.masterSubwork || { raw2D: [] };
+  const msRows = (ms && ms.raw2D) ? ms.raw2D : [];
+
+  // 1. หาคอลัมน์ "งบประมาณสุทธิ" ในชีตงบประมาณ (คอลัมน์ A ถึง K) โดยค่าเริ่มต้นคือ ช่อง E (index 4)
+  let netBudgetColIdx = 4;
+  for (let i = 0; i < headers.length; i++) {
+    if (/งบประมาณสุทธิ/i.test(headers[i])) {
+      netBudgetColIdx = i;
+      break;
+    }
+  }
+
+  // 2. วิเคราะห์คอลัมน์ในชีต Master งานย่อย เพื่อดึงเฉพาะ "รหัสงานย่อย" และ "รายละเอียดงานย่อย" ที่มีประเภท = รายรับ (หรือ รายได้)
+  const incomeSubworkMap = new Map(); // normCode -> { code, desc, type }
+  const allSubworkCodesSet = new Set();
+
+  if (msRows.length > 0) {
+    const firstRow = (msRows[0] || []).map(c => String(c ?? "").trim());
+    const hasHeader = msRows.length > 1 && firstRow.some(h => /รหัส|เลข|งานย่อย|รายละเอียด|ชื่อ|ประเภท|แผน/i.test(h));
+    const headerRow = hasHeader ? firstRow : [];
+    const dataRows = hasHeader ? msRows.slice(1) : msRows;
+    const colCount = Math.max(headerRow.length, ...dataRows.slice(0, 30).map(r => (r || []).length), 1);
+
+    // หาคอลัมน์ "ประเภท" (รายรับ / รายจ่าย)
+    let msTypeCol = headerRow.findIndex(h => /ประเภท|หมวด/i.test(h));
+    if (msTypeCol === -1) {
+      let bestTypeHits = 0;
+      for (let c = 0; c < colCount; c++) {
+        let hits = 0;
+        dataRows.slice(0, 50).forEach(r => {
+          const v = String((r && r[c]) ?? "").trim();
+          if (/^(รายรับ|รายได้|รายจ่าย|ค่าใช้จ่าย)$/i.test(v)) hits++;
+        });
+        if (hits > bestTypeHits) { bestTypeHits = hits; msTypeCol = c; }
+      }
+    }
+
+    // หาคอลัมน์ที่เป็น แผนย่อย หรือ รหัสงบประมาณ ใน Master งานย่อย (เพื่อแยกออก ไม่นำมาปนกับรหัสงานย่อย)
+    const excludedMasterCols = new Set();
+    if (msTypeCol !== -1) excludedMasterCols.add(msTypeCol);
+    for (let c = 0; c < colCount; c++) {
+      if (excludedMasterCols.has(c)) continue;
+      const h = headerRow[c] || "";
+      const hasPlanOrBgCode = dataRows.slice(0, 40).some(r => /^(bo05000000|z4010103001)/i.test(String((r && r[c]) ?? "").trim()));
+      if (/แผนย่อย|รหัสแผน|รหัสงบ|หมวดงบ/i.test(h) || hasPlanOrBgCode) {
+        excludedMasterCols.add(c);
+      }
+    }
+
+    // หาคอลัมน์ "รหัสงานย่อย" (msCodeCol) และ "รายละเอียดงานย่อย" (msDescCol)
+    let msCodeCol = -1;
+    let msDescCol = -1;
+
+    for (let c = 0; c < colCount; c++) {
+      if (excludedMasterCols.has(c)) continue;
+      const h = headerRow[c] || "";
+      if (msCodeCol === -1 && /รหัสงานย่อย|เลขงานย่อย|^รหัส$|code/i.test(h)) msCodeCol = c;
+      else if (msDescCol === -1 && /รายละเอียดงานย่อย|ชื่องานย่อย|รายละเอียด|ชื่องาน|ชื่อ|รายการ/i.test(h)) msDescCol = c;
+    }
+
+    // หากชื่อหัวตารางใช้คำว่า "งานย่อย" เฉยๆ ให้ดูความยาวและลักษณะข้อมูลเพื่อแยกระหว่าง รหัส กับ รายละเอียด
+    const remainingCols = [];
+    for (let c = 0; c < colCount; c++) {
+      if (!excludedMasterCols.has(c)) remainingCols.push(c);
+    }
+    if (msCodeCol === -1 && remainingCols.length > 0) {
+      if (remainingCols.length >= 2) {
+        // เปรียบเทียบความยาวเฉลี่ย คอลัมน์ที่สั้นกว่า/เป็นรหัส คือ รหัสงานย่อย
+        const avgLen = (colIdx) => {
+          const vals = dataRows.slice(0, 40).map(r => String((r && r[colIdx]) ?? "").trim()).filter(Boolean);
+          return vals.length ? vals.reduce((s, v) => s + v.length, 0) / vals.length : 999;
+        };
+        const sortedByLen = [...remainingCols].sort((a, b) => avgLen(a) - avgLen(b));
+        msCodeCol = sortedByLen[0];
+        if (msDescCol === -1) msDescCol = remainingCols.find(c => c !== msCodeCol) ?? -1;
+      } else {
+        msCodeCol = remainingCols[0];
+      }
+    }
+    if (msDescCol === -1) {
+      msDescCol = remainingCols.find(c => c !== msCodeCol) ?? -1;
+    }
+
+    dataRows.forEach(r => {
+      const cells = (r || []).map(c => String(c ?? "").trim());
+      if (!cells.some(Boolean)) return;
+
+      let rawCode = msCodeCol >= 0 ? String(cells[msCodeCol] ?? "").trim().replace(/\.0+$/, "") : "";
+      let rawDesc = msDescCol >= 0 ? String(cells[msDescCol] ?? "").trim() : "";
+
+      // กรณีรหัสและชื่ออยู่ในช่องเดียวกัน (คั่นด้วยเว้นวรรค เช่น "50101 งานบริการ...")
+      if (!rawDesc && /\s+/.test(rawCode)) {
+        const m = rawCode.match(/^([^\s]+)\s+(.+)$/);
+        if (m) {
+          rawCode = m[1].trim();
+          rawDesc = m[2].trim();
+        }
+      }
+
+      if (!rawCode || rawCode === "-" || /^(bo05000000|z4010103001)/i.test(rawCode)) return;
+      if (/^(รวม|รวมทั้งสิ้น|สรุป|รหัสงานย่อย|เลขงานย่อย|งานย่อย)$/i.test(rawCode)) return;
+
+      const normCode = normMasterKey(rawCode);
+      allSubworkCodesSet.add(normCode);
+
+      const typeCheckStr = msTypeCol >= 0 ? String(cells[msTypeCol] ?? "").trim() : cells.join(" ");
+      const isIncomeType = /รายรับ|รายได้/i.test(typeCheckStr) && !/รายจ่าย|ค่าใช้จ่าย/i.test(typeCheckStr);
+
+      if (isIncomeType) {
+        incomeSubworkMap.set(normCode, {
+          code: rawCode,
+          desc: rawDesc || rawCode,
+          type: typeCheckStr || "รายรับ"
+        });
+      }
+    });
+  }
+
+  // 3. หาคอลัมน์ "รหัสงานย่อย" และ "รายละเอียดงานย่อย" ในชีตงบประมาณ (คอลัมน์ A ถึง K)
+  let bgSubworkColIdx = -1;
+  let bestSwHits = -1;
+
+  for (let i = 0; i < headers.length; i++) {
+    if (i === netBudgetColIdx) continue;
+    const h = String(headers[i] || "").trim();
+    // ข้ามคอลัมน์ที่เป็น แผนย่อย หรือ รหัสงบประมาณ
+    const isPlanOrZ401Col = rows.slice(0, 80).some(r => {
+      const v = String((r._cols ? r._cols[i] : r[h]) ?? "").trim();
+      return /^(bo05000000|z4010103001)/i.test(v);
+    });
+    if (isPlanOrZ401Col) continue;
+
+    let score = 0;
+    if (/รหัสงานย่อย|เลขงานย่อย|^งานย่อย$/i.test(h) && !/แผนย่อย|รายละเอียด|ชื่อ/i.test(h)) score += 50;
+
+    rows.forEach(r => {
+      const rawCell = String((r._cols ? r._cols[i] : r[h]) ?? "").trim().replace(/\.0+$/, "");
+      if (!rawCell || rawCell === "-") return;
+      const nk = normMasterKey(rawCell);
+      const firstSpaceTok = normMasterKey(rawCell.split(/\s+/)[0] || "");
+      if (incomeSubworkMap.has(nk) || (firstSpaceTok && incomeSubworkMap.has(firstSpaceTok))) {
+        score += 30;
+      } else if (allSubworkCodesSet.has(nk) || (firstSpaceTok && allSubworkCodesSet.has(firstSpaceTok))) {
+        score += 10;
+      }
+    });
+
+    if (score > bestSwHits && score > 0) {
+      bestSwHits = score;
+      bgSubworkColIdx = i;
+    }
+  }
+
+  // หาคอลัมน์รายละเอียดในชีตงบประมาณ (เผื่อกรณี Master ไม่มีคำอธิบาย)
+  let bgDescColIdx = headers.findIndex((h, idx) =>
+    idx !== netBudgetColIdx &&
+    idx !== bgSubworkColIdx &&
+    /รายละเอียดงานย่อย|ชื่องานย่อย|รายละเอียด|รายการ|ชื่องาน|ชื่อ/i.test(String(h || ""))
+  );
+
+  // 4. ดึงแถวข้อมูลจากชีตงบประมาณ เฉพาะแถวที่มี "รหัสงานย่อย" ตรงกับประเภทรายรับใน Master งานย่อย เท่านั้น
+  // (ตัดแถวสรุปของหมวด Z4010103001 / แผนย่อย BO05000000 ที่ช่องรหัสงานย่อยว่างออกทั้งหมด และตัดแถวรายจ่ายออก)
+  const candidateRows = [];
+  let activeSection = "unknown"; // ติดตามหัวข้อหมวดกรณีชีตแบ่งกลุ่มบน-ล่าง
+
+  rows.forEach((row, idx) => {
+    const cols = row._cols || headers.map(h => row[h] ?? "");
+    const joinedText = cols.map(c => String(c ?? "").trim()).join(" ");
+
+    // หาค่าในช่องรหัสงานย่อยของแถวนี้
+    let matchedMaster = null;
+    let rawSwCell = "";
+
+    if (bgSubworkColIdx >= 0) {
+      rawSwCell = String(cols[bgSubworkColIdx] ?? "").trim().replace(/\.0+$/, "");
+      if (rawSwCell && rawSwCell !== "-" && !/^(bo05000000|z4010103001)/i.test(rawSwCell)) {
+        const nk = normMasterKey(rawSwCell);
+        const firstSpaceTok = normMasterKey(rawSwCell.split(/\s+/)[0] || "");
+        matchedMaster = incomeSubworkMap.get(nk) || (firstSpaceTok ? incomeSubworkMap.get(firstSpaceTok) : null) || null;
+      }
+    } else {
+      // กรณีไม่พบคอลัมน์ชัดเจน ให้ตรวจทุกคอลัมน์ที่ไม่ใช่ช่องตัวเลขและไม่ใช่รหัสแผนย่อย/หมวดงบ
+      for (let i = 0; i < cols.length; i++) {
+        if (i === netBudgetColIdx) continue;
+        const cVal = String(cols[i] ?? "").trim().replace(/\.0+$/, "");
+        if (!cVal || cVal === "-" || /^(bo05000000|z4010103001)/i.test(cVal)) continue;
+        const nk = normMasterKey(cVal);
+        if (incomeSubworkMap.has(nk)) {
+          matchedMaster = incomeSubworkMap.get(nk);
+          rawSwCell = cVal;
+          break;
+        }
+      }
+    }
+
+    // ถ้าแถวนี้มีรหัสหมวดงบหรือประเภท ให้ปรับสถานะหมวดปัจจุบันก่อนเสมอ (รองรับกรณี Merge Cell ใน Google Sheets)
+    if (/z4010103001/i.test(joinedText) || (/รายรับ|รายได้/i.test(joinedText) && !/รายจ่าย|ค่าใช้จ่าย/i.test(joinedText))) {
+      activeSection = "income";
+    } else if (
+      /รายจ่าย|ค่าใช้จ่าย|งบบุคลากร|งบดำเนินงาน|งบลงทุน|งบรายจ่าย/i.test(joinedText) ||
+      cols.some(c => /^z[0-9]/i.test(String(c ?? "").trim()) && !/^z4010103001/i.test(String(c ?? "").trim()))
+    ) {
+      activeSection = "expense";
+    }
+
+    // ถ้าแถวนี้ไม่มีรหัสงานย่อยใน Master ประเภทรายรับ (เช่น แถวหัวข้อรวม Z4010103001 หรือ BO05000000-1 ที่ช่องงานย่อยว่าง)
+    if (!matchedMaster) {
+      return; // ข้ามแถวสรุปที่ไม่มีรหัสงานย่อยทันที ไม่นำมานับซ้ำ!
+    }
+
+    const valE = parseNumber(cols[netBudgetColIdx]);
+    if (valE === 0) return;
+
+    // ข้ามทันทีหากอยู่ในหมวดรายจ่าย หรือแถวนี้ระบุว่าเป็นรายจ่าย
+    if (activeSection === "expense") return;
+
+    const fallbackDesc = bgDescColIdx >= 0 ? String(cols[bgDescColIdx] ?? "").trim() : "";
+
+    candidateRows.push({
+      rowIndex: idx + 1,
+      subworkCode: matchedMaster.code,
+      subworkDesc: cleanSubworkDescText(
+        (matchedMaster.desc && matchedMaster.desc !== matchedMaster.code)
+          ? matchedMaster.desc
+          : (fallbackDesc || matchedMaster.desc || "-"),
+        matchedMaster.code
+      ),
+      amount: valE,
+      inIncomeSection: activeSection === "income"
+    });
+  });
+
+  const incomeSectionRows = candidateRows.filter(r => r.inIncomeSection);
+  const selectedRows = incomeSectionRows.length > 0 ? incomeSectionRows : candidateRows;
+
+  // รวมยอดตามรหัสงานย่อย (กรณีรหัสงานย่อยแสดงเป็นรายการ)
+  const items = selectedRows.map(r => ({
+    code: r.subworkCode,
+    desc: r.subworkDesc,
+    amount: r.amount
+  }));
+
+  const totalNetIncome = items.reduce((sum, item) => sum + item.amount, 0);
+
+  return {
+    totalNetIncome,
+    matchedRowCount: items.length,
+    items,
+    netBudgetColName: headers[netBudgetColIdx] || "ช่อง E (งบประมาณสุทธิ)"
+  };
+}
+
+// คำนวณ การ์ดรายรับ (รับจริง) จากช่อง "รับ/จ่ายจริง" (หรือ รับจริง/จ่ายจริง) เฉพาะประเภทรายรับ พร้อมแยก รายได้ กับ ส่วนลดและส่วนต่างค่าบริการ
+function calculateActualIncomeReceipt() {
+  const budgetDs = STATE.budget || { headers: [], rows: [], raw2D: [], multiHeaders: [] };
+  const headers = (budgetDs.headers || []).slice(0, 11);
+  const multiHeaders = budgetDs.multiHeaders || [];
+  const rows = budgetDs.rows || [];
+  const raw2D = budgetDs.raw2D || [];
+  const msRows = (STATE.masterSubwork && STATE.masterSubwork.raw2D) ? STATE.masterSubwork.raw2D : [];
+  const mbRows = (STATE.masterBudget && STATE.masterBudget.raw2D) ? STATE.masterBudget.raw2D : [];
+  const colLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
+
+  // 1. สร้างแผนที่คำอธิบายจาก Master งบประมาณ (เพื่อแยก รายได้ vs ส่วนลดและส่วนต่างค่าบริการ vs รายจ่าย)
+  const masterBgMap = new Map();
+  mbRows.forEach(r => {
+    const cells = (r || []).map(c => String(c ?? "").trim()).filter(Boolean);
+    if (!cells.length) return;
+    const joined = cells.join(" ");
+    if (/^(ลำดับ|รหัส|ชื่อ|หมวด|ประเภท|master)/i.test(joined) && cells.every(c => c.length < 30)) return;
+    const meaningful = cells.filter(c => !/^\d{1,2}$/.test(c));
+    const code = meaningful[0] || cells[0];
+    const desc = meaningful.length > 1 ? meaningful.slice(1).join(" · ") : code;
+    const isDiscount = /ส่วนลด|ส่วนต่าง/i.test(joined);
+    const isExpense = !isDiscount && (/รายจ่าย|ค่าใช้จ่าย|งบบุคลากร|งบดำเนินงาน|งบลงทุน|งบรายจ่าย/i.test(joined) || /^z?[56]\d{4,}/i.test(code));
+    const isIncome = !isExpense && (isDiscount || /รายรับ|รายได้|ค่าบริการ|เงินบำรุง/i.test(joined) || /^z?4\d{3,}/i.test(code));
+    const info = { code, desc, joined, isDiscount, isIncome, isExpense };
+    cells.forEach(c => {
+      const nk = normMasterKey(c);
+      if (nk && nk.length >= 2 && !masterBgMap.has(nk)) masterBgMap.set(nk, info);
+    });
+  });
+
+  // 2. ดึงเฉพาะ "รหัสงานย่อย" และ "รายละเอียดงานย่อย" ที่มีประเภท = รายรับ จากชีต Master งานย่อย (เหมือนการ์ดรายรับงบประมาณสุทธิ)
+  const incomeSubworkMap = new Map();
+  const allSubworkCodesSet = new Set();
+
+  if (msRows.length > 0) {
+    const firstRow = (msRows[0] || []).map(c => String(c ?? "").trim());
+    const hasHeader = msRows.length > 1 && firstRow.some(h => /รหัส|เลข|งานย่อย|รายละเอียด|ชื่อ|ประเภท|แผน/i.test(h));
+    const headerRow = hasHeader ? firstRow : [];
+    const dataRows = hasHeader ? msRows.slice(1) : msRows;
+    const colCount = Math.max(headerRow.length, ...dataRows.slice(0, 30).map(r => (r || []).length), 1);
+
+    let msTypeCol = headerRow.findIndex(h => /ประเภท|หมวด/i.test(h));
+    if (msTypeCol === -1) {
+      let bestHits = 0;
+      for (let c = 0; c < colCount; c++) {
+        let hits = 0;
+        dataRows.slice(0, 50).forEach(r => {
+          if (/^(รายรับ|รายได้|รายจ่าย|ค่าใช้จ่าย)$/i.test(String((r && r[c]) ?? "").trim())) hits++;
+        });
+        if (hits > bestHits) { bestHits = hits; msTypeCol = c; }
+      }
+    }
+
+    const excludedMasterCols = new Set();
+    if (msTypeCol !== -1) excludedMasterCols.add(msTypeCol);
+    for (let c = 0; c < colCount; c++) {
+      if (excludedMasterCols.has(c)) continue;
+      const h = headerRow[c] || "";
+      const hasPlanOrBg = dataRows.slice(0, 40).some(r => /^(bo05000000|z4010103001)/i.test(String((r && r[c]) ?? "").trim()));
+      if (/แผนย่อย|รหัสแผน|รหัสงบ|หมวดงบ/i.test(h) || hasPlanOrBg) excludedMasterCols.add(c);
+    }
+
+    let msCodeCol = -1, msDescCol = -1;
+    for (let c = 0; c < colCount; c++) {
+      if (excludedMasterCols.has(c)) continue;
+      const h = headerRow[c] || "";
+      if (msCodeCol === -1 && /รหัสงานย่อย|เลขงานย่อย|^รหัส$|code/i.test(h)) msCodeCol = c;
+      else if (msDescCol === -1 && /รายละเอียดงานย่อย|ชื่องานย่อย|รายละเอียด|ชื่องาน|ชื่อ|รายการ/i.test(h)) msDescCol = c;
+    }
+
+    const remainingCols = [];
+    for (let c = 0; c < colCount; c++) {
+      if (!excludedMasterCols.has(c)) remainingCols.push(c);
+    }
+    if (msCodeCol === -1 && remainingCols.length > 0) {
+      if (remainingCols.length >= 2) {
+        const avgLen = (colIdx) => {
+          const vals = dataRows.slice(0, 40).map(r => String((r && r[colIdx]) ?? "").trim()).filter(Boolean);
+          return vals.length ? vals.reduce((s, v) => s + v.length, 0) / vals.length : 999;
+        };
+        const sortedByLen = [...remainingCols].sort((a, b) => avgLen(a) - avgLen(b));
+        msCodeCol = sortedByLen[0];
+        if (msDescCol === -1) msDescCol = remainingCols.find(c => c !== msCodeCol) ?? -1;
+      } else {
+        msCodeCol = remainingCols[0];
+      }
+    }
+    if (msDescCol === -1) msDescCol = remainingCols.find(c => c !== msCodeCol) ?? -1;
+
+    dataRows.forEach(r => {
+      const cells = (r || []).map(c => String(c ?? "").trim());
+      if (!cells.some(Boolean)) return;
+
+      let rawCode = msCodeCol >= 0 ? String(cells[msCodeCol] ?? "").trim().replace(/\.0+$/, "") : "";
+      let rawDesc = msDescCol >= 0 ? String(cells[msDescCol] ?? "").trim() : "";
+
+      if (!rawDesc && /\s+/.test(rawCode)) {
+        const m = rawCode.match(/^([^\s]+)\s+(.+)$/);
+        if (m) { rawCode = m[1].trim(); rawDesc = m[2].trim(); }
+      }
+
+      if (!rawCode || rawCode === "-" || /^(bo05000000|z4010103001)/i.test(rawCode)) return;
+      if (/^(รวม|รวมทั้งสิ้น|สรุป|รหัสงานย่อย|เลขงานย่อย|งานย่อย)$/i.test(rawCode)) return;
+
+      const normCode = normMasterKey(rawCode);
+      allSubworkCodesSet.add(normCode);
+
+      const typeCheckStr = msTypeCol >= 0 ? String(cells[msTypeCol] ?? "").trim() : cells.join(" ");
+      const isExpenseType = /รายจ่าย|ค่าใช้จ่าย/i.test(typeCheckStr) && !/รายรับ|รายได้/i.test(typeCheckStr);
+      const isIncomeType = !isExpenseType && /รายรับ|รายได้|ส่วนลด|ส่วนต่าง/i.test(typeCheckStr);
+
+      if (isIncomeType) {
+        incomeSubworkMap.set(normCode, {
+          code: rawCode,
+          desc: cleanSubworkDescText(rawDesc || rawCode, rawCode),
+          fullText: cells.join(" ")
+        });
+      }
+    });
+  }
+
+  // 3. หาคอลัมน์งบประมาณสุทธิ (netBudgetColIdx) และ คอลัมน์รหัสงานย่อย (bgSubworkColIdx)
+  let netBudgetColIdx = 4;
+  for (let i = 0; i < headers.length; i++) {
+    if (/งบประมาณสุทธิ/i.test(headers[i])) { netBudgetColIdx = i; break; }
+  }
+
+  let bgSubworkColIdx = -1;
+  let bestSwHits = -1;
+  for (let i = 0; i < headers.length; i++) {
+    if (i === netBudgetColIdx) continue;
+    const h = String(headers[i] || "").trim();
+    const isPlanOrZCol = rows.slice(0, 80).some(r => /^(bo05000000|z4010103001)/i.test(String((r._cols ? r._cols[i] : r[h]) ?? "").trim()));
+    if (isPlanOrZCol) continue;
+
+    let score = (/รหัสงานย่อย|เลขงานย่อย|^งานย่อย$/i.test(h) && !/แผนย่อย|รายละเอียด|ชื่อ/i.test(h)) ? 50 : 0;
+    rows.forEach(r => {
+      const rawCell = String((r._cols ? r._cols[i] : r[h]) ?? "").trim().replace(/\.0+$/, "");
+      if (!rawCell || rawCell === "-") return;
+      const nk = normMasterKey(rawCell);
+      const tok0 = normMasterKey(rawCell.split(/\s+/)[0] || "");
+      if (incomeSubworkMap.has(nk) || (tok0 && incomeSubworkMap.has(tok0))) score += 30;
+      else if (allSubworkCodesSet.has(nk) || (tok0 && allSubworkCodesSet.has(tok0))) score += 10;
+    });
+    if (score > bestSwHits && score > 0) { bestSwHits = score; bgSubworkColIdx = i; }
+  }
+
+  // 4. ค้นหาคอลัมน์ "รับ/จ่ายจริง" หรือ "รับจริง/จ่ายจริง" (actualColIdx)
+  const headerCombined = new Array(11).fill("");
+  for (let i = 0; i < 11; i++) {
+    const parts = [headers[i] || "", multiHeaders[i] || ""];
+    raw2D.slice(0, 12).forEach(r => {
+      if (!r) return;
+      const nonEmptyInRow = r.slice(0, 11).filter(c => String(c ?? "").trim() !== "").length;
+      if (nonEmptyInRow < 2) return;
+      if (r.some(c => /z4010103001|bo05000000/i.test(String(c ?? "")))) return;
+      if (parseNumber(r[netBudgetColIdx]) !== 0) return;
+      if (r[i]) parts.push(String(r[i]).replace(/\s+/g, " ").trim());
+    });
+    headerCombined[i] = parts.filter(Boolean).join(" ");
+  }
+
+  const isForbiddenForActual = (idx) => idx === netBudgetColIdx || idx === bgSubworkColIdx;
+
+  let actualColIdx = -1;
+  // ลำดับที่ 1: มีคำว่า รับ/จ่ายจริง หรือ รับจริง/จ่ายจริง
+  for (let i = 0; i < 11; i++) {
+    if (isForbiddenForActual(i)) continue;
+    const compact = headerCombined[i].replace(/\s+/g, "");
+    if (/(รับ|รับจริง)\/(จ่าย|จ่ายจริง)|รับจริง.*จ่ายจริง|จ่ายจริง.*รับจริง/i.test(compact)) {
+      actualColIdx = i;
+      break;
+    }
+  }
+  // ลำดับที่ 2: มีคำว่า รับจริง
+  if (actualColIdx === -1) {
+    for (let i = 0; i < 11; i++) {
+      if (isForbiddenForActual(i)) continue;
+      if (/รับจริง/i.test(headerCombined[i]) && !/งบประมาณสุทธิ|คงเหลือ/i.test(headerCombined[i])) {
+        actualColIdx = i;
+        break;
+      }
+    }
+  }
+  // ลำดับที่ 3: มีคำว่า จ่ายจริง / เบิกจ่ายจริง
+  if (actualColIdx === -1) {
+    for (let i = 0; i < 11; i++) {
+      if (isForbiddenForActual(i)) continue;
+      if (/จ่ายจริง|เบิกจ่ายจริง|ผลการเบิก|ผลการใช้/i.test(headerCombined[i]) && !/คงเหลือ/i.test(headerCombined[i])) {
+        actualColIdx = i;
+        break;
+      }
+    }
+  }
+  if (actualColIdx === -1) actualColIdx = 6;
+
+  // 5. ดึงเฉพาะแถวที่มี "รหัสงานย่อย" ตรงกับ Master งานย่อย ประเภทรายรับ เท่านั้น! (ไม่ดึงแถวสรุปที่ช่องงานย่อยว่าง และไม่ดึงแถวฝั่งรายจ่าย)
+  const candidateRows = [];
+  let activeSection = "unknown";
+  let activeSubGroup = "revenue";
+
+  rows.forEach((row, idx) => {
+    const cols = row._cols || headers.map(h => row[h] ?? "");
+    const joinedText = cols.map(c => String(c ?? "").trim()).join(" ");
+
+    // ตรวจสอบรหัสงบประมาณจาก Master งบประมาณ (ข้ามคอลัมน์รหัสงานย่อยและคอลัมน์ตัวเลข)
+    let matchedBgInfo = null;
+    for (let i = 0; i < cols.length; i++) {
+      if (i === actualColIdx || i === netBudgetColIdx || i === bgSubworkColIdx) continue;
+      const nk = normMasterKey(cols[i]);
+      if (nk && masterBgMap.has(nk)) {
+        matchedBgInfo = masterBgMap.get(nk);
+        break;
+      }
+    }
+    const combinedText = `${joinedText} ${matchedBgInfo ? matchedBgInfo.joined : ""}`;
+
+    // ตรวจรหัสหมวดงบ (Z4... vs Z5.../Z6...) โดยไม่รวมคอลัมน์รหัสงานย่อย เพื่อไม่ให้รหัสงานย่อยที่ขึ้นต้นด้วย 4 (เช่น 4131010199) ไปปลดล็อกฝั่งรายจ่าย
+    const hasZ4InBgCols = cols.some((c, i) => i !== bgSubworkColIdx && i !== actualColIdx && i !== netBudgetColIdx && /^z4\d+/i.test(String(c ?? "").trim()));
+    const hasExpZInBgCols = cols.some((c, i) => i !== bgSubworkColIdx && i !== actualColIdx && i !== netBudgetColIdx && /^z[0-9]/i.test(String(c ?? "").trim()) && !/^z4/i.test(String(c ?? "").trim()));
+
+    if (
+      hasZ4InBgCols ||
+      (matchedBgInfo && matchedBgInfo.isIncome) ||
+      (/รายรับ|รายได้|ส่วนลด.*บริการ|ส่วนต่าง.*บริการ/i.test(combinedText) && !/รายจ่าย|ค่าใช้จ่าย/i.test(combinedText))
+    ) {
+      activeSection = "income";
+    } else if (
+      hasExpZInBgCols ||
+      (matchedBgInfo && matchedBgInfo.isExpense) ||
+      /รายจ่าย|ค่าใช้จ่าย|งบบุคลากร|งบดำเนินงาน|งบลงทุน|งบรายจ่าย/i.test(combinedText)
+    ) {
+      activeSection = "expense";
+    }
+
+    // หาค่าในช่องรหัสงานย่อยของแถวนี้ (ต้องมีรหัสงานย่อยจริง ห้ามว่าง!)
+    let matchedIncSw = null;
+    if (bgSubworkColIdx >= 0) {
+      const rawSwCell = String(cols[bgSubworkColIdx] ?? "").trim().replace(/\.0+$/, "");
+      if (rawSwCell && rawSwCell !== "-" && !/^(bo05000000|z[0-9])/i.test(rawSwCell)) {
+        const nk = normMasterKey(rawSwCell);
+        const tok0 = normMasterKey(rawSwCell.split(/\s+/)[0] || "");
+        matchedIncSw = incomeSubworkMap.get(nk) || (tok0 ? incomeSubworkMap.get(tok0) : null) || null;
+      }
+    } else {
+      for (let i = 0; i < cols.length; i++) {
+        if (i === actualColIdx || i === netBudgetColIdx) continue;
+        const cVal = String(cols[i] ?? "").trim().replace(/\.0+$/, "");
+        if (!cVal || cVal === "-" || /^(bo05000000|z[0-9])/i.test(cVal)) continue;
+        const nk = normMasterKey(cVal);
+        if (incomeSubworkMap.has(nk)) { matchedIncSw = incomeSubworkMap.get(nk); break; }
+      }
+    }
+
+    // อัปเดตหมวดย่อย (รายได้ vs ส่วนลดและส่วนต่างค่าบริการ)
+    const swDescClean = matchedIncSw ? cleanSubworkDescText(matchedIncSw.desc, matchedIncSw.code) : "";
+    const hasDirectDiscountWord =
+      /ส่วนลด|ส่วนต่าง/i.test(combinedText) ||
+      Boolean(matchedBgInfo && matchedBgInfo.isDiscount) ||
+      /ส่วนลด|ส่วนต่าง/i.test(swDescClean);
+    const isRevenueHeadingItem =
+      (/รายได้|รายรับ/i.test(swDescClean) && !/ส่วนลด|ส่วนต่าง/i.test(swDescClean)) ||
+      (Boolean(matchedBgInfo && matchedBgInfo.isIncome && !matchedBgInfo.isDiscount) && !/ส่วนลด|ส่วนต่าง/i.test(combinedText));
+
+    if (!matchedIncSw) {
+      // แถวหัวข้อหมวด / แผนย่อย (ไม่มีรหัสงานย่อย)
+      if (hasDirectDiscountWord) {
+        activeSubGroup = "discount";
+      } else if (/รายได้|รายรับ|z4\d+|bo05000000/i.test(combinedText)) {
+        activeSubGroup = "revenue";
+      }
+      return; // ข้ามแถวสรุปหมวดที่ไม่มีรหัสงานย่อย
+    }
+
+    if (activeSection === "expense") return;
+
+    // หากรายละเอียดงานย่อยเป็นหัวข้อที่เป็นรายได้ ให้รีเซ็ตหมวดย่อยเป็น revenue ทันทีเพื่อไม่ให้ค้างอยู่ในส่วนลด
+    if (isRevenueHeadingItem) {
+      activeSubGroup = "revenue";
+    } else if (hasDirectDiscountWord) {
+      activeSubGroup = "discount";
+    }
+
+    const actualAmount = parseNumber(cols[actualColIdx]);
+    if (actualAmount === 0) return;
+
+    // รายการที่จะอยู่ใน "ส่วนลดและส่วนต่างค่าบริการ" ต้องไม่ใช่หัวข้อที่เป็นรายได้
+    const isDiscountRow = !isRevenueHeadingItem && (hasDirectDiscountWord || activeSubGroup === "discount");
+
+    candidateRows.push({
+      rowIndex: idx + 1,
+      code: matchedIncSw.code,
+      desc: swDescClean,
+      amount: actualAmount,
+      isDiscount: isDiscountRow,
+      isRevenueHeadingItem,
+      inIncomeSection: activeSection === "income"
+    });
+  });
+
+  const incomeSectionRows = candidateRows.filter(r => r.inIncomeSection);
+  const selectedRows = incomeSectionRows.length > 0 ? incomeSectionRows : candidateRows;
+
+  // แยกรายการเป็น "รายได้" กับ "ส่วนลดและส่วนต่างค่าบริการ" (ไม่นำหัวข้อที่เป็นรายได้ไปใส่ในส่วนลดเด็ดขาด)
+  const hasAnyExplicitDiscount = selectedRows.some(r => r.isDiscount);
+  const revenueItems = [];
+  const discountItems = [];
+
+  selectedRows.forEach(r => {
+    const putInDiscount = !r.isRevenueHeadingItem && (hasAnyExplicitDiscount ? r.isDiscount : (r.amount < 0));
+    if (putInDiscount) discountItems.push(r);
+    else revenueItems.push(r);
+  });
+
+  const sumRevenue = revenueItems.reduce((s, r) => s + r.amount, 0);
+  const sumDiscount = discountItems.reduce((s, r) => s + r.amount, 0);
+  const totalActualIncome = sumRevenue + sumDiscount;
+
+  const colLetter = colLetters[actualColIdx] || "";
+  const rawColHeader = headers[actualColIdx] || "รับ/จ่ายจริง";
+  const actualColName = colLetter ? `${rawColHeader} (ช่อง ${colLetter})` : rawColHeader;
+
+  return {
+    totalActualIncome,
+    sumRevenue,
+    sumDiscount,
+    revenueItems,
+    discountItems,
+    totalCount: selectedRows.length,
+    actualColName
+  };
+}
+
+// คำนวณ การ์ดค่าใช้จ่าย(จริง) โดยใช้ประเภท "ค่าใช้จ่าย" จากชีต Master งานย่อย (เฉพาะรหัสงานย่อยเท่านั้น) รวมมูลค่าจากคอลัมน์ "รวม" ในชีตงบประมาณ พร้อมจัดหมวดตามแผนย่อยใน Master งานย่อย
+function calculateActualExpenseTotal() {
+  const budgetDs = STATE.budget || { headers: [], rows: [], raw2D: [], multiHeaders: [] };
+  const headers = (budgetDs.headers || []).slice(0, 11);
+  const multiHeaders = budgetDs.multiHeaders || [];
+  const rows = budgetDs.rows || [];
+  const raw2D = budgetDs.raw2D || [];
+  const msRows = (STATE.masterSubwork && STATE.masterSubwork.raw2D) ? STATE.masterSubwork.raw2D : [];
+  const mbRows = (STATE.masterBudget && STATE.masterBudget.raw2D) ? STATE.masterBudget.raw2D : [];
+  const colLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
+
+  // แผนที่เสริมชื่อแผนย่อยจาก Master งบประมาณ (เผื่อกรณี Master งานย่อยเก็บเฉพาะรหัสแผนย่อย เช่น BO05000000 / BI02000000)
+  const mbPlanNameMap = new Map();
+  mbRows.forEach(r => {
+    const cells = (r || []).map(c => String(c ?? "").trim()).filter(Boolean);
+    if (cells.length >= 2 && !/^(รหัส|ลำดับ|แผน|หมวด|ประเภท|master)/i.test(cells[0])) {
+      const nk = normMasterKey(cells[0]);
+      if (nk && !mbPlanNameMap.has(nk)) mbPlanNameMap.set(nk, cells[1]);
+    }
+  });
+
+  // 1. ดึงเฉพาะ "รหัสงานย่อย" ที่มีประเภท = ค่าใช้จ่าย (หรือ รายจ่าย) พร้อมข้อมูล "แผนย่อย" จากชีต Master งานย่อย
+  const expenseSubworkMap = new Map();
+  const expenseByPlanAndSwMap = new Map();
+  const knownPlanKeysSet = new Set();
+  const masterSubplanOrder = [];
+  const seenMasterSubplan = new Set();
+  const allSubworkCodesSet = new Set();
+
+  if (msRows.length > 0) {
+    const firstRow = (msRows[0] || []).map(c => String(c ?? "").trim());
+    const hasHeader = msRows.length > 1 && firstRow.some(h => /รหัส|เลข|งานย่อย|รายละเอียด|ชื่อ|ประเภท|แผน/i.test(h));
+    const headerRow = hasHeader ? firstRow : [];
+    const dataRows = hasHeader ? msRows.slice(1) : msRows;
+    const colCount = Math.max(headerRow.length, ...dataRows.slice(0, 50).map(r => (r || []).length), 1);
+
+    let msTypeCol = headerRow.findIndex(h => /^ประเภท$|ประเภทรายการ|ประเภทงบ|ประเภท/i.test(h));
+    if (msTypeCol === -1) {
+      let bestHits = 0;
+      for (let c = 0; c < colCount; c++) {
+        let hits = 0;
+        dataRows.forEach(r => {
+          const v = String((r && r[c]) ?? "").trim();
+          if (/^(รายรับ|รายได้|รายจ่าย|ค่าใช้จ่าย)$/i.test(v)) hits += 3;
+          else if (/ค่าใช้จ่าย|รายจ่าย|รายรับ|รายได้/i.test(v) && v.length <= 30) hits += 1;
+        });
+        if (hits > bestHits) { bestHits = hits; msTypeCol = c; }
+      }
+    }
+
+    // ตรวจหาคอลัมน์ "แผนย่อย" (ทั้งรหัสแผนย่อย และ ชื่อแผนย่อย) ในชีต Master งานย่อย
+    let msPlanCodeCol = headerRow.findIndex((h, idx) => idx !== msTypeCol && /รหัสแผนย่อย|รหัสแผน|^แผนย่อย$/i.test(h));
+    let msPlanNameCol = headerRow.findIndex((h, idx) => idx !== msTypeCol && idx !== msPlanCodeCol && /ชื่อแผนย่อย|รายละเอียดแผนย่อย|แผนย่อย|ชื่อแผน|แผนงาน/i.test(h));
+
+    if (msPlanCodeCol === -1 && msPlanNameCol === -1) {
+      for (let c = 0; c < colCount; c++) {
+        if (c === msTypeCol) continue;
+        if (dataRows.slice(0, 80).some(r => /^b[oi]\d{5,}/i.test(String((r && r[c]) ?? "").trim()))) {
+          msPlanCodeCol = c;
+          break;
+        }
+      }
+    }
+
+    const excludedMasterCols = new Set();
+    if (msTypeCol !== -1) excludedMasterCols.add(msTypeCol);
+    if (msPlanCodeCol !== -1) excludedMasterCols.add(msPlanCodeCol);
+    if (msPlanNameCol !== -1) excludedMasterCols.add(msPlanNameCol);
+
+    for (let c = 0; c < colCount; c++) {
+      if (excludedMasterCols.has(c)) continue;
+      const h = headerRow[c] || "";
+      const hasPlanOrBg = dataRows.slice(0, 80).some(r => /^(b[oi]\d{5,}|z4010103001)/i.test(String((r && r[c]) ?? "").trim()));
+      if (/แผนย่อย|รหัสแผน|รหัสงบ|หมวดงบ/i.test(h) || hasPlanOrBg) excludedMasterCols.add(c);
+    }
+
+    let msCodeCol = -1, msDescCol = -1;
+    for (let c = 0; c < colCount; c++) {
+      if (excludedMasterCols.has(c)) continue;
+      const h = headerRow[c] || "";
+      if (msCodeCol === -1 && /รหัสงานย่อย|เลขงานย่อย|^รหัส$|code/i.test(h)) msCodeCol = c;
+      else if (msDescCol === -1 && /รายละเอียดงานย่อย|ชื่องานย่อย|รายละเอียด|ชื่องาน|ชื่อ|รายการ/i.test(h)) msDescCol = c;
+    }
+
+    const remainingCols = [];
+    for (let c = 0; c < colCount; c++) {
+      if (!excludedMasterCols.has(c)) remainingCols.push(c);
+    }
+    if (msCodeCol === -1 && remainingCols.length > 0) {
+      if (remainingCols.length >= 2) {
+        const avgLen = (colIdx) => {
+          const vals = dataRows.slice(0, 60).map(r => String((r && r[colIdx]) ?? "").trim()).filter(Boolean);
+          return vals.length ? vals.reduce((s, v) => s + v.length, 0) / vals.length : 999;
+        };
+        const sortedByLen = [...remainingCols].sort((a, b) => avgLen(a) - avgLen(b));
+        msCodeCol = sortedByLen[0];
+        if (msDescCol === -1) msDescCol = remainingCols.find(c => c !== msCodeCol) ?? -1;
+      } else {
+        msCodeCol = remainingCols[0];
+      }
+    }
+    if (msDescCol === -1) msDescCol = remainingCols.find(c => c !== msCodeCol) ?? -1;
+
+    if (msPlanCodeCol === -1 && msPlanNameCol === -1) {
+      const leftover = headerRow.findIndex((_, idx) => idx !== msTypeCol && idx !== msCodeCol && idx !== msDescCol);
+      if (leftover !== -1) msPlanCodeCol = leftover;
+    }
+
+    let lastSeenType = "";
+    let lastSeenPlanCode = "";
+    let lastSeenPlanName = "";
+
+    dataRows.forEach(r => {
+      const cells = (r || []).map(c => String(c ?? "").trim());
+      if (!cells.some(Boolean)) return;
+
+      let pCode = msPlanCodeCol >= 0 ? String(cells[msPlanCodeCol] ?? "").trim().replace(/\.0+$/, "") : "";
+      let pName = msPlanNameCol >= 0 ? String(cells[msPlanNameCol] ?? "").trim() : "";
+
+      if (pCode || pName) {
+        if (pCode && pCode !== lastSeenPlanCode) {
+          lastSeenPlanCode = pCode;
+          lastSeenPlanName = pName || "";
+        } else {
+          if (pCode) lastSeenPlanCode = pCode;
+          if (pName) lastSeenPlanName = pName;
+        }
+      } else {
+        pCode = lastSeenPlanCode;
+        pName = lastSeenPlanName;
+      }
+
+      if (!pName && pCode && mbPlanNameMap.has(normMasterKey(pCode))) {
+        pName = mbPlanNameMap.get(normMasterKey(pCode));
+      }
+
+      let subplanLabel = "";
+      if (pCode && pName && pCode !== pName && !pName.includes(pCode)) {
+        subplanLabel = `${pCode} · ${pName}`;
+      } else {
+        subplanLabel = pName || pCode || "ไม่ระบุแผนย่อย";
+      }
+
+      if (pCode) knownPlanKeysSet.add(normMasterKey(pCode));
+      if (pName) knownPlanKeysSet.add(normMasterKey(pName));
+
+      let rawCode = msCodeCol >= 0 ? String(cells[msCodeCol] ?? "").trim().replace(/\.0+$/, "") : "";
+      let rawDesc = msDescCol >= 0 ? String(cells[msDescCol] ?? "").trim() : "";
+
+      if (!rawDesc && /\s+/.test(rawCode)) {
+        const m = rawCode.match(/^([^\s]+)\s+(.+)$/);
+        if (m) { rawCode = m[1].trim(); rawDesc = m[2].trim(); }
+      }
+
+      if (!rawCode || rawCode === "-" || /^(b[oi]\d{5,}(?:-\d+)?|z4010103001(?:-1)?)$/i.test(rawCode)) return;
+      if (/^(รวม|รวมทั้งสิ้น|สรุป|รหัสงานย่อย|เลขงานย่อย|งานย่อย)$/i.test(rawCode)) return;
+
+      const normCode = normMasterKey(rawCode);
+      allSubworkCodesSet.add(normCode);
+
+      let cellType = msTypeCol >= 0 ? String(cells[msTypeCol] ?? "").trim() : "";
+      if (cellType) lastSeenType = cellType;
+      const typeCheckStr = cellType || lastSeenType || cells.join(" ");
+
+      const isExpenseType = /ค่าใช้จ่าย|รายจ่าย/i.test(typeCheckStr);
+
+      if (isExpenseType) {
+        const entry = {
+          code: rawCode,
+          desc: cleanSubworkDescText(rawDesc || rawCode, rawCode),
+          subplanCode: pCode,
+          subplanName: pName,
+          subplanLabel
+        };
+        if (!seenMasterSubplan.has(subplanLabel)) {
+          seenMasterSubplan.add(subplanLabel);
+          masterSubplanOrder.push(subplanLabel);
+        }
+        if (!expenseSubworkMap.has(normCode)) {
+          expenseSubworkMap.set(normCode, entry);
+        }
+        if (pCode) expenseByPlanAndSwMap.set(`${normMasterKey(pCode)}|${normCode}`, entry);
+        if (pName) expenseByPlanAndSwMap.set(`${normMasterKey(pName)}|${normCode}`, entry);
+      }
+    });
+  }
+
+  // 2. หาคอลัมน์งบประมาณสุทธิ (netBudgetColIdx) และ คอลัมน์รหัสงานย่อย (bgSubworkColIdx) ในชีตงบประมาณ
+  let netBudgetColIdx = 4;
+  for (let i = 0; i < headers.length; i++) {
+    if (/งบประมาณสุทธิ/i.test(headers[i])) { netBudgetColIdx = i; break; }
+  }
+
+  let bgSubworkColIdx = -1;
+  let bestSwHits = -1;
+  for (let i = 0; i < headers.length; i++) {
+    if (i === netBudgetColIdx) continue;
+    const h = String(headers[i] || "").trim();
+    const isPlanOrZ401Col = rows.slice(0, 80).some(r => /^(b[oi]\d{5,}|z4010103001)/i.test(String((r._cols ? r._cols[i] : r[h]) ?? "").trim()));
+    if (isPlanOrZ401Col) continue;
+
+    let score = (/รหัสงานย่อย|เลขงานย่อย|^งานย่อย$/i.test(h) && !/แผนย่อย|รายละเอียด|ชื่อ/i.test(h)) ? 50 : 0;
+    rows.forEach(r => {
+      const rawCell = String((r._cols ? r._cols[i] : r[h]) ?? "").trim().replace(/\.0+$/, "");
+      if (!rawCell || rawCell === "-") return;
+      const nk = normMasterKey(rawCell);
+      const tok0 = normMasterKey(rawCell.split(/\s+/)[0] || "");
+      if (expenseSubworkMap.has(nk) || (tok0 && expenseSubworkMap.has(tok0))) score += 30;
+      else if (allSubworkCodesSet.has(nk) || (tok0 && allSubworkCodesSet.has(tok0))) score += 10;
+    });
+    if (score > bestSwHits && score > 0) { bestSwHits = score; bgSubworkColIdx = i; }
+  }
+
+  // 3. ค้นหาคอลัมน์ "รวม" (totalColIdx) ในชีตงบประมาณ (คอลัมน์ A ถึง K)
+  const rawHeaderTokensByCol = Array.from({ length: 11 }, () => []);
+  const headerCombined = new Array(11).fill("");
+
+  for (let i = 0; i < 11; i++) {
+    const cleanH = String(headers[i] || "").replace(/\s*\(ช่อง\s*[A-K]\)\s*$/i, "").replace(/\s*\([A-K]\)\s*$/i, "").trim();
+    if (cleanH) rawHeaderTokensByCol[i].push(cleanH);
+    const parts = [cleanH, multiHeaders[i] || ""];
+    raw2D.slice(0, 12).forEach(r => {
+      if (!r) return;
+      const nonEmptyInRow = r.slice(0, 11).filter(c => String(c ?? "").trim() !== "").length;
+      if (nonEmptyInRow < 2) return;
+      if (r.some(c => /z4010103001|b[oi]\d{5,}/i.test(String(c ?? "")))) return;
+      if (parseNumber(r[netBudgetColIdx]) !== 0) return;
+      const cellTxt = String(r[i] ?? "").replace(/\s+/g, " ").trim();
+      if (cellTxt) {
+        rawHeaderTokensByCol[i].push(cellTxt);
+        parts.push(cellTxt);
+      }
+    });
+    headerCombined[i] = parts.filter(Boolean).join(" ");
+  }
+
+  const isForbiddenForTotal = (idx) =>
+    idx === netBudgetColIdx ||
+    idx === bgSubworkColIdx ||
+    /(รับ|รับจริง)\s*\/\s*(จ่าย|จ่ายจริง)|งบประมาณสุทธิ|คงเหลือ/i.test(headerCombined[idx]);
+
+  let totalColIdx = -1;
+  for (let i = 0; i < 11; i++) {
+    if (isForbiddenForTotal(i)) continue;
+    if (rawHeaderTokensByCol[i].some(t => /^รวม$/i.test(t))) {
+      totalColIdx = i;
+      break;
+    }
+  }
+  if (totalColIdx === -1) {
+    for (let i = netBudgetColIdx + 1; i < 11; i++) {
+      if (isForbiddenForTotal(i)) continue;
+      if (/รวม/i.test(headerCombined[i])) {
+        totalColIdx = i;
+        break;
+      }
+    }
+  }
+  if (totalColIdx === -1) {
+    for (let i = 0; i < 11; i++) {
+      if (isForbiddenForTotal(i)) continue;
+      if (/รวม/i.test(headerCombined[i])) {
+        totalColIdx = i;
+        break;
+      }
+    }
+  }
+  if (totalColIdx === -1) totalColIdx = 9;
+
+  // 4. คำนวณผลรวมจากคอลัมน์ "รวม" เฉพาะแถวที่มี "รหัสงานย่อย" ประเภทค่าใช้จ่าย และจัดหมวดตาม "แผนย่อย" ใน Master งานย่อย (รวมถึง BI02000000 ทั้ง 31 งานย่อย)
+  const matchedExpenseRows = [];
+  let activeSheetPlanKey = "";
+
+  rows.forEach((row, idx) => {
+    const cols = row._cols || headers.map(h => row[h] ?? "");
+
+    // ติดตามรหัสแผนย่อยบนชีตงบประมาณ (เช่น BO05000000, BI02000000)
+    for (let i = 0; i < Math.min(cols.length, 4); i++) {
+      if (i === bgSubworkColIdx) continue;
+      const cellStr = String(cols[i] ?? "").trim().replace(/\.0+$/, "");
+      if (!cellStr) continue;
+      const planCodeMatch = cellStr.match(/\b(b[oi]\d{5,}(?:-\d+)?)\b/i);
+      if (planCodeMatch) {
+        activeSheetPlanKey = normMasterKey(planCodeMatch[1]);
+        break;
+      }
+      const nk = normMasterKey(cellStr);
+      if (nk && knownPlanKeysSet.has(nk)) {
+        activeSheetPlanKey = nk;
+        break;
+      }
+    }
+
+    const isDirectZ401Row = cols.some((c, i) => i !== bgSubworkColIdx && /^z4010103001/i.test(String(c ?? "").trim()));
+    if (isDirectZ401Row) return;
+
+    let matchedExpSw = null;
+    if (bgSubworkColIdx >= 0) {
+      const rawSwCell = String(cols[bgSubworkColIdx] ?? "").trim().replace(/\.0+$/, "");
+      if (rawSwCell && rawSwCell !== "-" && !/^(b[oi]\d{5,}(?:-\d+)?|z4010103001(?:-1)?)$/i.test(rawSwCell)) {
+        const nk = normMasterKey(rawSwCell);
+        const tok0 = normMasterKey(rawSwCell.split(/\s+/)[0] || "");
+        const lookupSw = (swKey) => {
+          if (!swKey) return null;
+          if (activeSheetPlanKey && expenseByPlanAndSwMap.has(`${activeSheetPlanKey}|${swKey}`)) {
+            return expenseByPlanAndSwMap.get(`${activeSheetPlanKey}|${swKey}`);
+          }
+          return expenseSubworkMap.get(swKey) || null;
+        };
+        matchedExpSw = lookupSw(nk) || lookupSw(tok0);
+      }
+    } else {
+      for (let i = 0; i < cols.length; i++) {
+        if (i === totalColIdx || i === netBudgetColIdx) continue;
+        const cVal = String(cols[i] ?? "").trim().replace(/\.0+$/, "");
+        if (!cVal || cVal === "-" || /^(b[oi]\d{5,}(?:-\d+)?|z4010103001(?:-1)?)$/i.test(cVal)) continue;
+        const nk = normMasterKey(cVal);
+        if (expenseSubworkMap.has(nk)) {
+          matchedExpSw = (activeSheetPlanKey && expenseByPlanAndSwMap.get(`${activeSheetPlanKey}|${nk}`)) || expenseSubworkMap.get(nk);
+          break;
+        }
+      }
+    }
+
+    if (!matchedExpSw) return;
+
+    const valTotal = parseNumber(cols[totalColIdx]);
+
+    matchedExpenseRows.push({
+      rowIndex: idx + 1,
+      code: matchedExpSw.code,
+      desc: matchedExpSw.desc,
+      subplan: matchedExpSw.subplanLabel || "ไม่ระบุแผนย่อย",
+      amount: valTotal
+    });
+  });
+
+  // 5. จัดกลุ่มรายการค่าใช้จ่ายตาม "แผนย่อย" ในชีต Master งานย่อย
+  const subplanGroupsMap = new Map();
+  masterSubplanOrder.forEach(spLabel => {
+    subplanGroupsMap.set(spLabel, { subplan: spLabel, totalAmount: 0, items: [] });
+  });
+
+  matchedExpenseRows.forEach(item => {
+    const sp = item.subplan || "ไม่ระบุแผนย่อย";
+    if (!subplanGroupsMap.has(sp)) {
+      subplanGroupsMap.set(sp, { subplan: sp, totalAmount: 0, items: [] });
+    }
+    const g = subplanGroupsMap.get(sp);
+    g.totalAmount += item.amount;
+    g.items.push(item);
+  });
+
+  const subplanGroups = [...subplanGroupsMap.values()].filter(g => g.items.length > 0);
+
+  const totalActualExpense = matchedExpenseRows.reduce((sum, r) => sum + r.amount, 0);
+  const colLetter = colLetters[totalColIdx] || "";
+  const rawColHeader = headers[totalColIdx] || "รวม";
+  const totalColName = colLetter ? `${rawColHeader} (ช่อง ${colLetter})` : rawColHeader;
+
+  return {
+    totalActualExpense,
+    matchedCount: matchedExpenseRows.length,
+    masterExpenseCount: expenseSubworkMap.size,
+    items: matchedExpenseRows,
+    subplanGroups,
+    totalColName
+  };
+}
+
+// จัดรูปแบบตัวเลข: ค่าติดลบแสดงเครื่องหมาย - ด้านหลัง (เช่น 1,234.00-) และเป็นสีแดง
+function fmtSapSignedHtml(n, withCurrency = false) {
+  const num = Number(n || 0);
+  const absFormatted = Math.abs(num).toLocaleString("th-TH", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+  const prefix = withCurrency ? "฿" : "";
+  if (num < 0) {
+    return `<span class="neg-red">${prefix}${absFormatted}-</span>`;
+  }
+  return `${prefix}${absFormatted}`;
+}
+
+function renderBudgetView() {
+  const result = calculateNetIncomeBudget();
+  const actualRes = calculateActualIncomeReceipt();
+  const expenseRes = calculateActualExpenseTotal();
+
+  const valEl = document.getElementById("bgNetIncomeCardVal");
+  const metaEl = document.getElementById("bgNetIncomeCardMeta");
+  const badgeEl = document.getElementById("bgSubworkDetailBadge");
+  const tbody = document.querySelector("#bgSubworkDetailTable tbody");
+  const tfoot = document.querySelector("#bgSubworkDetailTable tfoot");
+
+  const fmtExact = (n) => Number(n || 0).toLocaleString("th-TH", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  // 1. การ์ดรายรับงบประมาณสุทธิ
+  if (valEl) {
+    valEl.innerHTML = fmtSapSignedHtml(result.totalNetIncome, true);
+  }
+  if (metaEl) {
+    metaEl.innerHTML =
+      `คำนวณผลรวมจากช่อง <strong>${escHtml(result.netBudgetColName)}</strong> ในชีตงบประมาณ ` +
+      `โดยใช้เฉพาะแถวที่มีรหัสงานย่อยประเภทรายรับจากชีต Master งานย่อย (${result.matchedRowCount.toLocaleString("th-TH")} รายการ)`;
+  }
+  if (badgeEl) {
+    badgeEl.textContent = `${result.matchedRowCount.toLocaleString("th-TH")} รายการ`;
+  }
+
+  if (tbody) {
+    if (!result.items.length) {
+      tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:24px;">ไม่พบรายการรหัสงานย่อยประเภทรายรับ</td></tr>`;
+      if (tfoot) tfoot.innerHTML = "";
+    } else {
+      tbody.innerHTML = result.items.map(item => `
+        <tr>
+          <td><span class="co-code">${escHtml(item.code)}</span></td>
+          <td>${escHtml(item.desc)}</td>
+          <td class="num-cell ${item.amount < 0 ? "neg-red" : "mint"}"><strong>${fmtSapSignedHtml(item.amount, false)}</strong></td>
+        </tr>
+      `).join("");
+
+      if (tfoot) {
+        tfoot.innerHTML = `
+          <tr style="background:var(--table-head);border-top:2px solid var(--border-strong);">
+            <td colspan="2" style="font-weight:800;color:var(--text);">รวมรายรับงบประมาณสุทธิทั้งสิ้น (${result.items.length.toLocaleString("th-TH")} รายการ)</td>
+            <td class="num-cell ${result.totalNetIncome < 0 ? "neg-red" : "mint"}" style="font-size:15px;font-weight:800;">${fmtSapSignedHtml(result.totalNetIncome, true)}</td>
+          </tr>
+        `;
+      }
+    }
+  }
+
+  // 2. การ์ดรายรับ (รับจริง) + แยกรายละเอียด รายได้ กับ ส่วนลดและส่วนต่างค่าบริการ
+  const actValEl = document.getElementById("bgActualIncomeCardVal");
+  const actMetaEl = document.getElementById("bgActualIncomeCardMeta");
+  const actSubEl = document.getElementById("bgActualSubSummary");
+
+  if (actValEl) {
+    actValEl.innerHTML = fmtSapSignedHtml(actualRes.totalActualIncome, true);
+  }
+  if (actMetaEl) {
+    actMetaEl.innerHTML =
+      `คำนวณผลรวมจากช่อง <strong>${escHtml(actualRes.actualColName)}</strong> ในชีตงบประมาณ ` +
+      `เฉพาะส่วนที่เป็นประเภทรายรับ (${actualRes.totalCount.toLocaleString("th-TH")} รายการ)`;
+  }
+  if (actSubEl) {
+    actSubEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+        <span style="color:var(--muted);">🟢 รายได้ (${actualRes.revenueItems.length.toLocaleString("th-TH")} รายการ)</span>
+        <strong class="${actualRes.sumRevenue < 0 ? "neg-red" : "mint"}">${fmtSapSignedHtml(actualRes.sumRevenue, true)}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+        <span style="color:var(--muted);">🔻 ส่วนลดและส่วนต่างค่าบริการ (${actualRes.discountItems.length.toLocaleString("th-TH")} รายการ)</span>
+        <strong class="${actualRes.sumDiscount < 0 ? "neg-red" : ""}">${fmtSapSignedHtml(actualRes.sumDiscount, true)}</strong>
+      </div>
+    `;
+  }
+
+  // ตารางส่วนที่ 1: รายได้ (ช่องรับจริง/จ่ายจริง)
+  const revBadge = document.getElementById("bgActRevBadge");
+  const revTbody = document.querySelector("#bgActualRevenueTable tbody");
+  const revTfoot = document.querySelector("#bgActualRevenueTable tfoot");
+  if (revBadge) revBadge.textContent = `${actualRes.revenueItems.length.toLocaleString("th-TH")} รายการ`;
+  if (revTbody) {
+    if (!actualRes.revenueItems.length) {
+      revTbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:24px;">ไม่พบรายการรายได้ในช่องรับจริง/จ่ายจริง</td></tr>`;
+      if (revTfoot) revTfoot.innerHTML = "";
+    } else {
+      revTbody.innerHTML = actualRes.revenueItems.map(item => `
+        <tr>
+          <td><span class="co-code">${escHtml(item.code)}</span></td>
+          <td>${escHtml(item.desc)}</td>
+          <td class="num-cell ${item.amount < 0 ? "neg-red" : "mint"}"><strong>${fmtSapSignedHtml(item.amount, false)}</strong></td>
+        </tr>
+      `).join("");
+      if (revTfoot) {
+        revTfoot.innerHTML = `
+          <tr style="background:var(--table-head);border-top:2px solid var(--border-strong);">
+            <td colspan="2" style="font-weight:800;color:var(--text);">รวมรายได้ (${actualRes.revenueItems.length.toLocaleString("th-TH")} รายการ)</td>
+            <td class="num-cell ${actualRes.sumRevenue < 0 ? "neg-red" : "mint"}" style="font-size:14.5px;font-weight:800;">${fmtSapSignedHtml(actualRes.sumRevenue, true)}</td>
+          </tr>
+        `;
+      }
+    }
+  }
+
+  // ตารางส่วนที่ 2: ส่วนลดและส่วนต่างค่าบริการ (ช่องรับจริง/จ่ายจริง)
+  const discBadge = document.getElementById("bgActDiscBadge");
+  const discTbody = document.querySelector("#bgActualDiscountTable tbody");
+  const discTfoot = document.querySelector("#bgActualDiscountTable tfoot");
+  if (discBadge) discBadge.textContent = `${actualRes.discountItems.length.toLocaleString("th-TH")} รายการ`;
+  if (discTbody) {
+    if (!actualRes.discountItems.length) {
+      discTbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:24px;">ไม่มีรายการส่วนลดและส่วนต่างค่าบริการ (0.00)</td></tr>`;
+      if (discTfoot) discTfoot.innerHTML = "";
+    } else {
+      discTbody.innerHTML = actualRes.discountItems.map(item => `
+        <tr>
+          <td><span class="co-code">${escHtml(item.code)}</span></td>
+          <td>${escHtml(item.desc)}</td>
+          <td class="num-cell ${item.amount < 0 ? "neg-red" : ""}"><strong>${fmtSapSignedHtml(item.amount, false)}</strong></td>
+        </tr>
+      `).join("");
+      if (discTfoot) {
+        discTfoot.innerHTML = `
+          <tr style="background:var(--table-head);border-top:2px solid var(--border-strong);">
+            <td colspan="2" style="font-weight:800;color:var(--text);">รวมส่วนลดและส่วนต่างค่าบริการ (${actualRes.discountItems.length.toLocaleString("th-TH")} รายการ)</td>
+            <td class="num-cell ${actualRes.sumDiscount < 0 ? "neg-red" : ""}" style="font-size:14.5px;font-weight:800;">${fmtSapSignedHtml(actualRes.sumDiscount, true)}</td>
+          </tr>
+        `;
+      }
+    }
+  }
+
+  // 3. การ์ดค่าใช้จ่าย(จริง) + รายละเอียดแยกหมวดตามแผนย่อย (Master งานย่อย)
+  const expValEl = document.getElementById("bgActualExpenseCardVal");
+  const expMetaEl = document.getElementById("bgActualExpenseCardMeta");
+  const expSubplanBadge = document.getElementById("bgExpSubplanBadge");
+  const expSubplanContainer = document.getElementById("bgExpenseBySubplanList");
+
+  if (expValEl) {
+    expValEl.innerHTML = fmtSapSignedHtml(expenseRes.totalActualExpense, true);
+  }
+  if (expMetaEl) {
+    expMetaEl.innerHTML =
+      `คำนวณผลรวมจากคอลัมน์ <strong>${escHtml(expenseRes.totalColName)}</strong> ในชีตงบประมาณ ` +
+      `โดยใช้เฉพาะรหัสงานย่อยประเภทค่าใช้จ่ายจากชีต Master งานย่อย (${expenseRes.matchedCount.toLocaleString("th-TH")} รายการ · ${expenseRes.subplanGroups.length.toLocaleString("th-TH")} แผนย่อย)`;
+  }
+  if (expSubplanBadge) {
+    expSubplanBadge.textContent = `${expenseRes.subplanGroups.length.toLocaleString("th-TH")} แผนย่อย · ${expenseRes.matchedCount.toLocaleString("th-TH")} รายการ`;
+  }
+
+  if (expSubplanContainer) {
+    if (!expenseRes.subplanGroups.length) {
+      expSubplanContainer.innerHTML = `<div class="card mat-empty">ไม่พบรายการค่าใช้จ่ายตามแผนย่อยในชีตงบประมาณ</div>`;
+    } else {
+      const maxSubplanAmt = Math.max(1, ...expenseRes.subplanGroups.map(g => Math.abs(g.totalAmount)));
+      const totalExpAbs = Math.abs(expenseRes.totalActualExpense) || 1;
+
+      expSubplanContainer.innerHTML = expenseRes.subplanGroups.map((group, gIdx) => {
+        const pct = expenseRes.totalActualExpense
+          ? ((group.totalAmount / totalExpAbs) * 100).toFixed(2)
+          : "0.00";
+        const barW = group.totalAmount !== 0
+          ? Math.max(2, Math.round((Math.abs(group.totalAmount) / maxSubplanAmt) * 100))
+          : 0;
+
+        const rowsHtml = group.items.map(item => `
+          <tr>
+            <td><span class="co-code">${escHtml(item.code)}</span></td>
+            <td>${escHtml(item.desc)}</td>
+            <td class="num-cell ${item.amount < 0 ? "neg-red" : "amber"}"><strong>${fmtSapSignedHtml(item.amount, false)}</strong></td>
+          </tr>
+        `).join("");
+
+        return `
+          <details class="mat-row"${gIdx === 0 || expenseRes.subplanGroups.length <= 4 ? " open" : ""}>
+            <summary>
+              <div class="mat-main">
+                <div class="mat-code">📌 หมวดแผนย่อย (Master งานย่อย)</div>
+                <div class="mat-name">${escHtml(group.subplan)}</div>
+                <div class="mat-tags">
+                  <span class="mchip">${group.items.length.toLocaleString("th-TH")} รายการงานย่อย</span>
+                  <span class="mchip warn">สัดส่วน ${pct}%</span>
+                </div>
+              </div>
+              <div class="mat-money">
+                <strong class="${group.totalAmount < 0 ? "neg-red" : "amber"}">${fmtSapSignedHtml(group.totalAmount, true)}</strong>
+                <div class="mat-bar"><i style="width:${barW}%;background:linear-gradient(90deg, #f59e0b, #fb923c);"></i></div>
+                <small>รวมจากคอลัมน์ ${escHtml(expenseRes.totalColName)}</small>
+              </div>
+            </summary>
+            <div class="mat-lines">
+              <table>
+                <thead>
+                  <tr>
+                    <th>รหัสงานย่อย</th>
+                    <th>รายละเอียดงานย่อย</th>
+                    <th style="text-align:right;">ยอดค่าใช้จ่ายจริง · คอลัมน์รวม (บาท)</th>
+                  </tr>
+                </thead>
+                <tbody>${rowsHtml}</tbody>
+                <tfoot>
+                  <tr style="background:var(--table-head);border-top:2px solid var(--border-strong);">
+                    <td colspan="2" style="font-weight:800;color:var(--text);">รวมหมวดแผนย่อย: ${escHtml(group.subplan)} (${group.items.length.toLocaleString("th-TH")} รายการ)</td>
+                    <td class="num-cell ${group.totalAmount < 0 ? "neg-red" : "amber"}" style="font-size:14.5px;font-weight:800;">${fmtSapSignedHtml(group.totalAmount, true)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </details>
+        `;
+      }).join("");
+    }
+  }
+}
+
+// =========================================================
 // 7. การนำทาง (Navigation) และ Event Listeners
 // =========================================================
 const VIEW_META = {
@@ -3469,6 +5379,7 @@ const VIEW_META = {
   "po-overview": { eyebrow: "PURCHASE ORDER OVERVIEW (ชีต 1)", title: "ภาพรวมรายการใบสั่งซื้อ (PO)", sub: "สรุปจำนวนรายการ PO สถานะการจัดซื้อ มูลค่าสั่งซื้อรวม และตารางข้อมูล PO ทั้งหมดแยกตามคลัง" },
   "po-material": { eyebrow: "PURCHASE ORDER — MATERIAL CATALOG (ชีต 1)", title: "ค้นหาจากรหัสหรือชื่อวัสดุ (พร้อมรูปภาพวัสดุ)", sub: "เลือกคลังที่ต้องการ แล้วค้นหาด้วยรหัสวัสดุหรือชื่อวัสดุเพื่อดูรายละเอียดและรูปภาพ" },
   "po-company": { eyebrow: "PURCHASE ORDER — VENDOR ANALYTICS (ชีต 1)", title: "ค้นหาจากบริษัท และภาพรวมสถานะจัดซื้อ", sub: "เลือกคลังและบริษัทเพื่อดูสถานะจัดซื้อที่ดำเนินการแล้ว / ยังไม่ได้ดำเนินการ และมูลค่าสั่งซื้อจากราคาเต็มใน PO" },
+  "budget": { eyebrow: "EXECUTIVE BUDGET · NET & ACTUAL INCOME", title: "แดชบอร์ดงบประมาณผู้บริหาร · รายรับงบประมาณสุทธิ & รายรับ (รับจริง)", sub: "สรุปผลรวมรายรับงบประมาณสุทธิ และรายรับ (รับจริง) จากช่องรับจริง/จ่ายจริง เฉพาะประเภทรายรับ พร้อมแยกรายละเอียด รายได้ กับ ส่วนลดและส่วนต่างค่าบริการ" },
   "import-excel": { eyebrow: "DATA SOURCE MANAGER · GOOGLE SHEETS & EXCEL", title: "จัดการแหล่งข้อมูล & Import ไฟล์ Excel", sub: "ลากไฟล์ Excel มาวาง หรือกดสลับที่มาของข้อมูลระหว่าง Google Sheets กับ Excel ได้ทันที" }
 };
 
@@ -3480,6 +5391,7 @@ function renderAllActiveViews() {
   if (STATE.activeView === "po-overview") renderPOOverviewView();
   if (STATE.activeView === "po-material") renderPOMaterialView();
   if (STATE.activeView === "po-company") renderPOCompanyView();
+  if (STATE.activeView === "budget") renderBudgetView();
   if (STATE.activeView === "import-excel") renderImportExcelView();
   animateVisibleNumbers();
 }
@@ -3537,6 +5449,33 @@ document.getElementById("excelPrSheetSelect").addEventListener("change", (e) => 
   extractExcelSheetsData();
   switchDataSource("excel");
 });
+const excelBgSel = document.getElementById("excelBudgetSheetSelect");
+if (excelBgSel) {
+  excelBgSel.addEventListener("change", (e) => {
+    STATE.excelStore.budgetSheetName = e.target.value;
+    extractExcelSheetsData();
+    switchDataSource("excel");
+  });
+}
+const excelMbSel = document.getElementById("excelMasterBudgetSelect");
+if (excelMbSel) {
+  excelMbSel.addEventListener("change", (e) => {
+    STATE.excelStore.masterBudgetSheetName = e.target.value;
+    extractExcelSheetsData();
+    switchDataSource("excel");
+  });
+}
+const excelMsSel = document.getElementById("excelMasterSubworkSelect");
+if (excelMsSel) {
+  excelMsSel.addEventListener("change", (e) => {
+    STATE.excelStore.masterSubworkSheetName = e.target.value;
+    extractExcelSheetsData();
+    switchDataSource("excel");
+  });
+}
+
+// Event Listeners สำหรับแดชบอร์ดงบประมาณผู้บริหาร (การ์ดรายรับงบประมาณสุทธิ)
+// ไม่ต้องผูกตัวกรองหรือตารางตามคำสั่ง "โดยยังไม่มีต้องมีตัวกรอง หรือรายละเอียดย่อย หรือตาราง ยังไม่ต้องเปรียบเทียบอะไรทั้งสิ้น"
 
 document.getElementById("prSearchInput").addEventListener("input", () => { renderPRView(); animateVisibleNumbers(); });
 document.getElementById("poOvSearchInput").addEventListener("input", () => { renderPOOverviewView(); animateVisibleNumbers(); });
@@ -3575,15 +5514,43 @@ function getDemoDataset() {
     { "PR Date": "03/11/2026", "PR": "PR-1006", "PO": "", "Plant": "2000", "รหัสวัสดุ": "MAT-2009", "วัสดุ": "แฟ้มสันกว้าง A4", "จำนวน": 100, "หน่วยนับ": "แฟ้ม", "ราคาต่อหน่วย": 62, "ราคารวมใน PR": 6200 }
   ];
 
+  const masterBg2D = [
+    ["รหัสแผนย่อย", "ชื่อแผนย่อย"],
+    ["BO05000000", "แผนงานบริการทางการแพทย์และสาธารณสุข"],
+    ["BO05000000-1", "แผนงานสนับสนุนบริการและบริหารทั่วไป"]
+  ];
+  const masterSw2D = [
+    ["รหัสแผนย่อย", "เลขงานย่อย", "งานย่อย", "ประเภท"],
+    ["BO05000000", "50101", "งานบริการรักษาพยาบาลและรายรับทางการแพทย์", "รายรับ"],
+    ["BO05000000", "50102", "งานบริการตรวจรักษาพิเศษและชันสูตร", "รายรับ"],
+    ["BO05000000-1", "50103", "งานสนับสนุนบริการทางการแพทย์และสาธารณสุข", "รายรับ"],
+    ["BO05000000", "50201", "งานบริหารเวชภัณฑ์และคลังยา", "ค่าใช้จ่าย"]
+  ];
+  // คอลัมน์ A..K: คอลัมน์ E (index 4) คือช่องงบประมาณสุทธิ, คอลัมน์ G (index 6) คือช่องรับ/จ่ายจริง, คอลัมน์ J (index 9) คือคอลัมน์รวม
+  // งบประมาณสุทธิ: 829,716,000.00 + 17,884,000.00 + 226,132,800.00 = 1,073,732,800.00
+  const budget2D = [
+    ["รหัสแผนย่อย", "เลขงานย่อย", "รหัสงบประมาณ", "รายการ", "งบประมาณสุทธิ", "งบตั้งต้น", "รับ/จ่ายจริง", "การขอซื้อ", "การขอจ้าง", "รวม", "คงเหลือ"],
+    ["BO05000000", "50101", "Z4010103001", "รายได้จากบริการทางการแพทย์ทั่วไป", "829716000", "830000000", "412580000.00", "0", "0", "412580000", "417136000"],
+    ["BO05000000", "50102", "Z4010103001-1", "ส่วนลดและส่วนต่างค่าบริการทางการแพทย์", "17884000", "18000000", "14250000.00-", "0", "0", "-14250000", "32134000"],
+    ["BO05000000-1", "50103", "Z4010103001", "รายได้จากการสนับสนุนบริการทางการแพทย์", "226132800", "227000000", "118400000.00", "0", "0", "118400000", "107732800"],
+    ["BO05000000", "50201", "Z5010101001", "จัดซื้อเวชภัณฑ์และยา", "0", "50000000", "32000000", "12000000", "0", "44000000", "6000000"]
+  ];
+
   return {
     po: { headers: poHeaders, rows: poRows, cols: detectSheetColumns(poHeaders, poRows) },
-    pr: { headers: prHeaders, rows: prRows, cols: detectSheetColumns(prHeaders, prRows) }
+    pr: { headers: prHeaders, rows: prRows, cols: detectSheetColumns(prHeaders, prRows) },
+    budget: buildBudgetDatasetFrom2D(budget2D),
+    masterBudget: buildMasterFrom2D(masterBg2D),
+    masterSubwork: buildMasterFrom2D(masterSw2D)
   };
 }
 
 const SHEET_CONFIG = {
-  po: { gid: "0",          name: "ชีต1", csvUrl: "" },
-  pr: { gid: "1680340293", name: "PR",   csvUrl: "" },
+  po:            { gid: "0",          name: "ชีต1",            csvUrl: "" },
+  pr:            { gid: "1680340293", name: "PR",              csvUrl: "" },
+  budget:        { gid: "1657026486", name: "งบประมาณ",        range: "A:K" },
+  masterBudget:  { gid: "663253578",  name: "Master งบประมาณ" },
+  masterSubwork: { gid: "359445395",  name: "Master งานย่อย" },
   apiKey: ""
 };
 
@@ -3617,6 +5584,143 @@ async function fetchText(url) {
   return text;
 }
 
+async function loadSheet2D(spec) {
+  const rangeParam = spec.range ? `&range=${encodeURIComponent(spec.range)}` : "";
+  const attempts = [];
+  // ลองดึงแบบ export CSV ก่อน เพื่อรักษาค่าตัวเลขที่มีเครื่องหมายลบด้านหลัง (เช่น "1,234.00-") ไม่ให้ถูก gviz ตัดเป็นค่าว่างเมื่อคอลัมน์มีทั้งตัวเลขและข้อความปนกัน
+  if (spec.gid) {
+    attempts.push(async () => ({ rows: parseCSV(await fetchText(`${SHEET_BASE_URL}/export?format=csv&gid=${spec.gid}`)), viaCsv: true }));
+    attempts.push(async () => ({ rows: parseCSV(await fetchText(`${SHEET_BASE_URL}/gviz/tq?tqx=out:csv&gid=${spec.gid}${rangeParam}`)), viaCsv: false }));
+  }
+  if (spec.name) {
+    attempts.push(async () => ({ rows: parseCSV(await fetchText(`${SHEET_BASE_URL}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(spec.name)}${rangeParam}`)), viaCsv: false }));
+  }
+  if (spec.gid) {
+    attempts.push(async () => ({ rows: gvizTableTo2D(await fetchSheetByParam(`gid=${spec.gid}${rangeParam}`)), viaCsv: false }));
+  }
+  if (spec.name) {
+    attempts.push(async () => ({ rows: gvizTableTo2D(await fetchSheetByParam(`sheet=${encodeURIComponent(spec.name)}${rangeParam}`)), viaCsv: false }));
+  }
+
+  for (const fn of attempts) {
+    try {
+      const out = await fn();
+      if (out && Array.isArray(out.rows) && out.rows.length > 0) {
+        out.rows._viaCsv = out.viaCsv;
+        return out.rows;
+      }
+    } catch {}
+  }
+  return [];
+}
+
+// กู้คืนค่าข้อความตัวเลขที่มีเครื่องหมายลบด้านหลัง (เช่น "12,345.00-") และหัวตารางหลายบรรทัด กรณีโหลดผ่าน gviz JSONP ซึ่งมักตัดข้อความในคอลัมน์ตัวเลขเป็น null
+async function enrichBudget2DIfJsonp(bg2D, ms2D) {
+  if (!Array.isArray(bg2D) || !bg2D.length || bg2D._viaCsv) return bg2D;
+  const gid = SHEET_CONFIG.budget.gid;
+
+  try {
+    // 1. ดึงแถวบนสุด A1:K15 แบบ headers=0 เพื่อหาตำแหน่งบรรทัดจริงใน Google Sheets และกู้คืนชื่อหัวคอลัมน์ทั้งหมด
+    const topTbl = await fetchSheetByParam(`gid=${gid}&range=A1:K15&headers=0`);
+    const topRows = gvizTableTo2D(topTbl);
+
+    // หาระยะเหลื่อมของบรรทัด (กรณี gviz ยุบรวมแถวหัวตารางหลายแถวเข้าด้วยกันเป็นแถวเดียว)
+    let sheetRowOffset = 0; // sheetRowNumber (1-based) = bgIdx + 1 + sheetRowOffset
+    for (let bIdx = 1; bIdx < Math.min(bg2D.length, 12); bIdx++) {
+      const bCells = (bg2D[bIdx] || []).slice(0, 5).map(c => String(c ?? "").trim()).filter(c => c.length >= 4);
+      if (!bCells.length) continue;
+      const tIdx = topRows.findIndex(tr => bCells.every(bc => (tr || []).some(tc => String(tc ?? "").trim() === bc)));
+      if (tIdx !== -1) {
+        sheetRowOffset = tIdx - bIdx;
+        break;
+      }
+    }
+
+    // เติมข้อความหัวคอลัมน์ที่อาจหายไปในแถวหัวตาราง
+    if (topRows.length > 0 && bg2D[0]) {
+      const headerEndInTop = Math.min(topRows.length, Math.max(1, 1 + sheetRowOffset));
+      const mergedHeader = new Array(11).fill("");
+      for (let r = 0; r < headerEndInTop; r++) {
+        const tr = topRows[r] || [];
+        const nonEmpty = tr.slice(0, 11).filter(c => String(c ?? "").trim() !== "").length;
+        if (nonEmpty < 2) continue;
+        for (let c = 0; c < 11; c++) {
+          const txt = String(tr[c] ?? "").replace(/\s+/g, " ").trim();
+          if (txt && !mergedHeader[c].includes(txt)) {
+            mergedHeader[c] = (mergedHeader[c] ? mergedHeader[c] + " " : "") + txt;
+          }
+        }
+      }
+      for (let c = 0; c < 11; c++) {
+        if (mergedHeader[c] && !String(bg2D[0][c] ?? "").trim()) {
+          bg2D[0][c] = mergedHeader[c];
+        }
+      }
+    }
+
+    // 2. รวบรวมรหัสงานย่อยประเภทรายรับจาก Master งานย่อย เพื่อเจาะจงดึงเฉพาะแถวรายรับที่อาจมีค่า "xxx.xx-" ถูก gviz ตัดทิ้ง
+    const incCodes = new Set();
+    (ms2D || []).forEach(r => {
+      const cells = (r || []).map(c => String(c ?? "").trim());
+      const joined = cells.join(" ");
+      if (/รายรับ|รายได้|ส่วนลด|ส่วนต่าง/i.test(joined) && !/รายจ่าย|ค่าใช้จ่าย/i.test(joined)) {
+        cells.forEach(c => {
+          const nk = normMasterKey(c);
+          if (nk && nk.length >= 2 && !/^(รายรับ|รายได้|bo05000000|z4010103001)/i.test(nk)) {
+            incCodes.add(nk);
+          }
+        });
+      }
+    });
+
+    // ค้นหาดัชนีแถวใน bg2D ที่อยู่ในส่วนประเภทรายรับ (ทั้งแถวงานย่อย แถวลูกใต้หมวดรายได้/ส่วนลด และแถว Z4.../4...)
+    const targetBgIndices = [];
+    let inIncBlock = false;
+    for (let i = 1; i < bg2D.length; i++) {
+      const r = bg2D[i] || [];
+      const joined = r.slice(0, 11).map(c => String(c ?? "").trim()).join(" ");
+      const hasExp = /รายจ่าย|ค่าใช้จ่าย|งบบุคลากร|งบดำเนินงาน|งบลงทุน|งบรายจ่าย/i.test(joined) ||
+                     r.slice(0, 6).some(c => /^z?[56]\d{5,}/i.test(String(c ?? "").trim()));
+      const hasInc = /z4\d+|รายรับ|รายได้|ส่วนลด|ส่วนต่าง/i.test(joined) ||
+                     r.slice(0, 6).some(c => /^4\d{5,}/i.test(String(c ?? "").trim())) ||
+                     r.slice(0, 6).some(c => incCodes.has(normMasterKey(c)));
+
+      if (hasExp && !hasInc) inIncBlock = false;
+      else if (hasInc) inIncBlock = true;
+
+      if (hasInc || inIncBlock) {
+        // ถ้าระหว่างคอลัมน์ F..K (5..10) มีช่องว่าง (ซึ่งอาจเกิดจากค่า "xxx.xx-" ถูก gviz ตัดเป็น null) ให้ดึงแถวนั้นแบบเจาะจง 1 แถว
+        const hasBlankNumCell = r.slice(5, 11).some(c => c === "" || c === null || c === undefined);
+        if (hasBlankNumCell) targetBgIndices.push(i);
+      }
+      if (targetBgIndices.length >= 40) break;
+    }
+
+    if (targetBgIndices.length > 0) {
+      await Promise.all(targetBgIndices.map(async (bIdx) => {
+        const sheetRow = bIdx + 1 + sheetRowOffset;
+        if (sheetRow < 1) return;
+        try {
+          // ดึงทีละ 1 แถวด้วย headers=0 ทำให้ gviz ไม่สามารถบังคับชนิดคอลัมน์เป็นตัวเลขทับค่า "12,345.00-" ได้!
+          const rowTbl = await fetchSheetByParam(`gid=${gid}&range=A${sheetRow}:K${sheetRow}&headers=0`);
+          const single2D = gvizTableTo2D(rowTbl);
+          const exactRow = single2D && single2D[0];
+          if (exactRow) {
+            for (let c = 0; c < 11; c++) {
+              const v = exactRow[c];
+              if (v !== "" && v !== null && v !== undefined && (bg2D[bIdx][c] === "" || bg2D[bIdx][c] === null || bg2D[bIdx][c] === undefined)) {
+                bg2D[bIdx][c] = v;
+              }
+            }
+          }
+        } catch {}
+      }));
+    }
+  } catch {}
+
+  return bg2D;
+}
+
 async function loadSheetDataset(spec) {
   const errors = [];
   const attempts = [];
@@ -3641,23 +5745,28 @@ async function loadSheetDataset(spec) {
 async function loadAllSheets() {
   const banner = document.getElementById("statusBanner");
   banner.className = "notice";
-  banner.innerHTML = `<span>กำลังดึงข้อมูลจาก Google Sheets (ชีต 1 สำหรับ PO และ ชีต PR)...</span>`;
+  banner.innerHTML = `<span>กำลังดึงข้อมูลจาก Google Sheets (ชีต 1, ชีต PR, ชีตงบประมาณ A–K, Master งบประมาณ และ Master งานย่อย)...</span>`;
 
   try {
-    const poRes = await loadSheetDataset(SHEET_CONFIG.po);
+    const [poRes, prSettled, rawBg2D, mb2D, ms2D] = await Promise.all([
+      loadSheetDataset(SHEET_CONFIG.po),
+      loadSheetDataset(SHEET_CONFIG.pr).catch(() => null),
+      loadSheet2D(SHEET_CONFIG.budget),
+      loadSheet2D(SHEET_CONFIG.masterBudget),
+      loadSheet2D(SHEET_CONFIG.masterSubwork)
+    ]);
+
+    const bg2D = rawBg2D.length ? await enrichBudget2DIfJsonp(rawBg2D, ms2D) : rawBg2D;
     const poData = poRes.ds;
+    const prData = prSettled && prSettled.ds ? dropDeletedPR(prSettled.ds) : poData;
+    const demo = getDemoDataset();
 
-    let prData;
-    try {
-      const prRes = await loadSheetDataset(SHEET_CONFIG.pr);
-      prData = dropDeletedPR(prRes.ds);
-    } catch {
-      prData = poData;
-    }
     STATE.googleStore.via = poRes.via;
-
     STATE.googleStore.po = poData;
     STATE.googleStore.pr = prData;
+    STATE.googleStore.budget = bg2D.length ? buildBudgetDatasetFrom2D(bg2D) : demo.budget;
+    STATE.googleStore.masterBudget = mb2D.length ? buildMasterFrom2D(mb2D) : demo.masterBudget;
+    STATE.googleStore.masterSubwork = ms2D.length ? buildMasterFrom2D(ms2D) : demo.masterSubwork;
     STATE.googleStore.loaded = true;
     STATE.googleStore.isDemo = false;
     STATE.googleStore.errorMsg = "";
@@ -3668,6 +5777,9 @@ async function loadAllSheets() {
     const demo = getDemoDataset();
     STATE.googleStore.po = demo.po;
     STATE.googleStore.pr = demo.pr;
+    STATE.googleStore.budget = demo.budget;
+    STATE.googleStore.masterBudget = demo.masterBudget;
+    STATE.googleStore.masterSubwork = demo.masterSubwork;
     STATE.googleStore.loaded = true;
     STATE.googleStore.isDemo = true;
 
