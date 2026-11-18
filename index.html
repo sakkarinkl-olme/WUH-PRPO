@@ -2237,7 +2237,7 @@ footer code {
       </article>
     </section>
 
-    <!-- VIEW 5C: เมนูย่อย ข้อมูลรหัสแผน (Z4010103001 - Z4010103008 · งบประมาณสุทธิ, ใบขอซื้อ, ใบสั่งซื้อ, รวม, คงเหลือ) -->
+    <!-- VIEW 5C: เมนูย่อย ข้อมูลรหัสแผน (Z4010103001 - Z4010103013 · งบประมาณสุทธิ, ใบขอซื้อ, ใบสั่งซื้อ, รวม, คงเหลือ) -->
     <section id="view-budget-zplan" class="view-section">
       <div class="kpis" style="grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));">
         <article class="card" style="padding: 22px 22px;">
@@ -2247,7 +2247,7 @@ footer code {
           <div class="value mint" id="zpNetBudgetVal" style="font-size: clamp(22px, 2.2vw, 30px); margin: 10px 0 6px;">
             ฿0.00
           </div>
-          <div class="meta" id="zpNetBudgetMeta">Z4010103001 - Z4010103008</div>
+          <div class="meta" id="zpNetBudgetMeta">Z4010103001 - Z4010103013</div>
         </article>
 
         <article class="card" style="padding: 22px 22px;">
@@ -2257,7 +2257,7 @@ footer code {
           <div class="value purple" id="zpPrVal" style="font-size: clamp(22px, 2.2vw, 30px); margin: 10px 0 6px;">
             ฿0.00
           </div>
-          <div class="meta" id="zpPrMeta">Z4010103001 - Z4010103008</div>
+          <div class="meta" id="zpPrMeta">Z4010103001 - Z4010103013</div>
         </article>
 
         <article class="card" style="padding: 22px 22px;">
@@ -2267,7 +2267,7 @@ footer code {
           <div class="value" id="zpPoVal" style="color: var(--text); font-size: clamp(22px, 2.2vw, 30px); margin: 10px 0 6px;">
             ฿0.00
           </div>
-          <div class="meta" id="zpPoMeta">Z4010103001 - Z4010103008</div>
+          <div class="meta" id="zpPoMeta">Z4010103001 - Z4010103013</div>
         </article>
 
         <article class="card" style="padding: 22px 22px;">
@@ -2277,7 +2277,7 @@ footer code {
           <div class="value amber" id="zpTotalUsedVal" style="font-size: clamp(22px, 2.2vw, 30px); margin: 10px 0 6px;">
             ฿0.00
           </div>
-          <div class="meta" id="zpTotalUsedMeta">Z4010103001 - Z4010103008</div>
+          <div class="meta" id="zpTotalUsedMeta">Z4010103001 - Z4010103013</div>
         </article>
 
         <article class="card" style="padding: 22px 22px;">
@@ -2287,21 +2287,21 @@ footer code {
           <div class="value" id="zpRemainingVal" style="color: var(--cyan); font-size: clamp(22px, 2.2vw, 30px); margin: 10px 0 6px;">
             ฿0.00
           </div>
-          <div class="meta" id="zpRemainingMeta">Z4010103001 - Z4010103008</div>
+          <div class="meta" id="zpRemainingMeta">Z4010103001 - Z4010103013</div>
         </article>
       </div>
 
       <article class="card table-card">
         <div class="panel-head">
           <div>
-            <h2>📌 ตารางข้อมูลรหัสแผน (Z4010103001 - Z4010103008)</h2>
-            <p class="meta" id="zpTableSub" style="margin: 4px 0 0;">แสดงข้อมูลช่อง งบประมาณสุทธิ, ใบขอซื้อ, ใบสั่งซื้อ, รวม และ คงเหลือ ของรหัสแผน Z4010103001 ถึง Z4010103008</p>
+            <h2>📌 ตารางข้อมูลรหัสแผน (Z4010103001 - Z4010103013)</h2>
+            <p class="meta" id="zpTableSub" style="margin: 4px 0 0;">แสดงข้อมูลช่อง งบประมาณสุทธิ, ใบขอซื้อ, ใบสั่งซื้อ, รวม และ คงเหลือ ของรหัสแผน Z4010103001 ถึง Z4010103013</p>
           </div>
           <span class="tag" id="zpTableBadge">0 รหัสแผน</span>
         </div>
 
         <div class="search-bar" style="margin-top: 14px; margin-bottom: 0;">
-          <input type="search" id="zpSearchInput" class="search-input" placeholder="พิมพ์ค้นหารหัสแผน Z4010103001 - Z4010103008 หรือรายละเอียด...">
+          <input type="search" id="zpSearchInput" class="search-input" placeholder="พิมพ์ค้นหารหัสแผน Z4010103001 - Z4010103013 หรือรายละเอียด...">
         </div>
 
         <div class="table-wrap" style="max-height: 520px;">
@@ -5463,12 +5463,14 @@ function renderBudgetView() {
 }
 
 // =========================================================
-// 6C. เมนูย่อย ข้อมูลรหัสแผน (เฉพาะรหัส Z4010103001 - Z4010103008)
-// แสดงและคำนวณจากช่อง งบประมาณสุทธิ, รวม และ คงเหลือ ในชีตงบประมาณ
+// 6C. เมนูย่อย ข้อมูลรหัสแผน (เฉพาะรหัส Z4010103001 - Z4010103013)
+// แสดงและคำนวณจากช่อง งบประมาณสุทธิ, ใบขอซื้อ, ใบสั่งซื้อ, รวม และ คงเหลือ ในชีตงบประมาณ
 // =========================================================
 const TARGET_Z_PLAN_CODES = [
   "Z4010103001", "Z4010103002", "Z4010103003", "Z4010103004",
-  "Z4010103005", "Z4010103006", "Z4010103007", "Z4010103008"
+  "Z4010103005", "Z4010103006", "Z4010103007", "Z4010103008",
+  "Z4010103009", "Z4010103010", "Z4010103011", "Z4010103012",
+  "Z4010103013"
 ];
 
 function calculateZPlanBudgetData() {
@@ -5480,10 +5482,10 @@ function calculateZPlanBudgetData() {
   const msRows = (STATE.masterSubwork && STATE.masterSubwork.raw2D) ? STATE.masterSubwork.raw2D : [];
   const mbRows = (STATE.masterBudget && STATE.masterBudget.raw2D) ? STATE.masterBudget.raw2D : [];
   const colLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
-  // จับคู่เฉพาะรหัส Z4010103001 ถึง Z4010103008 เท่านั้น (ไม่รวมรหัสย่อยที่มี -1 ต่อท้าย เช่น Z4010103001-1)
-  const zTargetRegex = /^(Z401010300[1-8])(?:\s+(?:[-:·|]\s*)?(.+))?$/i;
+  // จับคู่เฉพาะรหัส Z4010103001 ถึง Z4010103013 เท่านั้น (ไม่รวมรหัสย่อยที่มี -1 ต่อท้าย เช่น Z4010103001-1)
+  const zTargetRegex = /^(Z40101030(?:0[1-9]|1[0-3]))(?:\s+(?:[-:·|]\s*)?(.+))?$/i;
 
-  // 1. สร้างพจนานุกรมคำอธิบายรหัส Z4010103001 - Z4010103008 จาก Master งบประมาณ และ Master งานย่อย
+  // 1. สร้างพจนานุกรมคำอธิบายรหัส Z4010103001 - Z4010103013 จาก Master งบประมาณ และ Master งานย่อย
   const zMasterDescMap = new Map();
   const collectMasterZDesc = (sheetRows) => {
     (sheetRows || []).forEach(r => {
@@ -5552,7 +5554,7 @@ function calculateZPlanBudgetData() {
   let bgSubworkColIdx = -1;
   let bestSwHits = -1;
   for (let i = 0; i < netBudgetColIdx; i++) {
-    const isPlanOrZCol = rows.slice(0, 80).some(r => /^(b[oi]\d{5,}|z401010300[1-8])/i.test(String((r._cols ? r._cols[i] : r[headers[i]]) ?? "").trim()));
+    const isPlanOrZCol = rows.slice(0, 80).some(r => /^(b[oi]\d{5,}|z40101030(?:0[1-9]|1[0-3]))/i.test(String((r._cols ? r._cols[i] : r[headers[i]]) ?? "").trim()));
     if (isPlanOrZCol) continue;
     let hits = (/รหัสงานย่อย|เลขงานย่อย|^งานย่อย$/i.test(headerCombined[i]) && !/แผน/i.test(headerCombined[i])) ? 40 : 0;
     rows.forEach(r => {
@@ -5885,14 +5887,14 @@ function renderBudgetZPlanView() {
 
   const sub = document.getElementById("zpTableSub");
   if (sub) {
-    sub.innerHTML = `ดึงเฉพาะรหัสแผน <strong>Z4010103001 - Z4010103008</strong> จากคอลัมน์ <strong>${escHtml(data.zColName)}</strong>`;
+    sub.innerHTML = `ดึงเฉพาะรหัสแผน <strong>Z4010103001 - Z4010103013</strong> จากคอลัมน์ <strong>${escHtml(data.zColName)}</strong>`;
   }
 
   const tbody = document.querySelector("#zpTable tbody");
   const tfoot = document.querySelector("#zpTable tfoot");
   if (tbody) {
     if (!filtered.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:26px;">ไม่พบข้อมูลรหัสแผนในช่วง Z4010103001 - Z4010103008</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:26px;">ไม่พบข้อมูลรหัสแผนในช่วง Z4010103001 - Z4010103013</td></tr>`;
       if (tfoot) tfoot.innerHTML = "";
     } else {
       tbody.innerHTML = filtered.map(item => `
@@ -5910,7 +5912,7 @@ function renderBudgetZPlanView() {
       if (tfoot) {
         tfoot.innerHTML = `
           <tr style="background:var(--table-head);border-top:2px solid var(--border-strong);">
-            <td colspan="2" style="font-weight:800;color:var(--text);">รวมทั้งสิ้น Z4010103001 - Z4010103008 (${filtered.length.toLocaleString("th-TH")} รหัสแผน)</td>
+            <td colspan="2" style="font-weight:800;color:var(--text);">รวมทั้งสิ้น Z4010103001 - Z4010103013 (${filtered.length.toLocaleString("th-TH")} รหัสแผน)</td>
             <td class="num-cell ${sumNet < 0 ? "neg-red" : "mint"}" style="font-size:14.5px;font-weight:800;">${fmtSapSignedHtml(sumNet, true)}</td>
             <td class="num-cell ${sumPr < 0 ? "neg-red" : "purple"}" style="font-size:14.5px;font-weight:800;">${fmtSapSignedHtml(sumPr, true)}</td>
             <td class="num-cell ${sumPo < 0 ? "neg-red" : ""}" style="font-size:14.5px;font-weight:800;">${fmtSapSignedHtml(sumPo, true)}</td>
@@ -5934,7 +5936,7 @@ const VIEW_META = {
   "po-material": { eyebrow: "PURCHASE ORDER — MATERIAL CATALOG (ชีต 1)", title: "ค้นหาจากรหัสหรือชื่อวัสดุ (พร้อมรูปภาพวัสดุ)", sub: "เลือกคลังที่ต้องการ แล้วค้นหาด้วยรหัสวัสดุหรือชื่อวัสดุเพื่อดูรายละเอียดและรูปภาพ" },
   "po-company": { eyebrow: "PURCHASE ORDER — VENDOR ANALYTICS (ชีต 1)", title: "ค้นหาจากบริษัท และภาพรวมสถานะจัดซื้อ", sub: "เลือกคลังและบริษัทเพื่อดูสถานะจัดซื้อที่ดำเนินการแล้ว / ยังไม่ได้ดำเนินการ และมูลค่าสั่งซื้อจากราคาเต็มใน PO" },
   "budget": { eyebrow: "EXECUTIVE BUDGET · NET & ACTUAL INCOME", title: "แดชบอร์ดงบประมาณผู้บริหาร · รายรับงบประมาณสุทธิ & รายรับ (รับจริง)", sub: "สรุปผลรวมรายรับงบประมาณสุทธิ และรายรับ (รับจริง) จากช่องรับจริง/จ่ายจริง เฉพาะประเภทรายรับ พร้อมแยกรายละเอียด รายได้ กับ ส่วนลดและส่วนต่างค่าบริการ" },
-  "budget-zplan": { eyebrow: "EXECUTIVE BUDGET · PLAN CODE Z4010103001 - Z4010103008", title: "รายงานงบประมาณ · ข้อมูลรหัสแผน (Z4010103001 - Z4010103008)", sub: "สรุปข้อมูลเฉพาะรหัสแผน Z4010103001 ถึง Z4010103008 โดยแสดงผลรวมและรายละเอียดของช่อง งบประมาณสุทธิ, รวม และ คงเหลือ จากชีตงบประมาณ" },
+  "budget-zplan": { eyebrow: "EXECUTIVE BUDGET · PLAN CODE Z4010103001 - Z4010103013", title: "รายงานงบประมาณ · ข้อมูลรหัสแผน (Z4010103001 - Z4010103013)", sub: "สรุปข้อมูลเฉพาะรหัสแผน Z4010103001 ถึง Z4010103013 โดยแสดงผลรวมและรายละเอียดของช่อง งบประมาณสุทธิ, ใบขอซื้อ, ใบสั่งซื้อ, รวม และ คงเหลือ จากชีตงบประมาณ" },
   "import-excel": { eyebrow: "DATA SOURCE MANAGER · GOOGLE SHEETS & EXCEL", title: "จัดการแหล่งข้อมูล & Import ไฟล์ Excel", sub: "ลากไฟล์ Excel มาวาง หรือกดสลับที่มาของข้อมูลระหว่าง Google Sheets กับ Excel ได้ทันที" }
 };
 
@@ -6233,11 +6235,11 @@ async function enrichBudget2DIfJsonp(bg2D, ms2D) {
       }
     });
 
-    // ค้นหาดัชนีแถวใน bg2D ที่อยู่ในส่วนประเภทรายรับ และแถวรหัสแผน Z4010103001 - Z4010103008 ทั้งชีต
+    // ค้นหาดัชนีแถวใน bg2D ที่อยู่ในส่วนประเภทรายรับ และแถวรหัสแผน Z4010103001 - Z4010103013 ทั้งชีต
     const targetSet = new Set();
     for (let i = 1; i < bg2D.length; i++) {
       const r = bg2D[i] || [];
-      const isTargetZPlan = r.slice(0, 6).some(c => /^z401010300[1-8]\b/i.test(String(c ?? "").trim()));
+      const isTargetZPlan = r.slice(0, 6).some(c => /^z40101030(?:0[1-9]|1[0-3])\b/i.test(String(c ?? "").trim()));
       if (isTargetZPlan) {
         const hasBlankNumCell = r.slice(4, 11).some(c => c === "" || c === null || c === undefined);
         if (hasBlankNumCell) targetSet.add(i);
