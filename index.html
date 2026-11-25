@@ -583,6 +583,22 @@ header p { margin: 0; font-size: 13.5px; max-width: 720px; }
 .kpis .card:nth-child(3)::after { background: var(--mint); }
 .kpis .card:nth-child(4)::after { background: var(--amber); }
 
+/* สไตล์สำหรับการแสดงผลเงินฝากธนาคารแบบกะทัดรัด (ไม่ต้องใหญ่มาก) */
+#view-bank-dashboard .value, 
+#view-bank-details .value, 
+#view-bank-accounts .value,
+#view-bank-details .mat-stat strong,
+#bkKpiEndingBold {
+  font-size: clamp(20px, 2vw, 24px) !important;
+  letter-spacing: -0.5px;
+}
+
+#view-bank-dashboard .card,
+#view-bank-details .card,
+#view-bank-accounts .card {
+  padding: 16px 20px;
+}
+
 .label {
   color: var(--muted);
   font-size: 12.5px;
@@ -1658,7 +1674,7 @@ footer code {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 </style>
-</head>
+<style data-link-removed-style>a[data-link-removed],a[href*="zPythonSafez"]:not([onclick]){pointer-events:none!important;cursor:default!important;opacity:.6}</style></head>
 
 <body>
 
@@ -1708,6 +1724,25 @@ footer code {
         </button>
       </div>
 
+      <!-- ซ่อนระบบเงินฝากธนาคารชั่วคราว (ลบ style="display: none;" เพื่อเปิดใช้งานระบบเงินฝากธนาคารกลับคืนมาภายหลังได้ทันที) -->
+      <div id="bank-system-sidebar-menu" style="display: none;">
+        <div class="sidebar-label" style="margin-top:16px;">🏦 ระบบเงินฝากธนาคาร</div>
+        <button class="nav-btn" type="button" data-view="bank-dashboard">
+          <span>📊 แดชบอร์ดภาพรวม</span>
+        </button>
+        <div class="nav-sub">
+          <button class="nav-btn" type="button" data-view="bank-accounts">
+            <span>💳 ข้อมูลบัญชีธนาคาร</span>
+          </button>
+          <button class="nav-btn" type="button" data-view="bank-details">
+            <span>📈 รายละเอียดเงินฝาก</span>
+          </button>
+          <button class="nav-btn" type="button" data-view="bank-reports">
+            <span>📋 รายงานเงินฝาก</span>
+          </button>
+        </div>
+      </div>
+
       <div class="sidebar-label" style="margin-top:16px;">จัดการแหล่งข้อมูล</div>
       <button class="nav-btn" type="button" data-view="import-excel">
         <span>📥 Import ข้อมูล Excel</span>
@@ -1718,7 +1753,7 @@ footer code {
     <div class="sidebar-note">
       ที่มาของข้อมูลที่เลือกอยู่:<br>
       <strong id="sidebarSourceLabel" style="color:var(--text);">☁️ Google Sheets</strong><br>
-      <a href="https://docs.google.com/spreadsheets/d/1GS4iycdl-J68djNL9rEX_kahY0D_ygzdKX6uF6qcEJc/edit?gid=0#gid=0" target="_blank" rel="noopener">
+      <a href="https://docs.google.com/spreadsheets/d/1GS4iycdl-J68djNL9rEX_kahY0D_ygzdKX6uF6qcEJc/edit?gid=19763777#gid=19763777" target="_blank" rel="noopener">
         เปิดตาราง Google Sheets ↗
       </a>
     </div>
@@ -1931,7 +1966,7 @@ footer code {
 
     <!-- VIEW 3: หน้าจอภาพรวม PO -->
     <section id="view-po-overview" class="view-section">
-      <div class="kpis po-kpis">
+      <div class="kpis po-kpis" style="grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));">
         <article class="card kpi-click" data-po-filter="all" role="button" tabindex="0" title="คลิกเพื่อดูรายการด้านล่าง">
           <div class="label">จำนวนรายการ PO ทั้งหมด</div>
           <div class="value purple" id="poOvTotalRows" data-count="0">0</div>
@@ -1939,6 +1974,10 @@ footer code {
         <article class="card kpi-click" data-po-filter="pending" role="button" tabindex="0" title="คลิกเพื่อดูรายการด้านล่าง">
           <div class="label">สถานะจัดซื้อที่ยังไม่ได้ดำเนินการ</div>
           <div class="value amber" id="poOvPending" data-count="0">0</div>
+        </article>
+        <article class="card kpi-click" data-po-filter="pay_pending" role="button" tabindex="0" title="คลิกเพื่อดูรายการด้านล่าง">
+          <div class="label">สถานะจัดซื้อที่รอจ่ายเงิน</div>
+          <div class="value purple" id="poOvPayPending" data-count="0">0</div>
         </article>
         <article class="card kpi-click" data-po-filter="done" role="button" tabindex="0" title="คลิกเพื่อดูรายการด้านล่าง">
           <div class="label">สถานะจัดซื้อที่ดำเนินการแล้ว</div>
@@ -2001,6 +2040,12 @@ footer code {
         </div>
         <div class="table-wrap">
           <table id="poOvTable"><thead></thead><tbody></tbody></table>
+        </div>
+        
+        <!-- แผงควบคุมแบ่งหน้า (Pagination) -->
+        <div id="poOvPagination" style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px; gap: 12px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--line);">
+          <div style="font-size: 13px; color: var(--muted);" id="poOvPageInfo">แสดง 0 ถึง 0 จาก 0 แถว</div>
+          <div style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap;" id="poOvPageButtons"></div>
         </div>
       </article>
     </section>
@@ -2324,6 +2369,230 @@ footer code {
       </article>
     </section>
 
+    <!-- =========================================================
+         BANK DEPOSIT SYSTEM VIEWS (4 VIEWS)
+         ========================================================= -->
+    <!-- VIEW 5D: แดชบอร์ดภาพรวมเงินฝากธนาคาร -->
+    <section id="view-bank-dashboard" class="view-section">
+      <!-- Bank Global Filter Bar -->
+      <div class="bg-filter-bar" aria-label="ตัวกรองเงินฝากธนาคาร" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+        <div class="bg-filter-group">
+          <label for="bankFilterFy"><span>📅 ปีงบประมาณ</span></label>
+          <select id="bankFilterFy" class="select-input"><option value="ALL">แสดงทุกปี</option></select>
+        </div>
+        <div class="bg-filter-group">
+          <label for="bankFilterMonth"><span>📆 เดือน</span></label>
+          <select id="bankFilterMonth" class="select-input"><option value="ALL">แสดงทุกเดือน</option></select>
+        </div>
+        <div class="bg-filter-group">
+          <label for="bankFilterBank"><span>🏦 ธนาคาร</span></label>
+          <select id="bankFilterBank" class="select-input"><option value="ALL">ทุกธนาคาร</option></select>
+        </div>
+        <div class="bg-filter-group">
+          <label for="bankFilterType"><span>💳 ประเภท</span></label>
+          <select id="bankFilterType" class="select-input"><option value="ALL">ทุกประเภท</option></select>
+        </div>
+        <div class="bg-filter-group">
+          <label for="bankFilterAccount"><span>🔍 เลขที่บัญชี</span></label>
+          <select id="bankFilterAccount" class="select-input"><option value="ALL">ทุกเลขที่บัญชี</option></select>
+        </div>
+      </div>
+
+      <!-- Prominent Ending Balance Summary (ยอดยกไปเด่นชัด) -->
+      <div class="card" style="margin-bottom: 18px; padding: 26px; border-left: 6px solid var(--purple); background: var(--surface);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <div class="label" style="font-size: 14px; font-weight: 700; color: var(--muted);">💰 ยอดคงเหลือยกไปทั้งหมด (ยอดยกไปสุทธิ)</div>
+            <div class="value purple" id="bkKpiEndingBold" style="margin: 8px 0; font-weight: 800;">฿0.00</div>
+            <div class="meta" id="bkKpiFormulaLabel">ยอดยกไป = ยอดยกมา + ยอดรับเข้า - ยอดเบิกออก (คำนวณจากรายการจริงไม่รวมซ้ำ)</div>
+          </div>
+          <div style="text-align: right; min-width: 200px;">
+            <div class="tag" style="background: var(--active-bg); color: var(--cyan); font-weight: 700; font-size: 12px; border: 1px solid var(--border-strong);">ฐานะเงินฝากโรงพยาบาล</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 Summary Cards -->
+      <div class="kpis">
+        <article class="card">
+          <div class="label">🏦 จำนวนบัญชีธนาคารทั้งหมด</div>
+          <div class="value" id="bkKpiTotalAccounts" data-count="0">0</div>
+          <div class="meta">บัญชีเงินฝากที่เปิดใช้งานจริง</div>
+        </article>
+        <article class="card">
+          <div class="label">🩵 ยอดเงินฝากรวม</div>
+          <div class="value mint" id="bkKpiTotalBalance" data-count="0">0</div>
+          <div class="meta">รวมฐานะเงินฝากคงเหลือยกไป</div>
+        </article>
+        <article class="card">
+          <div class="label">📈 ยอดยกมาสะสม</div>
+          <div class="value" id="bkKpiTotalBeginning" data-count="0" style="color: var(--cyan);">0</div>
+          <div class="meta">ยอดยกมาตั้งต้นประจำงวด</div>
+        </article>
+        <article class="card">
+          <div class="label">📥 ยอดรับเข้าสะสม</div>
+          <div class="value mint" id="bkKpiTotalInflow" data-count="0">0</div>
+          <div class="meta">รวมเงินฝากรับเข้าระหว่างงวด</div>
+        </article>
+        <article class="card">
+          <div class="label">📤 ยอดเบิกออกสะสม</div>
+          <div class="value amber" id="bkKpiTotalOutflow" data-count="0">0</div>
+          <div class="meta">รวมเงินเบิกจ่าย/ถอนระหว่างงวด</div>
+        </article>
+      </div>
+
+      <!-- Donut Chart & Bar Chart -->
+      <div class="content" style="margin-top: 18px;">
+        <article class="card">
+          <div class="panel-head">
+            <h2>📊 ยอดคงเหลือเงินฝากแยกตามธนาคาร (ประจำงวด)</h2>
+            <div class="chart-legend-inline">
+              <span class="chart-legend-item"><i class="dot" style="background:var(--chart-mint);margin:0;"></i>ยอดคงเหลือสุทธิ (ยอดยกไป)</span>
+            </div>
+          </div>
+          <p class="meta">แสดงจำนวนยอดเงินคงเหลือยกไปรายธนาคารของงวดเดือนที่เลือกแบบอัปเดตครั้งต่อครั้ง (ไม่มีข้อมูลแนวโน้มสะสม)</p>
+          <div class="chart" id="bkBarChartMonthly" style="height: 290px;"></div>
+        </article>
+
+        <article class="card">
+          <div class="panel-head">
+            <h2>🍩 สัดส่วนยอดเงินฝากสะสมตามธนาคาร (ยอดยกไป)</h2>
+            <span class="tag" id="bkDonutTotalAccountsTag">0 ธนาคาร</span>
+          </div>
+          <p class="meta">สัดส่วนยอดคงเหลือสุทธิแยกตามธนาคารผู้ให้บริการ</p>
+          <div class="donut" id="bkDonutBank">
+            <div class="donut-center">
+              <strong id="bkDonutBankPct" style="font-size:24px;">0%</strong>
+              <span id="bkDonutBankLabel" style="font-size:11px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ธนาคารหลัก</span>
+            </div>
+          </div>
+          <div class="legend" id="bkDonutBankLegend" style="max-height: 120px; overflow-y: auto;">
+            <!-- Dynamic legends -->
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- VIEW 5E: ข้อมูลบัญชีธนาคาร -->
+    <section id="view-bank-accounts" class="view-section">
+      <div class="panel-head" style="margin-bottom: 18px;">
+        <div>
+          <h2>💳 สมุดบัญชีและข้อมูลบัญชีธนาคารทั้งหมด</h2>
+          <p class="meta">แสดงรายละเอียดบัญชีเงินฝากธนาคารของโรงพยาบาล พร้อมสิทธิ์ในการดำเนินธุรกรรมและเลขที่บัญชี</p>
+        </div>
+        <span class="tag" id="bkAccountListBadge" style="background:var(--primary-grad); color:#ffffff; border:0;">0 บัญชี</span>
+      </div>
+
+      <!-- Bank Card Grid -->
+      <div class="material-grid" id="bkAccountCardGrid">
+        <!-- Dynamic bank account passbook cards -->
+      </div>
+    </section>
+
+    <!-- VIEW 5F: รายละเอียดเงินฝาก (Ledger Details) -->
+    <section id="view-bank-details" class="view-section">
+      <div class="content" style="grid-template-columns: 280px minmax(0, 1fr); margin-top: 0;">
+        <!-- Left: Account Selector -->
+        <article class="card" style="padding: 16px;">
+          <h2 style="font-size: 15px; margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">💳 เลือกบัญชีธนาคาร</h2>
+          <div id="bkDetailsAccountSelector" style="display: flex; flex-direction: column; gap: 8px; max-height: 540px; overflow-y: auto;">
+            <!-- Dynamic accounts list -->
+          </div>
+        </article>
+
+        <!-- Right: Ledger Transactions -->
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+          <article class="card">
+            <div class="panel-head">
+              <div>
+                <h2 id="bkDetailsSelectedHeader">รายละเอียดการเคลื่อนไหวเงินฝาก</h2>
+                <p class="meta" id="bkDetailsSelectedSub">กรุณาเลือกบัญชีเงินฝากทางด้านซ้ายเพื่อเรียกดูประวัติยอดฝากประจำเดือน</p>
+              </div>
+              <span class="tag" id="bkDetailsSelectedBadge" style="background: var(--active-bg); color: var(--active-text);">บัญชีหลัก</span>
+            </div>
+            <div class="mat-stats" id="bkDetailsStats" style="margin-top: 14px;">
+              <!-- Stats of selected account -->
+            </div>
+          </article>
+
+          <article class="card table-card" style="margin-top: 0;">
+            <div class="panel-head">
+              <h2>📋 ประวัติการบันทึกเงินฝากแยกรายเดือน</h2>
+              <span class="tag" id="bkDetailsTableCount">0 งวดเดือน</span>
+            </div>
+            <div class="table-wrap">
+              <table id="bkDetailsTable">
+                <thead>
+                  <tr>
+                    <th>ปีงบประมาณ</th>
+                    <th>ประจำเดือน</th>
+                    <th style="text-align:right;">ยอดยกมา (บาท)</th>
+                    <th style="text-align:right;">ยอดรับเข้า (บาท)</th>
+                    <th style="text-align:right;">ยอดเบิกออก (บาท)</th>
+                    <th style="text-align:right;">ยอดยกไป (บาท)</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 5G: รายงานเงินฝาก (Interactive Reports & Export) -->
+    <section id="view-bank-reports" class="view-section">
+      <article class="card">
+        <div class="panel-head">
+          <div>
+            <h2>📋 รายงานเงินฝากธนาคารแยกบัญชีและธนาคาร (พร้อมส่งออก Excel)</h2>
+            <p class="meta">ค้นหา กรอง และส่งออกฐานะเงินฝากธนาคารของโรงพยาบาลเป็นไฟล์ Excel เพื่อจัดส่งฝ่ายการเงินได้ทันที</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button type="button" class="btn active-mode" id="bkReportExportBtn" style="min-height:36px; padding:6px 14px; font-size:12.5px;">
+              📥 Export to Excel (XLSX)
+            </button>
+            <span class="tag" id="bkReportTableBadge">0 รายการ</span>
+          </div>
+        </div>
+
+        <div class="search-bar" style="margin-top: 16px; margin-bottom: 0;">
+          <input type="search" id="bkReportSearchInput" class="search-input" placeholder="🔍 ค้นหาด้วยชื่อธนาคาร, เลขที่บัญชี, หรือประเภท...">
+          <select id="bkReportSortSelect" class="select-input" style="max-width: 200px;">
+            <option value="none">-- เรียงลำดับยอดเงิน --</option>
+            <option value="ending_desc">ยอดยกไป: มาก → น้อย</option>
+            <option value="ending_asc">ยอดยกไป: น้อย → มาก</option>
+            <option value="inflow_desc">ยอดรับเข้า: มาก → น้อย</option>
+            <option value="outflow_desc">ยอดเบิกออก: มาก → น้อย</option>
+          </select>
+        </div>
+
+        <div class="table-wrap" style="margin-top:14px; max-height: 480px;">
+          <table id="bkReportTable">
+            <thead>
+              <tr>
+                <th>ลำดับ</th>
+                <th>ธนาคาร</th>
+                <th>ประเภท</th>
+                <th>เลขที่บัญชี</th>
+                <th style="text-align:right;">ยอดยกมา (บาท)</th>
+                <th style="text-align:right;">ยอดรับเข้า (บาท)</th>
+                <th style="text-align:right;">ยอดเบิกออก (บาท)</th>
+                <th style="text-align:right;">ยอดยกไป (บาท)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot style="background: var(--table-head); font-weight:800; border-top: 2px solid var(--border-strong);"></tfoot>
+          </table>
+        </div>
+      </article>
+
+      <!-- Account Details Slide-in Modal/Popup -->
+      <div id="bkAccountModal" class="twin-tip" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:100; min-width:460px; display:none; pointer-events:auto;">
+        <!-- Modal content -->
+      </div>
+    </section>
+
     <!-- VIEW 6: IMPORT ข้อมูลจากไฟล์ EXCEL -->
     <section id="view-import-excel" class="view-section">
       <article class="card">
@@ -2418,7 +2687,7 @@ footer code {
 // 1. ตั้งค่าการเชื่อมต่อ ชื่อคลัง และคลังเก็บข้อมูลทั้ง 2 แหล่ง
 // =========================================================
 const SHEET_ID = "1GS4iycdl-J68djNL9rEX_kahY0D_ygzdKX6uF6qcEJc";
-const SHEET_EDIT_URL = "https://docs.google.com/spreadsheets/d/1GS4iycdl-J68djNL9rEX_kahY0D_ygzdKX6uF6qcEJc/edit?gid=0#gid=0";
+const SHEET_EDIT_URL = "https://docs.google.com/spreadsheets/d/1GS4iycdl-J68djNL9rEX_kahY0D_ygzdKX6uF6qcEJc/edit?gid=19763777#gid=19763777";
 const SHEET_BASE_URL = SHEET_EDIT_URL.split("/edit")[0];
 
 const PLANT_NAMES = {
@@ -2616,6 +2885,7 @@ function hasValidPONumber(val) {
 function classifyPurchaseStatus(row, cols) {
   const rawStatus = cols.statusCol ? String(row[cols.statusCol] ?? "").trim() : "";
   if (rawStatus) {
+    if (/รอจ่าย|ค้างจ่าย|รอชำระ|รอจ่ายเงิน/i.test(rawStatus)) return "pay_pending";
     if (/ยังไม่|ไม่ได้ดำเนินการ|รอดำเนินการ|รอ|ค้าง|pending|wait|open|not\s*yet|draft|ยกเลิก/i.test(rawStatus)) return "pending";
     if (/ดำเนินการแล้ว|สำเร็จ|เสร็จ|ออก\s*po|อนุมัติแล้ว|รับของแล้ว|ส่งแล้ว|done|complete|approved|issued|closed/i.test(rawStatus)) return "done";
   }
@@ -3150,7 +3420,7 @@ function getAvailablePlants() {
 
 function renderPlantFilterBar() {
   const bar = document.getElementById("globalPlantBar");
-  if (STATE.activeView === "import-excel" || STATE.activeView === "budget" || STATE.activeView === "budget-zplan") {
+  if (STATE.activeView.startsWith("bank-") || STATE.activeView.startsWith("budget") || STATE.activeView === "import-excel") {
     bar.style.display = "none";
     return;
   }
@@ -3508,10 +3778,13 @@ const PO_OV_LEGEND_STATUS = `
 const PO_OV_DEFAULT_NOTE = "แสดงจำนวนด้านบนแท่งกราฟในแต่ละคลัง (ไม่มีข้อความเสร็จแล้ว/รอดำเนินการใต้กราฟ)";
 
 let poOvStatusFilter = "all";
-const PO_OV_FILTER_LABEL = { all: "ทั้งหมด", pending: "ยังไม่ได้ดำเนินการ", done: "ดำเนินการแล้ว" };
+let poPageCurrent = 1;
+const poPageSize = 50;
+const PO_OV_FILTER_LABEL = { all: "ทั้งหมด", pending: "ยังไม่ได้ดำเนินการ", pay_pending: "รอจ่ายเงิน", done: "ดำเนินการแล้ว" };
 
 function setPoOvFilter(f, scroll) {
   poOvStatusFilter = (f !== "all" && poOvStatusFilter === f) ? "all" : f;
+  poPageCurrent = 1;
   renderPOOverviewView();
   if (scroll) {
     const el = document.getElementById("poOvTableTitle");
@@ -3527,15 +3800,18 @@ function renderPOOverviewView() {
   const { cols } = STATE.po;
   const fullPriceCol = cols.fullPriceCol || cols.amountCol;
 
-  let pendingCount = 0, doneCount = 0, totalFullPrice = 0;
+  let pendingCount = 0, payPendingCount = 0, doneCount = 0, totalFullPrice = 0;
   finalPO.forEach(r => {
-    if (classifyPurchaseStatus(r, cols) === "pending") pendingCount++;
+    const status = classifyPurchaseStatus(r, cols);
+    if (status === "pending") pendingCount++;
+    else if (status === "pay_pending") payPendingCount++;
     else doneCount++;
     if (fullPriceCol) totalFullPrice += parseNumber(r[fullPriceCol]);
   });
 
   document.getElementById("poOvTotalRows").dataset.count = finalPO.length;
   document.getElementById("poOvPending").dataset.count = pendingCount;
+  document.getElementById("poOvPayPending").dataset.count = payPendingCount;
   document.getElementById("poOvDone").dataset.count = doneCount;
   document.getElementById("poOvFullPrice").dataset.count = Math.round(totalFullPrice);
 
@@ -3586,8 +3862,11 @@ function renderPOOverviewView() {
   document.getElementById("poOvLegPending").textContent = pendingCount.toLocaleString("th-TH");
 
   const isPendingRow = r => classifyPurchaseStatus(r, cols) === "pending";
+  const isPayPendingRow = r => classifyPurchaseStatus(r, cols) === "pay_pending";
   const tableRows = poOvStatusFilter === "all" ? finalPO
-    : finalPO.filter(r => isPendingRow(r) === (poOvStatusFilter === "pending"));
+    : poOvStatusFilter === "pending" ? finalPO.filter(r => classifyPurchaseStatus(r, cols) === "pending")
+    : poOvStatusFilter === "pay_pending" ? finalPO.filter(r => classifyPurchaseStatus(r, cols) === "pay_pending")
+    : finalPO.filter(r => classifyPurchaseStatus(r, cols) === "done");
   document.querySelectorAll("[data-po-filter]").forEach(el => el.classList.toggle("active", el.dataset.poFilter === poOvStatusFilter));
   document.getElementById("poOvTableTitle").textContent = poOvStatusFilter === "all"
     ? "ตารางรายการใบสั่งซื้อ (PO) ทั้งหมด" : `รายการ PO · ${PO_OV_FILTER_LABEL[poOvStatusFilter]}`;
@@ -3598,14 +3877,139 @@ function renderPOOverviewView() {
     ` · คลัง: ${escHtml(getPlantDisplayName(STATE.selectedPlant))} · ${tableRows.length.toLocaleString("th-TH")} รายการ` +
     (fullPriceCol ? ` · มูลค่ารวม <strong>${fmtBaht(tableValue)}</strong>` : "");
 
-  const TABLE_LIMIT = 200;
-  document.getElementById("poOvTableBadge").textContent = tableRows.length > TABLE_LIMIT
-    ? `แสดง ${TABLE_LIMIT} จาก ${tableRows.length.toLocaleString("th-TH")} แถว` : `แสดง ${tableRows.length.toLocaleString("th-TH")} แถว`;
+  // คำนวณการแบ่งหน้า (Pagination) 50 แถวต่อหน้า
+  const totalRows = tableRows.length;
+  const totalPages = Math.ceil(totalRows / poPageSize) || 1;
+  if (poPageCurrent > totalPages) poPageCurrent = totalPages;
+  if (poPageCurrent < 1) poPageCurrent = 1;
+  const startIndex = (poPageCurrent - 1) * poPageSize;
+  const endIndex = Math.min(startIndex + poPageSize, totalRows);
+  const paginatedRows = tableRows.slice(startIndex, endIndex);
+
+  document.getElementById("poOvTableBadge").textContent = `แสดง ${paginatedRows.length} แถว (หน้า ${poPageCurrent}/${totalPages})`;
+  
+  // แสดงข้อมูลสถานะแบ่งหน้า
+  const pageInfoEl = document.getElementById("poOvPageInfo");
+  if (pageInfoEl) {
+    pageInfoEl.textContent = totalRows > 0 
+      ? `แสดง ${startIndex + 1} ถึง ${endIndex} จาก ${totalRows.toLocaleString("th-TH")} แถว`
+      : "ไม่พบข้อมูลสำหรับแสดงผล";
+  }
+
+  // ฟังก์ชันเลื่อนหน้าจอกลับมาที่หัวตารางเมื่อเปลี่ยนหน้า
+  const scrollToPO = () => {
+    const el = document.getElementById("poOvTableTitle");
+    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  };
+
+  // วาดปุ่มนำทางแบ่งหน้า
+  const pageBtnContainer = document.getElementById("poOvPageButtons");
+  if (pageBtnContainer) {
+    pageBtnContainer.innerHTML = "";
+    
+    // ปุ่มย้อนกลับ "ก่อนหน้า"
+    const prevBtn = document.createElement("button");
+    prevBtn.type = "button";
+    prevBtn.className = "btn";
+    prevBtn.style.padding = "4px 10px";
+    prevBtn.style.minHeight = "32px";
+    prevBtn.disabled = poPageCurrent === 1;
+    prevBtn.textContent = "« ก่อนหน้า";
+    prevBtn.addEventListener("click", () => {
+      poPageCurrent--;
+      renderPOOverviewView();
+      scrollToPO();
+    });
+    pageBtnContainer.appendChild(prevBtn);
+
+    // วาดปุ่มหมายเลขหน้าแบบย่ออัจฉริยะ (ไม่เกิน 5 ปุ่มล้อมรอบหน้าปัจจุบัน)
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, poPageCurrent - 2);
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    if (startPage > 1) {
+      const firstBtn = document.createElement("button");
+      firstBtn.type = "button";
+      firstBtn.className = "btn";
+      firstBtn.style.padding = "4px 10px";
+      firstBtn.style.minHeight = "32px";
+      firstBtn.textContent = "1";
+      firstBtn.addEventListener("click", () => {
+        poPageCurrent = 1;
+        renderPOOverviewView();
+        scrollToPO();
+      });
+      pageBtnContainer.appendChild(firstBtn);
+      
+      if (startPage > 2) {
+        const dots = document.createElement("span");
+        dots.style.color = "var(--muted)";
+        dots.style.padding = "0 4px";
+        dots.textContent = "...";
+        pageBtnContainer.appendChild(dots);
+      }
+    }
+
+    for (let p = startPage; p <= endPage; p++) {
+      const pBtn = document.createElement("button");
+      pBtn.type = "button";
+      pBtn.className = p === poPageCurrent ? "btn active-mode" : "btn";
+      pBtn.style.padding = "4px 10px";
+      pBtn.style.minHeight = "32px";
+      pBtn.textContent = p;
+      pBtn.addEventListener("click", () => {
+        poPageCurrent = p;
+        renderPOOverviewView();
+        scrollToPO();
+      });
+      pageBtnContainer.appendChild(pBtn);
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        const dots = document.createElement("span");
+        dots.style.color = "var(--muted)";
+        dots.style.padding = "0 4px";
+        dots.textContent = "...";
+        pageBtnContainer.appendChild(dots);
+      }
+      const lastBtn = document.createElement("button");
+      lastBtn.type = "button";
+      lastBtn.className = "btn";
+      lastBtn.style.padding = "4px 10px";
+      lastBtn.style.minHeight = "32px";
+      lastBtn.textContent = totalPages;
+      lastBtn.addEventListener("click", () => {
+        poPageCurrent = totalPages;
+        renderPOOverviewView();
+        scrollToPO();
+      });
+      pageBtnContainer.appendChild(lastBtn);
+    }
+
+    // ปุ่มถัดไป
+    const nextBtn = document.createElement("button");
+    nextBtn.type = "button";
+    nextBtn.className = "btn";
+    nextBtn.style.padding = "4px 10px";
+    nextBtn.style.minHeight = "32px";
+    nextBtn.disabled = poPageCurrent === totalPages;
+    nextBtn.textContent = "ถัดไป »";
+    nextBtn.addEventListener("click", () => {
+      poPageCurrent++;
+      renderPOOverviewView();
+      scrollToPO();
+    });
+    pageBtnContainer.appendChild(nextBtn);
+  }
 
   const colQty = STATE.po.headers.find(h => /^จำนวน$/.test(String(h).trim()));
   const colUnit = STATE.po.headers.find(h => /^หน่วยนับ$/.test(String(h).trim()));
   const tableHeaders = ["เลข PO", "คลัง", "ผู้ขาย", "รหัส", "ชื่อวัสดุ", "จำนวน", "มูลค่า (บาท)", "สถานะ"];
-  const view = tableRows.map(r => ({
+  const view = paginatedRows.map(r => ({
     "เลข PO": escHtml((cols.poNoCol && r[cols.poNoCol]) || "-"),
     "คลัง": escHtml(PLANT_NAMES[normalizePlantCode(r[cols.plantCol])] || "-"),
     "ผู้ขาย": escHtml(cols.companyCol ? cleanVendorName(r[cols.companyCol]) : "-"),
@@ -3613,9 +4017,14 @@ function renderPOOverviewView() {
     "ชื่อวัสดุ": escHtml((cols.matNameCol && r[cols.matNameCol]) || "-"),
     "จำนวน": colQty ? escHtml((String(r[colQty] ?? "") + " " + String(colUnit ? (r[colUnit] ?? "") : "")).trim() || "-") : "-",
     "มูลค่า (บาท)": fullPriceCol ? parseNumber(r[fullPriceCol]).toLocaleString("th-TH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "-",
-    "สถานะ": isPendingRow(r) ? '<span class="mchip warn">ยังไม่ได้ดำเนินการ</span>' : '<span class="mchip ok">ดำเนินการแล้ว</span>'
+    "statusRaw": classifyPurchaseStatus(r, cols),
+    "สถานะ": isPendingRow(r) ? '<span class="mchip warn">ยังไม่ได้ดำเนินการ</span>' :
+             isPayPendingRow(r) ? '<span class="mchip" style="color:var(--purple);background:rgba(167,139,250,0.14);border-color:rgba(167,139,250,0.4);">รอจ่ายเงิน</span>' :
+             '<span class="mchip ok">ดำเนินการแล้ว</span>'
   }));
-  renderTable("poOvTable", tableHeaders, view, TABLE_LIMIT);
+  
+  // วาดตารางเฉพาะแถวที่แบ่งหน้าแล้ว
+  renderTable("poOvTable", tableHeaders, view, poPageSize);
 }
 
 function escHtml(s) {
@@ -5926,8 +6335,673 @@ function renderBudgetZPlanView() {
 }
 
 // =========================================================
-// 7. การนำทาง (Navigation) และ Event Listeners
+// 6D. BANK DEPOSIT MANAGEMENT SYSTEM (ระบบเงินฝากธนาคาร)
+// สรุป ยอดยกมา ยอดรับเข้า ยอดเบิกออก ยอดยกไป (ช่องงวด/คัดกรอง)
 // =========================================================
+let BANK_STATE = {
+  activeAccountKey: "ALL", // "ALL" หรือ เลขที่บัญชีที่เลือกดูประวัติย่อย
+  reportSort: "none" // หรือ ending_desc, ending_asc, inflow_desc, outflow_desc
+};
+
+function getBankDemoDataset() {
+  // บัญชีเงินฝากตัวอย่าง (5 บัญชีหลัก)
+  const accounts2D = [
+    ["ลำดับ", "ธนาคาร", "ประเภท", "เลขที่บัญชี", "ชื่อบัญชี", "สาขา", "สถานะ"],
+    ["1", "ธนาคารกรุงไทย", "ออมทรัพย์", "012-1-23456-1", "เงินบำรุงโรงพยาบาล", "สาขาถนนสุเทพ", "เปิดใช้งาน"],
+    ["2", "ธนาคารกสิกรไทย", "ออมทรัพย์", "701-2-34567-2", "เงินบริจาคเพื่อการกุศล", "สาขานิมมานเหมินทร์", "เปิดใช้งาน"],
+    ["3", "ธนาคารไทยพาณิชย์", "กระแสรายวัน", "403-3-45678-3", "เงินหมุนเวียนเวชภัณฑ์", "สาขามหาวิทยาลัยเชียงใหม่", "เปิดใช้งาน"],
+    ["4", "ธนาคารกรุงเทพ", "ฝากประจำ 3 เดือน", "101-4-56789-4", "เงินกองทุนสำรองพนักงาน", "สาขาเซ็นทรัลเฟสติวัล", "เปิดใช้งาน"],
+    ["5", "ธนาคารออมสิน", "ฝากประจำ 6 เดือน", "502-5-67890-5", "เงินสะสมเพื่อการพัฒนาโรงพยาบาล", "สาขาถนนช้างคลาน", "เปิดใช้งาน"]
+  ];
+
+  // ยอดเงินเคลื่อนไหวรายเดือน (ปีงบประมาณ 2568 - 2569)
+  const ledger2D = [
+    ["ปีงบประมาณ", "ประจำเดือน", "ธนาคาร", "เลขที่บัญชี", "ยอดยกมา", "ยอดรับเข้า", "ยอดเบิกออก"],
+    ["2569", "ตุลาคม", "ธนาคารกรุงไทย", "012-1-23456-1", "125000000.00", "45000000.00", "35000000.00"],
+    ["2569", "ตุลาคม", "ธนาคารกสิกรไทย", "701-2-34567-2", "45000000.00", "12000000.00", "8000000.00"],
+    ["2569", "ตุลาคม", "ธนาคารไทยพาณิชย์", "403-3-45678-3", "18000000.00", "25000000.00", "22000000.00"],
+    ["2569", "ตุลาคม", "ธนาคารกรุงเทพ", "101-4-56789-4", "80000000.00", "250000.00", "0.00"],
+    ["2569", "ตุลาคม", "ธนาคารออมสิน", "502-5-67890-5", "150000000.00", "1200000.00", "0.00"],
+
+    ["2569", "พฤศจิกายน", "ธนาคารกรุงไทย", "012-1-23456-1", "135000000.00", "52000000.00", "48000000.00"],
+    ["2569", "พฤศจิกายน", "ธนาคารกสิกรไทย", "701-2-34567-2", "49000000.00", "15000000.00", "10000000.00"],
+    ["2569", "พฤศจิกายน", "ธนาคารไทยพาณิชย์", "403-3-45678-3", "21000000.00", "31000000.00", "28000000.00"],
+    ["2569", "พฤศจิกายน", "ธนาคารกรุงเทพ", "101-4-56789-4", "80250000.00", "250000.00", "0.00"],
+    ["2569", "พฤศจิกายน", "ธนาคารออมสิน", "502-5-67890-5", "151200000.00", "1200000.00", "0.00"],
+
+    ["2569", "ธันวาคม", "ธนาคารกรุงไทย", "012-1-23456-1", "139000000.00", "64000000.00", "59000000.00"],
+    ["2569", "ธันวาคม", "ธนาคารกสิกรไทย", "701-2-34567-2", "54000000.00", "18000000.00", "11000000.00"],
+    ["2569", "ธันวาคม", "ธนาคารไทยพาณิชย์", "403-3-45678-3", "24000000.00", "36000000.00", "31000000.00"],
+    ["2569", "ธันวาคม", "ธนาคารกรุงเทพ", "101-4-56789-4", "80500000.00", "250000.00", "0.00"],
+    ["2569", "ธันวาคม", "ธนาคารออมสิน", "502-5-67890-5", "152400000.00", "1200000.00", "0.00"],
+
+    ["2569", "มกราคม", "ธนาคารกรุงไทย", "012-1-23456-1", "144000000.00", "58000000.00", "52000000.00"],
+    ["2569", "มกราคม", "ธนาคารกสิกรไทย", "701-2-34567-2", "61000000.00", "21000000.00", "14000000.00"],
+    ["2569", "มกราคม", "ธนาคารไทยพาณิชย์", "403-3-45678-3", "29000000.00", "27000000.00", "29000000.00"],
+    ["2569", "มกราคม", "ธนาคารกรุงเทพ", "101-4-56789-4", "80750000.00", "250000.00", "0.00"],
+    ["2569", "มกราคม", "ธนาคารออมสิน", "502-5-67890-5", "153600000.00", "1200000.00", "0.00"]
+  ];
+
+  return { accounts2D, ledger2D };
+}
+
+// โหลดฐานข้อมูลเงินฝาก (จาก Google Sheet หรือ Fallback)
+let BANK_DB = {
+  accounts: [], // [{ id, bank, type, accNum, name, branch, status }]
+  ledger: [] // [{ fy, month, bank, accNum, beginning, inflow, outflow, ending, monthIdx }]
+};
+
+const MONTH_ORDER = ["ตุลาคม", "พฤศจิกายน", "ธันวาคม", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน"];
+
+function getMonthIndex(mStr) {
+  const idx = MONTH_ORDER.indexOf(String(mStr).trim());
+  return idx === -1 ? 99 : idx;
+}
+
+function initBankDepositData(acc2D, led2D) {
+  // 1. แปลงข้อมูลสมุดบัญชี
+  const accHeaders = acc2D[0] || [];
+  const findCol = (regex, headers) => headers.findIndex(h => regex.test(String(h).trim()));
+
+  const bkCol = findCol(/ธนาคาร/i, accHeaders);
+  const tyCol = findCol(/ประเภท/i, accHeaders);
+  const numCol = findCol(/เลขที่บัญชี|เลขบัญชี/i, accHeaders);
+  const nmCol = findCol(/ชื่อบัญชี/i, accHeaders);
+  const brCol = findCol(/สาขา/i, accHeaders);
+  const stCol = findCol(/สถานะ/i, accHeaders);
+
+  BANK_DB.accounts = acc2D.slice(1).map((r, i) => ({
+    id: i + 1,
+    bank: r[bkCol >= 0 ? bkCol : 1] || "-",
+    type: r[tyCol >= 0 ? tyCol : 2] || "-",
+    accNum: r[numCol >= 0 ? numCol : 3] || "-",
+    name: r[nmCol >= 0 ? nmCol : 4] || "-",
+    branch: r[brCol >= 0 ? brCol : 5] || "-",
+    status: r[stCol >= 0 ? stCol : 6] || "เปิดใช้งาน"
+  })).filter(a => a.accNum && a.accNum !== "-");
+
+  // 2. แปลงข้อมูลเดินบัญชีเคลื่อนไหวรายเดือน
+  const ledHeaders = led2D[0] || [];
+  const fyCol = findCol(/ปีงบประมาณ|ปี/i, ledHeaders);
+  const moCol = findCol(/เดือน|ประจำเดือน/i, ledHeaders);
+  const bankLCol = findCol(/ธนาคาร/i, ledHeaders);
+  const accLCol = findCol(/เลขที่บัญชี|เลขบัญชี/i, ledHeaders);
+  const begCol = findCol(/ยอดยกมา/i, ledHeaders);
+  const infCol = findCol(/ยอดรับเข้า|รับเข้า|ฝากเข้า/i, ledHeaders);
+  const outfCol = findCol(/ยอดเบิกออก|เบิกออก|ถอนออก/i, ledHeaders);
+
+  BANK_DB.ledger = led2D.slice(1).map(r => {
+    const beg = parseNumber(r[begCol >= 0 ? begCol : 4]);
+    const inf = parseNumber(r[infCol >= 0 ? infCol : 5]);
+    const outf = parseNumber(r[outfCol >= 0 ? outfCol : 6]);
+    const end = beg + inf - outf;
+    const mo = r[moCol >= 0 ? moCol : 1] || "-";
+
+    return {
+      fy: String(r[fyCol >= 0 ? fyCol : 0] || "2569").trim(),
+      month: mo.trim(),
+      monthIdx: getMonthIndex(mo),
+      bank: r[bankLCol >= 0 ? bankLCol : 2] || "-",
+      accNum: r[accLCol >= 0 ? accLCol : 3] || "-",
+      beginning: beg,
+      inflow: inf,
+      outflow: outf,
+      ending: end
+    };
+  }).filter(l => l.accNum && l.accNum !== "-");
+
+  populateBankFilters();
+}
+
+// เติมข้อมูลตัวเลือกใน Filter ด้านบน
+function populateBankFilters() {
+  const fFy = document.getElementById("bankFilterFy");
+  const fMo = document.getElementById("bankFilterMonth");
+  const fBk = document.getElementById("bankFilterBank");
+  const fTy = document.getElementById("bankFilterType");
+  const fAc = document.getElementById("bankFilterAccount");
+
+  if (!fFy) return;
+
+  const years = [...new Set(BANK_DB.ledger.map(l => l.fy))].sort();
+  const months = [...new Set(BANK_DB.ledger.map(l => l.month))].sort((a,b) => getMonthIndex(a) - getMonthIndex(b));
+  const banks = [...new Set(BANK_DB.accounts.map(a => a.bank))].sort();
+  const types = [...new Set(BANK_DB.accounts.map(a => a.type))].sort();
+  const accs = [...new Set(BANK_DB.accounts.map(a => a.accNum))].sort();
+
+  fFy.innerHTML = '<option value="ALL">แสดงทุกปีงบประมาณ</option>' + years.map(y => `<option value="${y}">${y}</option>`).join("");
+  fMo.innerHTML = '<option value="ALL">แสดงทุกเดือน</option>' + months.map(m => `<option value="${m}">${m}</option>`).join("");
+  fBk.innerHTML = '<option value="ALL">ทุกธนาคาร</option>' + banks.map(b => `<option value="${b}">${b}</option>`).join("");
+  fTy.innerHTML = '<option value="ALL">ทุกประเภท</option>' + types.map(t => `<option value="${t}">${t}</option>`).join("");
+  fAc.innerHTML = '<option value="ALL">ทุกเลขที่บัญชี</option>' + accs.map(a => `<option value="${a}">${a}</option>`).join("");
+
+  // บันทึกความเปลี่ยนแปลง
+  const runFilter = () => {
+    renderBankDashboardView();
+    renderBankAccountsView();
+    renderBankDetailsView();
+    renderBankReportsView();
+  };
+
+  [fFy, fMo, fBk, fTy, fAc].forEach(el => {
+    el.removeEventListener("change", runFilter);
+    el.addEventListener("change", runFilter);
+  });
+}
+
+// ฟังก์ชันคัดกรองข้อมูลตามฟิลเตอร์หลัก
+function getFilteredBankLedger() {
+  const fy = document.getElementById("bankFilterFy").value;
+  const month = document.getElementById("bankFilterMonth").value;
+  const bank = document.getElementById("bankFilterBank").value;
+  const type = document.getElementById("bankFilterType").value;
+  const accNum = document.getElementById("bankFilterAccount").value;
+
+  return BANK_DB.ledger.filter(l => {
+    const acc = BANK_DB.accounts.find(a => a.accNum === l.accNum) || { type: "" };
+    if (fy !== "ALL" && l.fy !== fy) return false;
+    if (month !== "ALL" && l.month !== month) return false;
+    if (bank !== "ALL" && l.bank !== bank) return false;
+    if (type !== "ALL" && acc.type !== type) return false;
+    if (accNum !== "ALL" && l.accNum !== accNum) return false;
+    return true;
+  });
+}
+
+// ---------------------------------------------------------
+// 1. หน้าหลัก (Dashboard) เงินฝากธนาคาร
+// ---------------------------------------------------------
+function renderBankDashboardView() {
+  const filteredLedger = getFilteredBankLedger();
+
+  // จัดกลุ่มหาข้อมูลคงเหลือปัจจุบันแยกตามสมุดบัญชีที่เลือก
+  const uniqueAccNums = [...new Set(filteredLedger.map(l => l.accNum))];
+
+  let totalBeg = 0;
+  let totalInf = 0;
+  let totalOut = 0;
+  let totalEnd = 0;
+
+  // สำหรับแต่ละบัญชี เราจะสแกนหา "งวดล่าสุด" ภายใต้เงื่อนไขฟิลเตอร์เพื่อหาผลรวมยอดยกไป
+  uniqueAccNums.forEach(accNum => {
+    const ledgerRows = filteredLedger.filter(l => l.accNum === accNum);
+    if (!ledgerRows.length) return;
+
+    // สำหรับหา ยอดยกมาสะสม, ยอดรับสะสม, ยอดจ่ายสะสม ของงวดที่คัดกรอง
+    // หาเดือนแรกสุด และเดือนสุดท้ายเพื่อคำนวณยอดยกไปรวมที่แท้จริง
+    const sorted = [...ledgerRows].sort((a,b) => a.monthIdx - b.monthIdx);
+    const earliest = sorted[0];
+    const latest = sorted[sorted.length - 1];
+
+    totalBeg += earliest.beginning;
+    totalInf += ledgerRows.reduce((s, r) => s + r.inflow, 0);
+    totalOut += ledgerRows.reduce((s, r) => s + r.outflow, 0);
+    totalEnd += latest.ending;
+  });
+
+  // อัปเดต Summary Cards
+  document.getElementById("bkKpiTotalAccounts").textContent = uniqueAccNums.length.toLocaleString("th-TH");
+  document.getElementById("bkKpiTotalAccounts").dataset.count = uniqueAccNums.length;
+
+  document.getElementById("bkKpiTotalBalance").textContent = fmtBaht(totalEnd);
+  document.getElementById("bkKpiTotalBalance").dataset.count = Math.round(totalEnd);
+
+  document.getElementById("bkKpiTotalBeginning").textContent = fmtBaht(totalBeg);
+  document.getElementById("bkKpiTotalBeginning").dataset.count = Math.round(totalBeg);
+
+  document.getElementById("bkKpiTotalInflow").textContent = fmtBaht(totalInf);
+  document.getElementById("bkKpiTotalInflow").dataset.count = Math.round(totalInf);
+
+  document.getElementById("bkKpiTotalOutflow").textContent = fmtBaht(totalOut);
+  document.getElementById("bkKpiTotalOutflow").dataset.count = Math.round(totalOut);
+
+  // ยอดยกไปเด่นชัด
+  const boldEndEl = document.getElementById("bkKpiEndingBold");
+  boldEndEl.innerHTML = fmtSapSignedHtml(totalEnd, true);
+
+  // --- กราฟที่ 1: สัดส่วนเงินฝากสะสมตามธนาคาร ---
+  const bankSums = {};
+  uniqueAccNums.forEach(accNum => {
+    const ledgerRows = filteredLedger.filter(l => l.accNum === accNum);
+    if (!ledgerRows.length) return;
+    const latest = [...ledgerRows].sort((a,b) => b.monthIdx - a.monthIdx)[0];
+    bankSums[latest.bank] = (bankSums[latest.bank] || 0) + latest.ending;
+  });
+
+  const donutBankList = Object.entries(bankSums).sort((a,b) => b[1] - a[1]);
+  const sumBankEnding = donutBankList.reduce((s, r) => s + Math.max(0, r[1]), 0);
+
+  document.getElementById("bkDonutTotalAccountsTag").textContent = `${donutBankList.length} ธนาคาร`;
+
+  const donutEl = document.getElementById("bkDonutBank");
+  const pctText = document.getElementById("bkDonutBankPct");
+  const labelText = document.getElementById("bkDonutBankLabel");
+  const legendEl = document.getElementById("bkDonutBankLegend");
+
+  if (!donutBankList.length || sumBankEnding <= 0) {
+    donutEl.style.background = "var(--chart-neutral)";
+    pctText.textContent = "0%";
+    labelText.textContent = "ไม่มีเงินฝาก";
+    legendEl.innerHTML = `<div class="meta" style="text-align:center;padding:12px;">ไม่มียอดคงเหลือสุทธิ</div>`;
+  } else {
+    // วาด Conic-gradient ของ Donut ธนาคาร
+    let currentPctAccum = 0;
+    const colors = ["var(--chart-mint)", "var(--chart-purple)", "var(--chart-amber)", "var(--purple)", "var(--cyan)"];
+    const gradientParts = [];
+
+    donutBankList.forEach(([bName, bAmt], idx) => {
+      const pct = (bAmt / sumBankEnding) * 100;
+      const color = colors[idx % colors.length];
+      gradientParts.push(`${color} ${currentPctAccum}% ${currentPctAccum + pct}%`);
+      currentPctAccum += pct;
+    });
+
+    donutEl.style.background = `conic-gradient(${gradientParts.join(", ")})`;
+    const topPct = ((donutBankList[0][1] / sumBankEnding) * 100).toFixed(1);
+    pctText.textContent = `${topPct}%`;
+    labelText.textContent = donutBankList[0][0];
+
+    // สร้าง Legends
+    legendEl.innerHTML = donutBankList.map(([bName, bAmt], idx) => {
+      const color = colors[idx % colors.length];
+      const pct = ((bAmt / sumBankEnding) * 100).toFixed(1);
+      return `
+        <div class="legend-row">
+          <span><i class="dot" style="background:${color}"></i>${escHtml(bName)} (${pct}%)</span>
+          <strong>${fmtBaht(bAmt)}</strong>
+        </div>`;
+    }).join("");
+  }
+
+  // --- กราฟที่ 2: ยอดคงเหลือเงินฝากแยกตามธนาคาร (ประจำงวด) ---
+  const barChart = document.getElementById("bkBarChartMonthly");
+  barChart.innerHTML = "";
+
+  if (!donutBankList.length) {
+    barChart.innerHTML = `<div class="meta" style="grid-column: span 12; text-align:center; padding-top:100px;">ไม่พบประวัติการเดินบัญชีรายเดือน</div>`;
+  } else {
+    const maxVal = Math.max(...donutBankList.map(o => o[1]), 1);
+    donutBankList.forEach(([bName, bAmt], idx) => {
+      const col = document.createElement("div");
+      col.className = "column";
+
+      const pairWrap = document.createElement("div");
+      pairWrap.className = "pair-bars";
+
+      const subCol = document.createElement("div");
+      subCol.className = "sub-bar-col";
+      subCol.style.maxWidth = "44px";
+
+      const top = document.createElement("span");
+      top.className = "bar-top-value";
+      top.style.fontSize = "10.5px";
+      top.style.padding = "2px 5px";
+      top.textContent = bAmt >= 1000000 
+        ? (bAmt / 1000000).toFixed(1) + "M"
+        : Math.round(bAmt / 1000).toLocaleString() + "k";
+
+      const bar = document.createElement("div");
+      bar.className = "bar po-bar";
+      bar.style.setProperty("--height", `${Math.max((bAmt / maxVal) * 80, 6)}%`);
+      bar.style.setProperty("--delay", `${idx * 80}ms`);
+
+      subCol.append(top, bar);
+      pairWrap.append(subCol);
+
+      const lbl = document.createElement("span");
+      lbl.className = "month";
+      lbl.title = bName;
+      lbl.textContent = bName.replace("ธนาคาร", "");
+
+      col.append(pairWrap, lbl);
+      barChart.append(col);
+    });
+  }
+}
+
+// ---------------------------------------------------------
+// 2. ข้อมูลบัญชีธนาคาร (Bank Passbook Cards)
+// ---------------------------------------------------------
+const BANK_ICONS = {
+  "ธนาคารกรุงไทย": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Krung_Thai_Bank_logo.svg",
+  "ธนาคารกสิกรไทย": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Kasikornbank_Logo.svg",
+  "ธนาคารไทยพาณิชย์": "https://upload.wikimedia.org/wikipedia/commons/d/df/Siam_Commercial_Bank_Logo.svg",
+  "ธนาคารกรุงเทพ": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Bangkok_Bank_Logo.svg",
+  "ธนาคารออมสิน": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Government_Savings_Bank_Thailand_Logo.svg"
+};
+
+function renderBankAccountsView() {
+  const grid = document.getElementById("bkAccountCardGrid");
+  if (!grid) return;
+
+  const fy = document.getElementById("bankFilterFy").value;
+  const month = document.getElementById("bankFilterMonth").value;
+
+  const ledFilter = getFilteredBankLedger();
+
+  let html = "";
+  BANK_DB.accounts.forEach(acc => {
+    // หายอดคงเหลือล่าสุดภายใต้ฟิลเตอร์
+    const ledgerRows = ledFilter.filter(l => l.accNum === acc.accNum);
+    let beg = 0, inf = 0, outf = 0, end = 0;
+    if (ledgerRows.length > 0) {
+      const sorted = [...ledgerRows].sort((a,b) => a.monthIdx - b.monthIdx);
+      beg = sorted[0].beginning;
+      inf = ledgerRows.reduce((s, r) => s + r.inflow, 0);
+      outf = ledgerRows.reduce((s, r) => s + r.outflow, 0);
+      end = sorted[sorted.length - 1].ending;
+    }
+
+    const iconUrl = BANK_ICONS[acc.bank] || "";
+    const iconImg = iconUrl ? `<img src="${iconUrl}" style="height:24px;width:24px;object-fit:contain;" alt="${acc.bank}">` : "🏦";
+
+    html += `
+      <article class="material-card" style="cursor:pointer;" onclick="viewBankAccountDetails('${escHtml(acc.accNum)}')">
+        <div class="material-img-wrap" style="height:120px;background:linear-gradient(135deg, #1e2d4a 0%, #0d1626 100%);">
+          <div style="position:absolute;top:16px;left:16px;display:flex;align-items:center;gap:10px;">
+            <div style="background:#fff;border-radius:50%;padding:4px;display:grid;place-items:center;height:34px;width:34px;">${iconImg}</div>
+            <div style="font-weight:800;color:#fff;font-size:14px;">${escHtml(acc.bank)}</div>
+          </div>
+          <div class="material-plant-badge" style="background:var(--purple);color:#fff;">${escHtml(acc.type)}</div>
+          <div style="position:absolute;bottom:12px;left:16px;color:#cbd5e1;font-family:var(--font-mono);font-size:14px;letter-spacing:1px;">
+            ${escHtml(acc.accNum)}
+          </div>
+        </div>
+        <div class="material-body" style="padding:16px;">
+          <div class="material-code" style="color:var(--cyan);font-weight:700;">💳 ${escHtml(acc.branch)}</div>
+          <div class="material-title" style="font-size:15px;font-weight:700;margin-top:4px;">${escHtml(acc.name)}</div>
+          <div class="material-specs" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line);">
+            <div style="display:flex;justify-content:space-between;"><span>ยอดยกมา:</span><strong>${fmtBaht(beg)}</strong></div>
+            <div style="display:flex;justify-content:space-between;"><span>ยอดรับเข้า:</span><strong class="mint">+${fmtBaht(inf)}</strong></div>
+            <div style="display:flex;justify-content:space-between;"><span>ยอดคงเหลือยกไป:</span><strong class="purple" style="font-size:14px;">${fmtBaht(end)}</strong></div>
+          </div>
+        </div>
+      </article>`;
+  });
+
+  grid.innerHTML = html || `<div class="card mat-empty" style="grid-column: span 12;">ไม่พบสมุดบัญชีธนาคารที่มีการลงรายการไว้</div>`;
+  document.getElementById("bkAccountListBadge").textContent = `${BANK_DB.accounts.length} บัญชี`;
+}
+
+// ---------------------------------------------------------
+// 3. รายละเอียดเงินฝาก (Interactive Account Ledger Viewer)
+// ---------------------------------------------------------
+function renderBankDetailsView() {
+  const selector = document.getElementById("bkDetailsAccountSelector");
+  if (!selector) return;
+
+  const fy = document.getElementById("bankFilterFy").value;
+  const month = document.getElementById("bankFilterMonth").value;
+  const ledFilter = getFilteredBankLedger();
+
+  // สร้างปุ่มเลือกบัญชีทางด้านซ้าย
+  let sidebarHtml = "";
+  BANK_DB.accounts.forEach(acc => {
+    const isSelected = BANK_STATE.activeAccountKey === acc.accNum;
+    const ledgerRows = ledFilter.filter(l => l.accNum === acc.accNum);
+    let currentEnd = 0;
+    if (ledgerRows.length > 0) {
+      currentEnd = [...ledgerRows].sort((a,b) => b.monthIdx - a.monthIdx)[0].ending;
+    }
+
+    sidebarHtml += `
+      <button type="button" class="nav-btn ${isSelected ? "active" : ""}" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:4px;" onclick="selectBankDetailsAccount('${escHtml(acc.accNum)}')">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">${escHtml(acc.bank)} · ${escHtml(acc.type)}</span>
+        <strong style="font-size:13.5px;color:var(--text);">${escHtml(acc.name)}</strong>
+        <span style="font-size:11.5px;font-family:var(--font-mono);color:var(--cyan);">${escHtml(acc.accNum)}</span>
+        <span style="font-size:12px;font-weight:800;align-self:flex-end;color:var(--purple);margin-top:2px;">฿${currentEnd.toLocaleString("th-TH", {minimumFractionDigits:2})}</span>
+      </button>`;
+  });
+
+  selector.innerHTML = sidebarHtml || `<div class="meta" style="padding:12px;text-align:center;">ไม่มีข้อมูลบัญชี</div>`;
+
+  // แสดงผลตารางเคลื่อนไหวเงินฝากทางขวา
+  const header = document.getElementById("bkDetailsSelectedHeader");
+  const sub = document.getElementById("bkDetailsSelectedSub");
+  const badge = document.getElementById("bkDetailsSelectedBadge");
+  const statsDiv = document.getElementById("bkDetailsStats");
+  const tbody = document.querySelector("#bkDetailsTable tbody");
+  const tableCountBadge = document.getElementById("bkDetailsTableCount");
+
+  const selectedAcc = BANK_DB.accounts.find(a => a.accNum === BANK_STATE.activeAccountKey);
+  if (!selectedAcc) {
+    header.textContent = "กรุณาเลือกบัญชีเงินฝาก";
+    sub.textContent = "คลิกเลือกบัญชีสมุดธนาคารทางด้านซ้ายเพื่อแสดงข้อมูลการเคลื่อนไหวทางการเงิน";
+    badge.style.display = "none";
+    statsDiv.innerHTML = "";
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px;">กรุณาเลือกบัญชีที่ต้องการดูรายละเอียด</td></tr>`;
+    tableCountBadge.textContent = "0 งวดเดือน";
+    return;
+  }
+
+  header.textContent = selectedAcc.name;
+  sub.textContent = `${selectedAcc.bank} (${selectedAcc.type}) · เลขที่บัญชี: ${selectedAcc.accNum} · สาขา: ${selectedAcc.branch}`;
+  badge.style.display = "inline-block";
+  badge.textContent = selectedAcc.status;
+
+  const activeLedger = BANK_DB.ledger.filter(l => l.accNum === selectedAcc.accNum && (fy === "ALL" || l.fy === fy) && (month === "ALL" || l.month === month));
+  activeLedger.sort((a,b) => a.monthIdx - b.monthIdx);
+
+  let sumBeg = 0, sumInflow = 0, sumOutflow = 0, endingBal = 0;
+  if (activeLedger.length > 0) {
+    sumBeg = activeLedger[0].beginning;
+    sumInflow = activeLedger.reduce((s, r) => s + r.inflow, 0);
+    sumOutflow = activeLedger.reduce((s, r) => s + r.outflow, 0);
+    endingBal = activeLedger[activeLedger.length - 1].ending;
+  }
+
+  statsDiv.innerHTML = `
+    <div class="mat-stat"><strong>${fmtBaht(sumBeg)}</strong>ยอดยกมาเริ่มต้นประจำช่วง</div>
+    <div class="mat-stat"><strong class="mint">+${fmtBaht(sumInflow)}</strong>ยอดเงินรับฝากรวม</div>
+    <div class="mat-stat"><strong class="amber">-${fmtBaht(sumOutflow)}</strong>ยอดเงินเบิกออกรวม</div>
+    <div class="mat-stat"><strong class="purple">${fmtBaht(endingBal)}</strong>ยอดคงเหลือยกไปสุทธิ</div>`;
+
+  tableCountBadge.textContent = `${activeLedger.length} งวดเดือน`;
+
+  if (!activeLedger.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px;">ไม่พบรายการบันทึกเงินฝากในช่วงเวลาที่เลือก</td></tr>`;
+  } else {
+    tbody.innerHTML = activeLedger.map(l => `
+      <tr>
+        <td>ปีงบประมาณ ${l.fy}</td>
+        <td><strong>ประจำเดือน${l.month}</strong></td>
+        <td style="text-align:right;">${fmtBaht(l.beginning)}</td>
+        <td style="text-align:right;" class="mint">+${fmtBaht(l.inflow)}</td>
+        <td style="text-align:right;" class="amber">-${fmtBaht(l.outflow)}</td>
+        <td style="text-align:right;font-weight:700;">${fmtBaht(l.ending)}</td>
+      </tr>`).join("");
+  }
+}
+
+function selectBankDetailsAccount(accNum) {
+  BANK_STATE.activeAccountKey = accNum;
+  renderBankDetailsView();
+}
+
+// ---------------------------------------------------------
+// 4. รายงานเงินฝาก (Detailed Ledger Report Table)
+// ---------------------------------------------------------
+function renderBankReportsView() {
+  const tbody = document.querySelector("#bkReportTable tbody");
+  const tfoot = document.querySelector("#bkReportTable tfoot");
+  const badge = document.getElementById("bkReportTableBadge");
+  const searchInput = document.getElementById("bkReportSearchInput");
+  const sortSelect = document.getElementById("bkReportSortSelect");
+
+  if (!tbody) return;
+
+  const ledFilter = getFilteredBankLedger();
+  const searchKey = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+  // รวมรายการแยกตามบัญชีที่คัดกรอง
+  const reportData = [];
+  BANK_DB.accounts.forEach(acc => {
+    // หาเดือนเดินบัญชีของงวดที่ฟิลเตอร์
+    const ledgerRows = ledFilter.filter(l => l.accNum === acc.accNum);
+    if (!ledgerRows.length) return;
+
+    const sorted = [...ledgerRows].sort((a,b) => a.monthIdx - b.monthIdx);
+    const earliest = sorted[0];
+    const latest = sorted[sorted.length - 1];
+
+    const beg = earliest.beginning;
+    const inflow = ledgerRows.reduce((s,r) => s + r.inflow, 0);
+    const outflow = ledgerRows.reduce((s,r) => s + r.outflow, 0);
+    const ending = latest.ending;
+
+    // การค้นหาด้วยคำสำคัญ
+    if (searchKey) {
+      const isHit = acc.bank.toLowerCase().includes(searchKey) ||
+                    acc.type.toLowerCase().includes(searchKey) ||
+                    acc.accNum.toLowerCase().includes(searchKey) ||
+                    acc.name.toLowerCase().includes(searchKey);
+      if (!isHit) return;
+    }
+
+    reportData.push({ acc, beg, inflow, outflow, ending });
+  });
+
+  // การเรียงลำดับยอดเงิน
+  const sortVal = sortSelect ? sortSelect.value : "none";
+  if (sortVal === "ending_desc") reportData.sort((a,b) => b.ending - a.ending);
+  else if (sortVal === "ending_asc") reportData.sort((a,b) => a.ending - b.ending);
+  else if (sortVal === "inflow_desc") reportData.sort((a,b) => b.inflow - a.inflow);
+  else if (sortVal === "outflow_desc") reportData.sort((a,b) => b.outflow - a.outflow);
+
+  badge.textContent = `${reportData.length} รายการ`;
+
+  if (!reportData.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:24px;">ไม่พบประวัติการทำธุรกรรมหรือบัญชีเงินฝากที่คัดกรอง</td></tr>`;
+    tfoot.innerHTML = "";
+    return;
+  }
+
+  tbody.innerHTML = reportData.map((d, i) => `
+    <tr style="cursor:pointer;" onclick="viewBankAccountDetails('${escHtml(d.acc.accNum)}')">
+      <td>${i + 1}</td>
+      <td><strong>${escHtml(d.acc.bank)}</strong></td>
+      <td><span class="mchip">${escHtml(d.acc.type)}</span></td>
+      <td><span class="co-code" style="color:var(--cyan);">${escHtml(d.acc.accNum)}</span></td>
+      <td style="text-align:right;">${fmtBaht(d.beg)}</td>
+      <td style="text-align:right;" class="mint">+${fmtBaht(d.inflow)}</td>
+      <td style="text-align:right;" class="amber">-${fmtBaht(d.outflow)}</td>
+      <td style="text-align:right;font-weight:700;">${fmtBaht(d.ending)}</td>
+    </tr>`).join("");
+
+  // ยอดรวมท้ายตาราง
+  const totalBeg = reportData.reduce((s,r) => s + r.beg, 0);
+  const totalIn = reportData.reduce((s,r) => s + r.inflow, 0);
+  const totalOut = reportData.reduce((s,r) => s + r.outflow, 0);
+  const totalEnd = reportData.reduce((s,r) => s + r.ending, 0);
+
+  tfoot.innerHTML = `
+    <tr>
+      <td colspan="4" style="text-align:right;padding:12px 14px;">ยอดรวมทั้งสิ้น (${reportData.length} บัญชี):</td>
+      <td style="text-align:right;padding:12px 14px;color:var(--text);font-weight:800;">${fmtBaht(totalBeg)}</td>
+      <td style="text-align:right;padding:12px 14px;color:var(--mint);font-weight:800;">+${fmtBaht(totalIn)}</td>
+      <td style="text-align:right;padding:12px 14px;color:var(--amber);font-weight:800;">-${fmtBaht(totalOut)}</td>
+      <td style="text-align:right;padding:12px 14px;color:var(--purple);font-weight:800;font-size:14px;">${fmtBaht(totalEnd)}</td>
+    </tr>`;
+}
+
+// คลิกเปิดรายละเอียดบัญชีธนาคารเพิ่มเติมใน Modal
+function viewBankAccountDetails(accNum) {
+  const acc = BANK_DB.accounts.find(a => a.accNum === accNum);
+  const modal = document.getElementById("bkAccountModal");
+  if (!acc || !modal) return;
+
+  const ledgerRows = BANK_DB.ledger.filter(l => l.accNum === accNum);
+  ledgerRows.sort((a,b) => b.monthIdx - a.monthIdx); // ล่าสุดขึ้นก่อน
+
+  const monthlyListHtml = ledgerRows.slice(0, 6).map(l => `
+    <div class="stat-row">
+      <span>งวด ${l.month} / ปี ${l.fy}</span>
+      <strong>ยอดยกไป: ${fmtBaht(l.ending)} <small style="color:var(--muted);font-weight:500;">(รับ +${fmtBaht(l.inflow)} · เบิก -${fmtBaht(l.outflow)})</small></strong>
+    </div>`).join("");
+
+  modal.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:12px;">
+      <h3 style="margin:0;font-size:16px;color:var(--cyan);">💳 รายละเอียดสมุดบัญชีเงินฝาก</h3>
+      <button type="button" class="btn" style="min-height:0;padding:4px 8px;font-size:12px;" onclick="closeBankAccountModal()">✕ ปิด</button>
+    </div>
+    <div style="display:grid;gap:8px;font-size:13px;line-height:1.6;">
+      <div>ธนาคาร: <strong>${escHtml(acc.bank)}</strong></div>
+      <div>ประเภทบัญชี: <strong>${escHtml(acc.type)}</strong></div>
+      <div>เลขที่บัญชี: <strong style="font-family:var(--font-mono);color:var(--cyan);">${escHtml(acc.accNum)}</strong></div>
+      <div>ชื่อบัญชี: <strong>${escHtml(acc.name)}</strong></div>
+      <div>สาขาธนาคาร: <strong>${escHtml(acc.branch)}</strong></div>
+      <div>สถานะธุรกรรม: <span class="mchip ok">${escHtml(acc.status)}</span></div>
+      
+      <h4 style="margin:14px 0 6px;border-top:1px solid var(--border);padding-top:10px;font-size:13.5px;color:var(--text);">📈 ความเคลื่อนไหวย้อนหลัง 6 งวดล่าสุด</h4>
+      <div style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;">
+        ${monthlyListHtml || '<div class="meta">ไม่มีประวัติเคลื่อนไหวคัดกรอง</div>'}
+      </div>
+      
+      <div style="display:flex;gap:8px;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
+        <button type="button" class="btn active-mode" style="flex:1;min-height:34px;padding:6px 12px;font-size:12.5px;" onclick="goToAccountDetailsViewer('${escHtml(acc.accNum)}')">📈 เรียกดู Ledger เต็มรูปแบบ</button>
+      </div>
+    </div>`;
+
+  modal.style.display = "block";
+}
+
+function closeBankAccountModal() {
+  const modal = document.getElementById("bkAccountModal");
+  if (modal) modal.style.display = "none";
+}
+
+function goToAccountDetailsViewer(accNum) {
+  closeBankAccountModal();
+  BANK_STATE.activeAccountKey = accNum;
+  activateMenuView("bank-details");
+}
+
+// ส่งออกไฟล์ตารางรายงานฐานะเงินฝากธนาคารเป็น Excel
+function exportBankDepositReportToExcel() {
+  if (typeof XLSX === "undefined") {
+    alert("ระบบไม่พบไลบรารี SheetJS (xlsx) ในขณะนี้ กรุณาลองใหม่อีกครั้ง");
+    return;
+  }
+
+  const ledFilter = getFilteredBankLedger();
+  const rawRows = [
+    ["รายงานยอดเงินฝากธนาคารโรงพยาบาล", "", "", "", "", "", ""],
+    ["ณ วันที่จัดทำรายงาน: " + new Date().toLocaleDateString("th-TH"), "", "", "", "", "", ""],
+    [],
+    ["ลำดับ", "ธนาคาร", "ประเภท", "เลขที่บัญชี", "ยอดยกมาเริ่มต้น (บาท)", "ยอดรับเข้าสะสม (บาท)", "ยอดเบิกจ่ายออก (บาท)", "ยอดยกคงเหลือสุทธิ (บาท)"]
+  ];
+
+  let seq = 1;
+  BANK_DB.accounts.forEach(acc => {
+    const ledgerRows = ledFilter.filter(l => l.accNum === acc.accNum);
+    if (!ledgerRows.length) return;
+
+    const sorted = [...ledgerRows].sort((a,b) => a.monthIdx - b.monthIdx);
+    const earliest = sorted[0];
+    const latest = sorted[sorted.length - 1];
+
+    const beg = earliest.beginning;
+    const inflow = ledgerRows.reduce((s,r) => s + r.inflow, 0);
+    const outflow = ledgerRows.reduce((s,r) => s + r.outflow, 0);
+    const ending = latest.ending;
+
+    rawRows.push([
+      seq++,
+      acc.bank,
+      acc.type,
+      acc.accNum,
+      beg,
+      inflow,
+      outflow,
+      ending
+    ]);
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(rawRows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "รายงานเงินฝาก");
+  XLSX.writeFile(wb, `รายงานเงินฝากธนาคาร_โรงพยาบาล_${new Date().toISOString().slice(0,10)}.xlsx`);
+}
 const VIEW_META = {
   "twin": { eyebrow: "DIGITAL TWIN · HOSPITAL 3D", title: "Digital Twin โรงพยาบาล · คลังพัสดุและเวชภัณฑ์", sub: "แบบจำลองโรงพยาบาล 3 มิติที่เชื่อมกับข้อมูล PO / PR จริง ลากเพื่อหมุน คลิกอาคารเพื่อเลือกคลัง" },
   "overview": { eyebrow: "WAREHOUSE INTELLIGENCE · GLASS UI", title: "ภาพรวมข้อมูลคลังพัสดุและเวชภัณฑ์", sub: "เลือกคลัง (พัสดุ, คลังยา, คลังเวชภัณฑ์, คลังแลป, คลังห้องผ่าตัด) เพื่อดูสรุปข้อมูล" },
@@ -5937,6 +7011,10 @@ const VIEW_META = {
   "po-company": { eyebrow: "PURCHASE ORDER — VENDOR ANALYTICS (ชีต 1)", title: "ค้นหาจากบริษัท และภาพรวมสถานะจัดซื้อ", sub: "เลือกคลังและบริษัทเพื่อดูสถานะจัดซื้อที่ดำเนินการแล้ว / ยังไม่ได้ดำเนินการ และมูลค่าสั่งซื้อจากราคาเต็มใน PO" },
   "budget": { eyebrow: "EXECUTIVE BUDGET · NET & ACTUAL INCOME", title: "แดชบอร์ดงบประมาณผู้บริหาร · รายรับงบประมาณสุทธิ & รายรับ (รับจริง)", sub: "สรุปผลรวมรายรับงบประมาณสุทธิ และรายรับ (รับจริง) จากช่องรับจริง/จ่ายจริง เฉพาะประเภทรายรับ พร้อมแยกรายละเอียด รายได้ กับ ส่วนลดและส่วนต่างค่าบริการ" },
   "budget-zplan": { eyebrow: "EXECUTIVE BUDGET · PLAN CODE Z4010103001 - Z4010103013", title: "รายงานงบประมาณ · ข้อมูลรหัสแผน (Z4010103001 - Z4010103013)", sub: "สรุปข้อมูลเฉพาะรหัสแผน Z4010103001 ถึง Z4010103013 โดยแสดงผลรวมและรายละเอียดของช่อง งบประมาณสุทธิ, ใบขอซื้อ, ใบสั่งซื้อ, รวม และ คงเหลือ จากชีตงบประมาณ" },
+  "bank-dashboard": { eyebrow: "BANK DEPOSIT · DASHBOARD", title: "ระบบบริหารเงินฝากธนาคาร · แดชบอร์ดภาพรวม", sub: "แดชบอร์ดภาพรวมฐานะเงินฝากธนาคารของโรงพยาบาล สรุปยอดสะสมแนวโน้มและสัดส่วนประจำงวด" },
+  "bank-accounts": { eyebrow: "BANK DEPOSIT · ACCOUNTS", title: "ข้อมูลบัญชีธนาคารโรงพยาบาล", sub: "สมุดบัญชีเงินฝากทั้งหมด แสดงเลขที่บัญชี ประเภทบัญชี และยอดคงเหลือแต่ละธนาคาร" },
+  "bank-details": { eyebrow: "BANK DEPOSIT · DETAILS", title: "รายละเอียดการเคลื่อนไหวเงินฝากธนาคาร", sub: "ตรวจสอบประวัติการทำธุรกรรม ยอดยกมา ยอดรับเข้า และยอดเบิกออกแยกรายเดือนของแต่ละบัญชี" },
+  "bank-reports": { eyebrow: "BANK DEPOSIT · REPORTS", title: "รายงานเงินฝากและฐานะการเงิน", sub: "สรุปรายงานเงินฝากแยกตามธนาคารและบัญชี ค้นหา กรอง และส่งออกข้อมูลเป็นไฟล์ Excel ได้ทันที" },
   "import-excel": { eyebrow: "DATA SOURCE MANAGER · GOOGLE SHEETS & EXCEL", title: "จัดการแหล่งข้อมูล & Import ไฟล์ Excel", sub: "ลากไฟล์ Excel มาวาง หรือกดสลับที่มาของข้อมูลระหว่าง Google Sheets กับ Excel ได้ทันที" }
 };
 
@@ -5950,6 +7028,10 @@ function renderAllActiveViews() {
   if (STATE.activeView === "po-company") renderPOCompanyView();
   if (STATE.activeView === "budget") renderBudgetView();
   if (STATE.activeView === "budget-zplan") renderBudgetZPlanView();
+  if (STATE.activeView === "bank-dashboard") renderBankDashboardView();
+  if (STATE.activeView === "bank-accounts") renderBankAccountsView();
+  if (STATE.activeView === "bank-details") renderBankDetailsView();
+  if (STATE.activeView === "bank-reports") renderBankReportsView();
   if (STATE.activeView === "import-excel") renderImportExcelView();
   animateVisibleNumbers();
 }
@@ -6032,6 +7114,20 @@ if (excelMsSel) {
   });
 }
 
+// Event Listeners สำหรับระบบเงินฝากธนาคาร
+const reportSearch = document.getElementById("bkReportSearchInput");
+if (reportSearch) {
+  reportSearch.addEventListener("input", renderBankReportsView);
+}
+const reportSort = document.getElementById("bkReportSortSelect");
+if (reportSort) {
+  reportSort.addEventListener("change", renderBankReportsView);
+}
+const exportBtn = document.getElementById("bkReportExportBtn");
+if (exportBtn) {
+  exportBtn.addEventListener("click", exportBankDepositReportToExcel);
+}
+
 // Event Listeners สำหรับแดชบอร์ดงบประมาณผู้บริหาร (การ์ดรายรับงบประมาณสุทธิ)
 // ไม่ต้องผูกตัวกรองหรือตารางตามคำสั่ง "โดยยังไม่มีต้องมีตัวกรอง หรือรายละเอียดย่อย หรือตาราง ยังไม่ต้องเปรียบเทียบอะไรทั้งสิ้น"
 
@@ -6040,7 +7136,7 @@ const zpSearchEl = document.getElementById("zpSearchInput");
 if (zpSearchEl) {
   zpSearchEl.addEventListener("input", () => { renderBudgetZPlanView(); });
 }
-document.getElementById("poOvSearchInput").addEventListener("input", () => { renderPOOverviewView(); animateVisibleNumbers(); });
+document.getElementById("poOvSearchInput").addEventListener("input", () => { poPageCurrent = 1; renderPOOverviewView(); animateVisibleNumbers(); });
 document.querySelectorAll("[data-po-filter]").forEach(el => {
   el.addEventListener("click", () => setPoOvFilter(el.dataset.poFilter, true));
   el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setPoOvFilter(el.dataset.poFilter, true); } });
@@ -6063,7 +7159,9 @@ function getDemoDataset() {
     { "เลขที่ PO": "PO-69003", "Plant": "2200", "รหัสวัสดุ": "SUP-2201", "ชื่อวัสดุ": "ถุงมือตรวจโรค Nitrile ไซส์ M", "ผู้ขาย": "30018 - บริษัท เมดิคอลซัพพลาย จำกัด", "สถานะจัดซื้อ": "ยังไม่ได้ดำเนินการ", "ราคาเต็มใน PO": 45000, "รูปภาพ": "" },
     { "เลขที่ PO": "PO-69004", "Plant": "2400", "รหัสวัสดุ": "LAB-2401", "ชื่อวัสดุ": "หลอดเก็บเลือดสุญญากาศ EDTA", "ผู้ขาย": "40099 - บริษัท แลปเทคโนโลยี่ จำกัด", "สถานะจัดซื้อ": "ดำเนินการแล้ว", "ราคาเต็มใน PO": 38000, "รูปภาพ": "" },
     { "เลขที่ PO": "PO-69005", "Plant": "2500", "รหัสวัสดุ": "OR-2501", "ชื่อวัสดุ": "ชุดกาวน์ผ่าตัดปลอดเชื้อ Sterile", "ผู้ขาย": "30018 - บริษัท เมดิคอลซัพพลาย จำกัด", "สถานะจัดซื้อ": "ยังไม่ได้ดำเนินการ", "ราคาเต็มใน PO": 67500, "รูปภาพ": "" },
-    { "เลขที่ PO": "PO-69006", "Plant": "2100", "รหัสวัสดุ": "MED-2105", "ชื่อวัสดุ": "Amoxicillin 500 mg Capsule", "ผู้ขาย": "20045 - บริษัท ฟาร์มาแคร์ จำกัด", "สถานะจัดซื้อ": "ดำเนินการแล้ว", "ราคาเต็มใน PO": 32000, "รูปภาพ": "" }
+    { "เลขที่ PO": "PO-69006", "Plant": "2100", "รหัสวัสดุ": "MED-2105", "ชื่อวัสดุ": "Amoxicillin 500 mg Capsule", "ผู้ขาย": "20045 - บริษัท ฟาร์มาแคร์ จำกัด", "สถานะจัดซื้อ": "ดำเนินการแล้ว", "ราคาเต็มใน PO": 32000, "รูปภาพ": "" },
+    { "เลขที่ PO": "PO-69007", "Plant": "2200", "รหัสวัสดุ": "SUP-2202", "ชื่อวัสดุ": "หน้ากากอนามัย 3 ชั้นทางการแพทย์", "ผู้ขาย": "30018 - บริษัท เมดิคอลซัพพลาย จำกัด", "สถานะจัดซื้อ": "รอจ่ายเงิน", "ราคาเต็มใน PO": 18000, "รูปภาพ": "" },
+    { "เลขที่ PO": "PO-69008", "Plant": "2400", "รหัสวัสดุ": "LAB-2405", "ชื่อวัสดุ": "เข็มเจาะเลือด Sterile นิรภัย", "ผู้ขาย": "40099 - บริษัท แลปเทคโนโลยี่ จำกัด", "สถานะจัดซื้อ": "รอจ่ายเงิน", "ราคาเต็มใน PO": 12500, "รูปภาพ": "" }
   ];
 
   const prHeaders = ["PR Date", "PR", "PO", "Plant", "รหัสวัสดุ", "วัสดุ", "จำนวน", "หน่วยนับ", "ราคาต่อหน่วย", "ราคารวมใน PR"];
@@ -6317,21 +7415,24 @@ async function loadSheetDataset(spec) {
 async function loadAllSheets() {
   const banner = document.getElementById("statusBanner");
   banner.className = "notice";
-  banner.innerHTML = `<span>กำลังดึงข้อมูลจาก Google Sheets (ชีต 1, ชีต PR, ชีตงบประมาณ A–K, Master งบประมาณ และ Master งานย่อย)...</span>`;
+  banner.innerHTML = `<span>กำลังดึงข้อมูลจาก Google Sheets (ชีต 1, ชีต PR, ชีตงบประมาณ A–K, Master งบประมาณ, Master งานย่อย และชีตระบบเงินฝากธนาคาร)...</span>`;
 
   try {
-    const [poRes, prSettled, rawBg2D, mb2D, ms2D] = await Promise.all([
+    const [poRes, prSettled, rawBg2D, mb2D, ms2D, bankAccs2D, bankLedger2D] = await Promise.all([
       loadSheetDataset(SHEET_CONFIG.po),
       loadSheetDataset(SHEET_CONFIG.pr).catch(() => null),
       loadSheet2D(SHEET_CONFIG.budget),
       loadSheet2D(SHEET_CONFIG.masterBudget),
-      loadSheet2D(SHEET_CONFIG.masterSubwork)
+      loadSheet2D(SHEET_CONFIG.masterSubwork),
+      loadSheet2D({ gid: "", name: "ประเภทเงินฝากธนาคาร" }).catch(() => []),
+      loadSheet2D({ gid: "", name: "เงินฝากธนาคาร" }).catch(() => [])
     ]);
 
     const bg2D = rawBg2D.length ? await enrichBudget2DIfJsonp(rawBg2D, ms2D) : rawBg2D;
     const poData = poRes.ds;
     const prData = prSettled && prSettled.ds ? dropDeletedPR(prSettled.ds) : poData;
     const demo = getDemoDataset();
+    const bkDemo = getBankDemoDataset();
 
     STATE.googleStore.via = poRes.via;
     STATE.googleStore.po = poData;
@@ -6343,10 +7444,18 @@ async function loadAllSheets() {
     STATE.googleStore.isDemo = false;
     STATE.googleStore.errorMsg = "";
 
+    // โหลดระบบเงินฝากธนาคาร
+    if (bankAccs2D.length > 1 && bankLedger2D.length > 1) {
+      initBankDepositData(bankAccs2D, bankLedger2D);
+    } else {
+      initBankDepositData(bkDemo.accounts2D, bkDemo.ledger2D);
+    }
+
     if (STATE.dataSource === "google") switchDataSource("google");
   } catch (err) {
     STATE.googleStore.errorMsg = (err && err.message) ? err.message : "ไม่ทราบสาเหตุ";
     const demo = getDemoDataset();
+    const bkDemo = getBankDemoDataset();
     STATE.googleStore.po = demo.po;
     STATE.googleStore.pr = demo.pr;
     STATE.googleStore.budget = demo.budget;
@@ -6354,6 +7463,8 @@ async function loadAllSheets() {
     STATE.googleStore.masterSubwork = demo.masterSubwork;
     STATE.googleStore.loaded = true;
     STATE.googleStore.isDemo = true;
+
+    initBankDepositData(bkDemo.accounts2D, bkDemo.ledger2D);
 
     if (STATE.dataSource === "google") switchDataSource("google");
   }
